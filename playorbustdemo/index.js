@@ -873,8 +873,8 @@ class GameScene extends Phaser.Scene {
             button.visible = false;
         this._bustSpot.Amount = this._anteSpot.Amount;
         this._antePayout = -1;
-        this._stepList.push(Steps.CalculateGamePayouts);
         this._stepList.push(Steps.ResolveAnteWager);
+        this._stepList.push(Steps.CalculateGamePayouts);
         this._stepList.push(Steps.FlipBoardHand);
         if (this._bonusSpot.Amount > 0) {
             this._stepList.push(Steps.ResolveBonus);
