@@ -64,15 +64,15 @@ class GameScene extends Phaser.Scene {
         super("GameScene");
         //#region Constants
         this.PlayerHandAnchor = new Point(230, 500);
-        this.PlayerCommentaryAnchor = new Point(255, 475);
+        this.DealerHandAnchor = new Point(465, 75);
+        this.BoardAnchor = new Point(465, 220);
         this.AntePayoffOffset = new Point(-34, -37);
         this.PlayPayoffOffset = new Point(-34, -37);
         this.BonusPayoffOffset = new Point(-34, -37);
         this.BustPayoffOffset = new Point(34, -37);
-        this.DealerHandAnchor = new Point(465, 75);
-        this.DealerCommentaryAnchor = new Point(490, 172);
-        this.BoardAnchor = new Point(465, 220);
         this.TargetFontInstructionSize = 22;
+        this.CommentaryAnchor = new Point(10, 10);
+        this.CommentarySpacing = 30;
         this.NumberOfDecks = 1;
         //#endregion
         //#region Hand information
@@ -97,6 +97,9 @@ class GameScene extends Phaser.Scene {
         this._antePayout = 0;
         this._playPayout = 0;
         this._bustPayout = 0;
+        this._optimalPlay = 0;
+        this._optimalAnnotation = "";
+        this._doubleCheck = false;
         //#endregion
         //#region Test hands
         this._testDealerHand = new Array(0);
@@ -266,8 +269,14 @@ class GameScene extends Phaser.Scene {
         graphics.lineStyle(5, 0xffffff, 1);
         //#region Ante spot
         spotAnchor = new Point(540, 500);
-        graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let anteLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "ANTE");
+        graphics.beginPath();
+        graphics.moveTo(spotAnchor.x - 27, spotAnchor.y - 68);
+        graphics.lineTo(spotAnchor.x + 16, spotAnchor.y - 25);
+        graphics.lineTo(spotAnchor.x - 27, spotAnchor.y + 18);
+        graphics.lineTo(spotAnchor.x - 70, spotAnchor.y - 25);
+        graphics.closePath();
+        graphics.strokePath();
+        let anteLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "ANTE");
         anteLabel.setFixedSize(80, 22);
         anteLabel.setStyle(Config.gameOptions.feltFormat);
         this._anteSpot = new BettingSpot({
@@ -286,9 +295,17 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._anteSpot);
         //#endregion
         //#region Play spot
-        spotAnchor = new Point(492, 611);
-        graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let playLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "PLAY");
+        spotAnchor = new Point(492, 591);
+        graphics.fillStyle(0x000000);
+        graphics.beginPath();
+        graphics.moveTo(spotAnchor.x - 27, spotAnchor.y - 68);
+        graphics.lineTo(spotAnchor.x + 16, spotAnchor.y - 25);
+        graphics.lineTo(spotAnchor.x - 27, spotAnchor.y + 18);
+        graphics.lineTo(spotAnchor.x - 70, spotAnchor.y - 25);
+        graphics.closePath();
+        graphics.fillPath();
+        graphics.strokePath();
+        let playLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "PLAY");
         playLabel.setFixedSize(80, 22);
         playLabel.setStyle(Config.gameOptions.feltFormat);
         this._playSpot = new BettingSpot({
@@ -306,9 +323,17 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._playSpot);
         //#endregion
         //#region Bust spot
-        spotAnchor = new Point(590, 611);
-        graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let bustLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "BUST");
+        spotAnchor = new Point(590, 591);
+        graphics.fillStyle(0xFF0000);
+        graphics.beginPath();
+        graphics.moveTo(spotAnchor.x - 27, spotAnchor.y - 68);
+        graphics.lineTo(spotAnchor.x + 16, spotAnchor.y - 25);
+        graphics.lineTo(spotAnchor.x - 27, spotAnchor.y + 18);
+        graphics.lineTo(spotAnchor.x - 70, spotAnchor.y - 25);
+        graphics.closePath();
+        graphics.fillPath();
+        graphics.strokePath();
+        let bustLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "BUST");
         bustLabel.setFixedSize(80, 22);
         bustLabel.setStyle(Config.gameOptions.feltFormat);
         this._bustSpot = new BettingSpot({
@@ -324,8 +349,10 @@ class GameScene extends Phaser.Scene {
             payoffOffset: this.BustPayoffOffset
         });
         this.add.existing(this._bustSpot);
+        //#endregion
         //#region Bonus spot
         spotAnchor = new Point(540, 389);
+        graphics.lineStyle(5, 0xff0000, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
         let bonusLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "ODDS");
         bonusLabel.setFixedSize(80, 22);
@@ -353,6 +380,7 @@ class GameScene extends Phaser.Scene {
         this._lastWagerAmounts = new Array(this._bettingSpots.length);
         this.Score = 10000;
         this.CurrentState = GameState.Predeal;
+        //#endregion
     }
     //#region Animation methods
     doAnimation() {
@@ -385,11 +413,42 @@ class GameScene extends Phaser.Scene {
             case Steps.CalculateTotals: {
                 this._playerTotal = this.calculateTotal(this._playerHand);
                 this._dealerTotal = this.calculateTotal(this._dealerHand);
+                let cardNumbers = [
+                    this._playerHand[0].CardNumber,
+                    this._playerHand[1].CardNumber
+                ];
+                let highRank = Math.floor(Math.max(cardNumbers[0], cardNumbers[1]) / 4);
+                let lowRank = Math.floor(Math.min(cardNumbers[0], cardNumbers[1]) / 4);
+                let isSuited = (cardNumbers[0] % 4 == cardNumbers[1] % 4);
+                this._optimalPlay = Strategy.Play;
+                if (isSuited) {
+                    this._optimalAnnotation = "Any two suited cards: PLAY";
+                }
+                else if (highRank == lowRank) {
+                    this._optimalAnnotation = "Any two suited cards: PLAY";
+                }
+                else if (highRank >= 11) {
+                    this._optimalAnnotation = "Any king-high or ace-high: PLAY";
+                }
+                else if (highRank == 10 && lowRank >= 2) {
+                    this._optimalAnnotation = "Queen-four through queen-jack: PLAY";
+                }
+                else if ((highRank - lowRank) == 1) {
+                    this._optimalAnnotation = "Any two connected cards: PLAY";
+                }
+                else if ((highRank - lowRank) == 2 && (lowRank >= 3)) {
+                    this._optimalAnnotation = "Any one-gap hand at least seven-five or higher: PLAY";
+                }
+                else {
+                    this._optimalAnnotation = "Make BUST wager.";
+                    this._optimalPlay = Strategy.Bust;
+                }
                 this.doAnimation();
                 break;
             }
             case Steps.ResolveBonus: {
                 let payout = -1;
+                let bonusAnnotation = "Odds wager loses";
                 let playerRank = Math.floor(this._playerTotal / 100000);
                 let allPlayerCards = [
                     this._playerHand[0].CardNumber,
@@ -400,25 +459,32 @@ class GameScene extends Phaser.Scene {
                 let highCardNumber = allPlayerCards.reduce((a, b) => a > b ? a : b);
                 let highCardRank = Math.floor(highCardNumber / 4);
                 if (playerRank == ThreeCardPokerRank.MiniRoyal) {
+                    bonusAnnotation = "Odds pays 50:1 for Mini Royal";
                     payout = 50;
                 }
                 else if (playerRank == ThreeCardPokerRank.StraightFlush) {
+                    bonusAnnotation = "Odds pays 10:1 for straight flush";
                     payout = 10;
                 }
                 else if (playerRank == ThreeCardPokerRank.Trips) {
+                    bonusAnnotation = "Odds pays 10:1 for trips";
                     payout = 10;
                 }
                 else if (playerRank == ThreeCardPokerRank.Straight) {
+                    bonusAnnotation = "Odds pays 2:1 for straight";
                     payout = 2;
                 }
                 else if (playerRank == ThreeCardPokerRank.NoPair) {
                     if (highCardRank <= 5) {
+                        bonusAnnotation = "Odds pays 10:1 for 6/7 high bust";
                         payout = 10;
                     }
                     else if (highCardRank <= 9) {
+                        bonusAnnotation = "Odds pays 2:1 for 8/9/T/J high bust";
                         payout = 2;
                     }
                 }
+                this.addCommentaryField(bonusAnnotation);
                 this.resolvePayout(this._bonusSpot, payout, true, true);
                 break;
             }
@@ -445,30 +511,59 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case Steps.ResolveAnteWager: {
-                if (this._antePayout != 0) {
-                    this.resolvePayout(this._anteSpot, this._antePayout, true, true);
+                if (this._antePayout == 0) {
+                    this.addCommentaryField("Ante wager pushes.");
+                    this.doAnimation();
                 }
                 else {
-                    this.doAnimation();
+                    if (this._antePayout == 1) {
+                        this.addCommentaryField("Ante wager pays 1:1");
+                    }
+                    else if (this._antePayout == -1) {
+                        this.addCommentaryField("Ante wager loses");
+                    }
+                    this.resolvePayout(this._anteSpot, this._antePayout, true, true);
                 }
                 break;
             }
             case Steps.ResolvePlayWager: {
-                if (this._playPayout != 0) {
-                    this.resolvePayout(this._playSpot, this._playPayout, true, true);
+                if (this._playPayout == 0) {
+                    this.doAnimation();
                 }
                 else {
-                    this.doAnimation();
+                    if (this._playPayout == 1) {
+                        this.addCommentaryField("Play wager pays 1:1");
+                    }
+                    else if (this._playPayout == -1) {
+                        this.addCommentaryField("Play wager loses");
+                    }
+                    this.resolvePayout(this._playSpot, this._playPayout, true, true);
                 }
                 break;
             }
             case Steps.ResolveBustWager: {
-                if (this._bustPayout != 0) {
-                    this.resolvePayout(this._bustSpot, this._bustPayout, true, true);
-                }
-                else {
+                if (this._bustPayout == 0) {
                     this.doAnimation();
                 }
+                else {
+                    if (this._bustPayout == 2) {
+                        this.addCommentaryField("Bust wager pays 2:1");
+                    }
+                    else if (this._bustPayout == -1) {
+                        this.addCommentaryField("Bust wager loses");
+                    }
+                    this.resolvePayout(this._bustSpot, this._bustPayout, true, true);
+                }
+                break;
+            }
+            case Steps.AnnotatePlayer: {
+                this.addCommentaryField("Player hand: " + ThreeCardDescriptors[this._playerTotal]);
+                this.doAnimation();
+                break;
+            }
+            case Steps.AnnotateDealer: {
+                this.addCommentaryField("Dealer hand: " + ThreeCardDescriptors[this._dealerTotal]);
+                this.doAnimation();
                 break;
             }
             case Steps.ChangeStateMainInput: {
@@ -487,6 +582,10 @@ class GameScene extends Phaser.Scene {
     }
     //#endregion
     //#region Logic methods
+    addCommentaryField(fieldText) {
+        let newCommentary = this.add.text(this.CommentaryAnchor.x, (this._commentaryList.length * this.CommentarySpacing) + this.CommentaryAnchor.y, fieldText, Config.gameOptions.commentaryFormat);
+        this._commentaryList.push(newCommentary);
+    }
     calculateTotal(holeCards) {
         let peakHand = -1;
         let cards = [
@@ -495,10 +594,10 @@ class GameScene extends Phaser.Scene {
             this._boardHand[0].CardNumber,
             this._boardHand[1].CardNumber,
         ];
-        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[0], cards[1], cards[2]], false, true));
-        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[0], cards[1], cards[3]], false, true));
-        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[0], cards[2], cards[3]], false, true));
-        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[1], cards[2], cards[3]], false, true));
+        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[0], cards[1], cards[2]], false));
+        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[0], cards[1], cards[3]], false));
+        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[0], cards[2], cards[3]], false));
+        peakHand = Math.max(peakHand, ThreeCardEvaluator.cardVectorToHandNumber([cards[1], cards[2], cards[3]], false));
         return peakHand;
     }
     updateLocation(location, isPlayer, isBackwards = false) {
@@ -549,6 +648,7 @@ class GameScene extends Phaser.Scene {
         for (let thisButton of this._clearDealPanel) {
             thisButton.visible = true;
         }
+        this._doubleCheck = true;
     }
     //#endregion
     //#region Animation methods
@@ -694,8 +794,14 @@ class GameScene extends Phaser.Scene {
             this.updateLocation(this._boardAnchor, false);
         }
     }
-    playClick() {
+    playChipClick() {
         this.sound.play("chipClick");
+    }
+    playButtonClick() {
+        this.sound.play("buttonClick");
+    }
+    playChing() {
+        this.sound.play("ching");
     }
     resolvePayout(wager, multiple, elevateOldBet, continueAnimation = true) {
         if (wager.Amount != 0) {
@@ -799,8 +905,10 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case GameState.MainInput: {
-                for (let thisButton of this._mainPanel)
+                for (let thisButton of this._mainPanel) {
+                    thisButton.scale = 1.0;
                     thisButton.visible = true;
+                }
                 break;
             }
             case GameState.GameOver: {
@@ -821,26 +929,26 @@ class GameScene extends Phaser.Scene {
         if (this._cursorValue > 0) {
             let targetSpot = target.parentContainer;
             let newValue = Math.min(targetSpot.Amount + this._cursorValue, targetSpot.MaximumBet);
-            this.playClick();
+            this.playChipClick();
             targetSpot.Amount = newValue;
         }
     }
     beginDeal() {
-        this.playClick();
+        this.playButtonClick();
         this.CurrentState = GameState.StartDeal;
     }
     clearBettingSpots() {
         for (let spot of this._bettingSpots) {
             spot.Amount = 0;
         }
-        this.playClick();
+        this.playButtonClick();
     }
     newBets() {
-        this.playClick();
+        this.playButtonClick();
         this.CurrentState = GameState.Predeal;
     }
     rebetBets() {
-        this.playClick();
+        this.playButtonClick();
         this.predealInitialization();
         for (let index = 0; index < this._bettingSpots.length; index += 1) {
             this._bettingSpots[index].Amount = this._lastWagerAmounts[index];
@@ -848,54 +956,106 @@ class GameScene extends Phaser.Scene {
         this.CurrentState = GameState.StartDeal;
     }
     selectChip(target) {
-        this.playClick();
+        this.playButtonClick();
         this.selectCursorValue(target.Value);
     }
     makePlayWager() {
-        this.playClick();
-        for (let button of this._mainPanel)
-            button.visible = false;
-        this._playSpot.Amount = this._anteSpot.Amount;
-        this._stepList.push(Steps.FlipBoardHand);
-        if (this._bonusSpot.Amount > 0) {
-            this._stepList.push(Steps.ResolveBonus);
+        if (this._optimalPlay != Strategy.Play && this._doubleCheck) {
+            this.playChing();
+            this.Instructions = "Are you sure you want to make a PLAY wager?\nOptimal strategy = " + this._optimalAnnotation;
+            if (this._optimalPlay == Strategy.Play) {
+                this._playButton.scale = 1.2;
+            }
+            else if (this._optimalPlay == Strategy.Bust) {
+                this._bustButton.scale = 1.2;
+            }
+            this._doubleCheck = false;
         }
-        this._stepList.push(Steps.FlipDealerHand);
-        this._stepList.push(Steps.CalculateGamePayouts);
-        this._stepList.push(Steps.ResolveAnteWager);
-        this._stepList.push(Steps.ResolvePlayWager);
-        this._stepList.push(Steps.ChangeStateGameOver);
-        this.doAnimation();
+        else {
+            this.playButtonClick();
+            for (let button of this._mainPanel)
+                button.visible = false;
+            this._playSpot.Amount = this._anteSpot.Amount;
+            this._stepList.push(Steps.FlipBoardHand);
+            this._stepList.push(Steps.AnnotatePlayer);
+            if (this._bonusSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolveBonus);
+            }
+            this._stepList.push(Steps.FlipDealerHand);
+            this._stepList.push(Steps.AnnotateDealer);
+            this._stepList.push(Steps.CalculateGamePayouts);
+            this._stepList.push(Steps.ResolveAnteWager);
+            this._stepList.push(Steps.ResolvePlayWager);
+            this._stepList.push(Steps.ChangeStateGameOver);
+            this.doAnimation();
+        }
     }
     makeBustWager() {
-        this.playClick();
-        for (let button of this._mainPanel)
-            button.visible = false;
-        this._bustSpot.Amount = this._anteSpot.Amount;
-        this._antePayout = -1;
-        this._stepList.push(Steps.ResolveAnteWager);
-        this._stepList.push(Steps.CalculateGamePayouts);
-        this._stepList.push(Steps.FlipBoardHand);
-        if (this._bonusSpot.Amount > 0) {
-            this._stepList.push(Steps.ResolveBonus);
+        if (this._optimalPlay != Strategy.Bust && this._doubleCheck) {
+            this.playChing();
+            this.Instructions = "Are you sure you want to make a BUST wager?\nOptimal strategy = " + this._optimalAnnotation;
+            if (this._optimalPlay == Strategy.Play) {
+                this._playButton.scale = 1.2;
+            }
+            else if (this._optimalPlay == Strategy.Bust) {
+                this._bustButton.scale = 1.2;
+            }
+            this._doubleCheck = false;
         }
-        this._stepList.push(Steps.ResolveBustWager);
-        this._stepList.push(Steps.ChangeStateGameOver);
-        this.doAnimation();
+        else {
+            this.playButtonClick();
+            for (let button of this._mainPanel)
+                button.visible = false;
+            this._bustSpot.Amount = this._anteSpot.Amount;
+            this._antePayout = -1;
+            this._stepList.push(Steps.ResolveAnteWager);
+            this._stepList.push(Steps.CalculateGamePayouts);
+            this._stepList.push(Steps.FlipBoardHand);
+            this._stepList.push(Steps.AnnotatePlayer);
+            if (this._bonusSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolveBonus);
+            }
+            this._stepList.push(Steps.ResolveBustWager);
+            this._stepList.push(Steps.ChangeStateGameOver);
+            this.doAnimation();
+        }
     }
     foldHand() {
-        this.playClick();
-        for (let button of this._mainPanel)
-            button.visible = false;
-        this._stepList.push(Steps.FoldHand);
-        if (this._bonusSpot.Amount > 0) {
-            this._stepList.push(Steps.FlipBoardHand);
-            this._stepList.push(Steps.ResolveBonus);
+        if (this._optimalPlay != Strategy.Fold && this._doubleCheck) {
+            this.playChing();
+            this.Instructions = "Are you sure you want to fold?\nOptimal strategy = " + this._optimalAnnotation;
+            if (this._optimalPlay == Strategy.Play) {
+                this._playButton.scale = 1.2;
+            }
+            else if (this._optimalPlay == Strategy.Bust) {
+                this._bustButton.scale = 1.2;
+            }
+            this._doubleCheck = false;
         }
-        this._stepList.push(Steps.ChangeStateGameOver);
-        this.doAnimation();
+        else {
+            this.playButtonClick();
+            for (let button of this._mainPanel)
+                button.visible = false;
+            this._stepList.push(Steps.FoldHand);
+            if (this._bonusSpot.Amount > 0) {
+                this._stepList.push(Steps.FlipBoardHand);
+                this._stepList.push(Steps.AnnotatePlayer);
+                this._stepList.push(Steps.ResolveBonus);
+            }
+            this._stepList.push(Steps.ChangeStateGameOver);
+            this.doAnimation();
+        }
     }
-    hintPlease() { }
+    hintPlease() {
+        this.playButtonClick();
+        this.Instructions = this._optimalAnnotation;
+        if (this._optimalPlay == Strategy.Bust) {
+            this._bustButton.scale = 1.2;
+        }
+        else if (this._optimalPlay == Strategy.Play) {
+            this._playButton.scale = 1.2;
+        }
+    }
     //#endregion
     //#region Properties
     get CurrentState() { return this._currentState; }
@@ -930,7 +1090,15 @@ class LoaderScene extends Phaser.Scene {
         //#region Load sounds
         this.load.audio("chipClick", [
             "./assets/sounds/ChipClick.mp3",
-            "./assets/sounds.ChipClick.ogg"
+            "./assets/sounds/ChipClick.ogg"
+        ]);
+        this.load.audio("buttonClick", [
+            "./assets/sounds/Button Click.mp3",
+            "./assets/sounds/Button Click.ogg"
+        ]);
+        this.load.audio("ching", [
+            "./assets/sounds/Cash Register.mp3",
+            "./assets/sounds/Cash Register.ogg"
         ]);
         //#endregion
         //#region Load graphics
@@ -1445,7 +1613,8 @@ Steps.CalculateGamePayouts = "Calculate Game Payouts";
 Steps.ResolveAnteWager = "Resolve Ante Wager";
 Steps.ResolvePlayWager = "Resolve Play Wager";
 Steps.ResolveBustWager = "Resolve Bust Wager";
-Steps.AnnotateDealer = "Annotate dealer";
+Steps.AnnotatePlayer = "Annotate Player";
+Steps.AnnotateDealer = "Annotate Dealer";
 Steps.ResolvePlayer0 = "Resolve player hand #0";
 Steps.ResolvePlayer1 = "Resolve player hand #1";
 Steps.ResolvePlayer2 = "Resolve player hand #2";
@@ -1457,6 +1626,11 @@ Steps.PostDoubleControl = "Post double control";
 Steps.ResolveBust = "Resolve Bust";
 Steps.SplitPair = "Split pair";
 Steps.ForceNextHand = "Force next hand";
+class Strategy {
+}
+Strategy.Play = 0;
+Strategy.Bust = 1;
+Strategy.Fold = 2;
 class StringTable {
 }
 StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE and/or BONUS betting spots to add chips, click DEAL to begin.";
@@ -1464,7 +1638,7 @@ StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers
 StringTable.Insurance = "Would you like insurance? (YES / NO)";
 StringTable.DoubleBack = "Would you like to make a Second Chance Wager? (YES / NO)";
 class ThreeCardEvaluator {
-    static cardVectorToHandNumber(cardVector, isJokerFullyWild, isWheelSecondBest = false) {
+    static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
         let output = -1;
         let cards = new Array(...cardVector);
         let ranks = [0, 0, 0];
@@ -1474,16 +1648,16 @@ class ThreeCardEvaluator {
         // First, we need to check for jokers
         if (cards[0] >= 52) {
             // Three jokers
-            return this.cardVectorToHandNumber(miniRoyalVector, false, isWheelSecondBest);
+            return this.cardVectorToHandNumber(miniRoyalVector, false);
         }
         else if (cards[1] >= 52) {
             // Two jokers
             if (cards[0] >= 40) {
-                return this.cardVectorToHandNumber(miniRoyalVector, false, isWheelSecondBest);
+                return this.cardVectorToHandNumber(miniRoyalVector, false);
             }
             else {
                 let straightFlushVector = [cards[0], cards[0] + 4, cards[0] + 8];
-                return this.cardVectorToHandNumber(straightFlushVector, false, isWheelSecondBest);
+                return this.cardVectorToHandNumber(straightFlushVector, false);
             }
         }
         else if (cards[2] >= 52) {
@@ -1491,7 +1665,7 @@ class ThreeCardEvaluator {
             let bestHand = -1;
             for (let replacement = 0; replacement < 52; replacement += 1) {
                 let testHand = [cards[0], cards[1], replacement];
-                let candidate = this.cardVectorToHandNumber(testHand, isJokerFullyWild, isWheelSecondBest);
+                let candidate = this.cardVectorToHandNumber(testHand, isJokerFullyWild);
                 if (!isJokerFullyWild && replacement < 48) {
                     let candidateRank = Math.floor(candidate / 100000);
                     if (candidateRank == ThreeCardPokerRank.Straight ||
@@ -1562,33 +1736,25 @@ class ThreeCardEvaluator {
                 else if (!isSuited && !isStraight) {
                     output = ThreeCardPokerRank.NoPair * 100000;
                 }
-                if (isWheelSecondBest) {
-                    if (isStraight) {
-                        var isBroadway = ((ranks[0] == 10) && (ranks[1] == 11) && (ranks[2] == 12));
-                        if (isBroadway) {
-                            output += this.tiebreakByCardRanks(ranks[2], ranks[1], ranks[0]);
-                        }
-                        else if (isWheel) {
-                            output += this.tiebreakByCardRanks(11, 10, 9);
-                        }
-                        else if (ranks[0] == 0) {
-                            // lowest card is a 2, that must mean a 4-3-2 straight, the new "wheel" -- as you know, normally bottom straight has zero tiebreaker
-                            // NOP
-                        }
-                        else {
-                            output += this.tiebreakByCardRanks(ranks[2] - 1, ranks[1] - 1, ranks[0] - 1);
-                        }
-                    }
-                    else {
-                        output += this.tiebreakByCardRanks(ranks[2], ranks[1], ranks[0]);
-                    }
+                if (!isWheel) {
+                    // Wheel has a tiebreaker of 0, it's the bottom straight
+                    output += this.tiebreakByCardRanks(ranks[2], ranks[1], ranks[0]);
                 }
-                else {
-                    if (!isWheel) {
-                        // A wheel will have lowest tiebreaker, not adding anything.
-                        output += this.tiebreakByCardRanks(ranks[2], ranks[1], ranks[0]);
-                    }
-                }
+                // if (isStraight) {
+                // 	var isBroadway: Boolean = ((ranks[0] == 10) && (ranks[1] == 11) && (ranks[2] == 12));
+                // 	if (isBroadway) {
+                // 		output += this.tiebreakByCardRanks(ranks[2], ranks[1], ranks[0]);
+                // 	} else if (isWheel) {
+                // 		output += this.tiebreakByCardRanks(11, 10, 9);
+                // 	} else if (ranks[0] == 0) {
+                // 		// lowest card is a 2, that must mean a 4-3-2 straight, the new "wheel" -- as you know, normally bottom straight has zero tiebreaker
+                // 		// NOP
+                // 	} else {
+                // 		output += this.tiebreakByCardRanks(ranks[2] - 1, ranks[1] - 1, ranks[0] - 1);
+                // 	}
+                // } else {
+                // 	output += this.tiebreakByCardRanks(ranks[2], ranks[1], ranks[0]);
+                // }
             }
         }
         return output;
@@ -1597,6 +1763,749 @@ class ThreeCardEvaluator {
         return highRank * 169 + middleRank * 13 + lowRank;
     }
 }
+let ThreeCardDescriptors = {
+    100520: "No pair, 532",
+    100533: "No pair, 542",
+    100689: "No pair, 632",
+    100702: "No pair, 642",
+    100703: "No pair, 643",
+    100715: "No pair, 652",
+    100716: "No pair, 653",
+    100858: "No pair, 732",
+    100871: "No pair, 742",
+    100872: "No pair, 743",
+    100884: "No pair, 752",
+    100885: "No pair, 753",
+    100886: "No pair, 754",
+    100897: "No pair, 762",
+    100898: "No pair, 763",
+    100899: "No pair, 764",
+    101027: "No pair, 832",
+    101040: "No pair, 842",
+    101041: "No pair, 843",
+    101053: "No pair, 852",
+    101054: "No pair, 853",
+    101055: "No pair, 854",
+    101066: "No pair, 862",
+    101067: "No pair, 863",
+    101068: "No pair, 864",
+    101069: "No pair, 865",
+    101079: "No pair, 872",
+    101080: "No pair, 873",
+    101081: "No pair, 874",
+    101082: "No pair, 875",
+    101196: "No pair, 932",
+    101209: "No pair, 942",
+    101210: "No pair, 943",
+    101222: "No pair, 952",
+    101223: "No pair, 953",
+    101224: "No pair, 954",
+    101235: "No pair, 962",
+    101236: "No pair, 963",
+    101237: "No pair, 964",
+    101238: "No pair, 965",
+    101248: "No pair, 972",
+    101249: "No pair, 973",
+    101250: "No pair, 974",
+    101251: "No pair, 975",
+    101252: "No pair, 976",
+    101261: "No pair, 982",
+    101262: "No pair, 983",
+    101263: "No pair, 984",
+    101264: "No pair, 985",
+    101265: "No pair, 986",
+    101365: "No pair, T32",
+    101378: "No pair, T42",
+    101379: "No pair, T43",
+    101391: "No pair, T52",
+    101392: "No pair, T53",
+    101393: "No pair, T54",
+    101404: "No pair, T62",
+    101405: "No pair, T63",
+    101406: "No pair, T64",
+    101407: "No pair, T65",
+    101417: "No pair, T72",
+    101418: "No pair, T73",
+    101419: "No pair, T74",
+    101420: "No pair, T75",
+    101421: "No pair, T76",
+    101430: "No pair, T82",
+    101431: "No pair, T83",
+    101432: "No pair, T84",
+    101433: "No pair, T85",
+    101434: "No pair, T86",
+    101435: "No pair, T87",
+    101443: "No pair, T92",
+    101444: "No pair, T93",
+    101445: "No pair, T94",
+    101446: "No pair, T95",
+    101447: "No pair, T96",
+    101448: "No pair, T97",
+    101534: "No pair, J32",
+    101547: "No pair, J42",
+    101548: "No pair, J43",
+    101560: "No pair, J52",
+    101561: "No pair, J53",
+    101562: "No pair, J54",
+    101573: "No pair, J62",
+    101574: "No pair, J63",
+    101575: "No pair, J64",
+    101576: "No pair, J65",
+    101586: "No pair, J72",
+    101587: "No pair, J73",
+    101588: "No pair, J74",
+    101589: "No pair, J75",
+    101590: "No pair, J76",
+    101599: "No pair, J82",
+    101600: "No pair, J83",
+    101601: "No pair, J84",
+    101602: "No pair, J85",
+    101603: "No pair, J86",
+    101604: "No pair, J87",
+    101612: "No pair, J92",
+    101613: "No pair, J93",
+    101614: "No pair, J94",
+    101615: "No pair, J95",
+    101616: "No pair, J96",
+    101617: "No pair, J97",
+    101618: "No pair, J98",
+    101625: "No pair, JT2",
+    101626: "No pair, JT3",
+    101627: "No pair, JT4",
+    101628: "No pair, JT5",
+    101629: "No pair, JT6",
+    101630: "No pair, JT7",
+    101631: "No pair, JT8",
+    101703: "No pair, Q32",
+    101716: "No pair, Q42",
+    101717: "No pair, Q43",
+    101729: "No pair, Q52",
+    101730: "No pair, Q53",
+    101731: "No pair, Q54",
+    101742: "No pair, Q62",
+    101743: "No pair, Q63",
+    101744: "No pair, Q64",
+    101745: "No pair, Q65",
+    101755: "No pair, Q72",
+    101756: "No pair, Q73",
+    101757: "No pair, Q74",
+    101758: "No pair, Q75",
+    101759: "No pair, Q76",
+    101768: "No pair, Q82",
+    101769: "No pair, Q83",
+    101770: "No pair, Q84",
+    101771: "No pair, Q85",
+    101772: "No pair, Q86",
+    101773: "No pair, Q87",
+    101781: "No pair, Q92",
+    101782: "No pair, Q93",
+    101783: "No pair, Q94",
+    101784: "No pair, Q95",
+    101785: "No pair, Q96",
+    101786: "No pair, Q97",
+    101787: "No pair, Q98",
+    101794: "No pair, QT2",
+    101795: "No pair, QT3",
+    101796: "No pair, QT4",
+    101797: "No pair, QT5",
+    101798: "No pair, QT6",
+    101799: "No pair, QT7",
+    101800: "No pair, QT8",
+    101801: "No pair, QT9",
+    101807: "No pair, QJ2",
+    101808: "No pair, QJ3",
+    101809: "No pair, QJ4",
+    101810: "No pair, QJ5",
+    101811: "No pair, QJ6",
+    101812: "No pair, QJ7",
+    101813: "No pair, QJ8",
+    101814: "No pair, QJ9",
+    101872: "No pair, K32",
+    101885: "No pair, K42",
+    101886: "No pair, K43",
+    101898: "No pair, K52",
+    101899: "No pair, K53",
+    101900: "No pair, K54",
+    101911: "No pair, K62",
+    101912: "No pair, K63",
+    101913: "No pair, K64",
+    101914: "No pair, K65",
+    101924: "No pair, K72",
+    101925: "No pair, K73",
+    101926: "No pair, K74",
+    101927: "No pair, K75",
+    101928: "No pair, K76",
+    101937: "No pair, K82",
+    101938: "No pair, K83",
+    101939: "No pair, K84",
+    101940: "No pair, K85",
+    101941: "No pair, K86",
+    101942: "No pair, K87",
+    101950: "No pair, K92",
+    101951: "No pair, K93",
+    101952: "No pair, K94",
+    101953: "No pair, K95",
+    101954: "No pair, K96",
+    101955: "No pair, K97",
+    101956: "No pair, K98",
+    101963: "No pair, KT2",
+    101964: "No pair, KT3",
+    101965: "No pair, KT4",
+    101966: "No pair, KT5",
+    101967: "No pair, KT6",
+    101968: "No pair, KT7",
+    101969: "No pair, KT8",
+    101970: "No pair, KT9",
+    101976: "No pair, KJ2",
+    101977: "No pair, KJ3",
+    101978: "No pair, KJ4",
+    101979: "No pair, KJ5",
+    101980: "No pair, KJ6",
+    101981: "No pair, KJ7",
+    101982: "No pair, KJ8",
+    101983: "No pair, KJ9",
+    101984: "No pair, KJT",
+    101989: "No pair, KQ2",
+    101990: "No pair, KQ3",
+    101991: "No pair, KQ4",
+    101992: "No pair, KQ5",
+    101993: "No pair, KQ6",
+    101994: "No pair, KQ7",
+    101995: "No pair, KQ8",
+    101996: "No pair, KQ9",
+    101997: "No pair, KQT",
+    102054: "No pair, A42",
+    102055: "No pair, A43",
+    102067: "No pair, A52",
+    102068: "No pair, A53",
+    102069: "No pair, A54",
+    102080: "No pair, A62",
+    102081: "No pair, A63",
+    102082: "No pair, A64",
+    102083: "No pair, A65",
+    102093: "No pair, A72",
+    102094: "No pair, A73",
+    102095: "No pair, A74",
+    102096: "No pair, A75",
+    102097: "No pair, A76",
+    102106: "No pair, A82",
+    102107: "No pair, A83",
+    102108: "No pair, A84",
+    102109: "No pair, A85",
+    102110: "No pair, A86",
+    102111: "No pair, A87",
+    102119: "No pair, A92",
+    102120: "No pair, A93",
+    102121: "No pair, A94",
+    102122: "No pair, A95",
+    102123: "No pair, A96",
+    102124: "No pair, A97",
+    102125: "No pair, A98",
+    102132: "No pair, AT2",
+    102133: "No pair, AT3",
+    102134: "No pair, AT4",
+    102135: "No pair, AT5",
+    102136: "No pair, AT6",
+    102137: "No pair, AT7",
+    102138: "No pair, AT8",
+    102139: "No pair, AT9",
+    102145: "No pair, AJ2",
+    102146: "No pair, AJ3",
+    102147: "No pair, AJ4",
+    102148: "No pair, AJ5",
+    102149: "No pair, AJ6",
+    102150: "No pair, AJ7",
+    102151: "No pair, AJ8",
+    102152: "No pair, AJ9",
+    102153: "No pair, AJT",
+    102158: "No pair, AQ2",
+    102159: "No pair, AQ3",
+    102160: "No pair, AQ4",
+    102161: "No pair, AQ5",
+    102162: "No pair, AQ6",
+    102163: "No pair, AQ7",
+    102164: "No pair, AQ8",
+    102165: "No pair, AQ9",
+    102166: "No pair, AQT",
+    102167: "No pair, AQJ",
+    102171: "No pair, AK2",
+    102172: "No pair, AK3",
+    102173: "No pair, AK4",
+    102174: "No pair, AK5",
+    102175: "No pair, AK6",
+    102176: "No pair, AK7",
+    102177: "No pair, AK8",
+    102178: "No pair, AK9",
+    102179: "No pair, AKT",
+    102180: "No pair, AKJ",
+    200001: "Pair of 2s, 3 kicker",
+    200002: "Pair of 2s, 4 kicker",
+    200003: "Pair of 2s, 5 kicker",
+    200004: "Pair of 2s, 6 kicker",
+    200005: "Pair of 2s, 7 kicker",
+    200006: "Pair of 2s, 8 kicker",
+    200007: "Pair of 2s, 9 kicker",
+    200008: "Pair of 2s, T kicker",
+    200009: "Pair of 2s, J kicker",
+    200010: "Pair of 2s, Q kicker",
+    200011: "Pair of 2s, K kicker",
+    200012: "Pair of 2s, A kicker",
+    200182: "Pair of 3s, 2 kicker",
+    200184: "Pair of 3s, 4 kicker",
+    200185: "Pair of 3s, 5 kicker",
+    200186: "Pair of 3s, 6 kicker",
+    200187: "Pair of 3s, 7 kicker",
+    200188: "Pair of 3s, 8 kicker",
+    200189: "Pair of 3s, 9 kicker",
+    200190: "Pair of 3s, T kicker",
+    200191: "Pair of 3s, J kicker",
+    200192: "Pair of 3s, Q kicker",
+    200193: "Pair of 3s, K kicker",
+    200194: "Pair of 3s, A kicker",
+    200364: "Pair of 4s, 2 kicker",
+    200365: "Pair of 4s, 3 kicker",
+    200367: "Pair of 4s, 5 kicker",
+    200368: "Pair of 4s, 6 kicker",
+    200369: "Pair of 4s, 7 kicker",
+    200370: "Pair of 4s, 8 kicker",
+    200371: "Pair of 4s, 9 kicker",
+    200372: "Pair of 4s, T kicker",
+    200373: "Pair of 4s, J kicker",
+    200374: "Pair of 4s, Q kicker",
+    200375: "Pair of 4s, K kicker",
+    200376: "Pair of 4s, A kicker",
+    200546: "Pair of 5s, 2 kicker",
+    200547: "Pair of 5s, 3 kicker",
+    200548: "Pair of 5s, 4 kicker",
+    200550: "Pair of 5s, 6 kicker",
+    200551: "Pair of 5s, 7 kicker",
+    200552: "Pair of 5s, 8 kicker",
+    200553: "Pair of 5s, 9 kicker",
+    200554: "Pair of 5s, T kicker",
+    200555: "Pair of 5s, J kicker",
+    200556: "Pair of 5s, Q kicker",
+    200557: "Pair of 5s, K kicker",
+    200558: "Pair of 5s, A kicker",
+    200728: "Pair of 6s, 2 kicker",
+    200729: "Pair of 6s, 3 kicker",
+    200730: "Pair of 6s, 4 kicker",
+    200731: "Pair of 6s, 5 kicker",
+    200733: "Pair of 6s, 7 kicker",
+    200734: "Pair of 6s, 8 kicker",
+    200735: "Pair of 6s, 9 kicker",
+    200736: "Pair of 6s, T kicker",
+    200737: "Pair of 6s, J kicker",
+    200738: "Pair of 6s, Q kicker",
+    200739: "Pair of 6s, K kicker",
+    200740: "Pair of 6s, A kicker",
+    200910: "Pair of 7s, 2 kicker",
+    200911: "Pair of 7s, 3 kicker",
+    200912: "Pair of 7s, 4 kicker",
+    200913: "Pair of 7s, 5 kicker",
+    200914: "Pair of 7s, 6 kicker",
+    200916: "Pair of 7s, 8 kicker",
+    200917: "Pair of 7s, 9 kicker",
+    200918: "Pair of 7s, T kicker",
+    200919: "Pair of 7s, J kicker",
+    200920: "Pair of 7s, Q kicker",
+    200921: "Pair of 7s, K kicker",
+    200922: "Pair of 7s, A kicker",
+    201092: "Pair of 8s, 2 kicker",
+    201093: "Pair of 8s, 3 kicker",
+    201094: "Pair of 8s, 4 kicker",
+    201095: "Pair of 8s, 5 kicker",
+    201096: "Pair of 8s, 6 kicker",
+    201097: "Pair of 8s, 7 kicker",
+    201099: "Pair of 8s, 9 kicker",
+    201100: "Pair of 8s, T kicker",
+    201101: "Pair of 8s, J kicker",
+    201102: "Pair of 8s, Q kicker",
+    201103: "Pair of 8s, K kicker",
+    201104: "Pair of 8s, A kicker",
+    201274: "Pair of 9s, 2 kicker",
+    201275: "Pair of 9s, 3 kicker",
+    201276: "Pair of 9s, 4 kicker",
+    201277: "Pair of 9s, 5 kicker",
+    201278: "Pair of 9s, 6 kicker",
+    201279: "Pair of 9s, 7 kicker",
+    201280: "Pair of 9s, 8 kicker",
+    201282: "Pair of 9s, T kicker",
+    201283: "Pair of 9s, J kicker",
+    201284: "Pair of 9s, Q kicker",
+    201285: "Pair of 9s, K kicker",
+    201286: "Pair of 9s, A kicker",
+    201456: "Pair of Ts, 2 kicker",
+    201457: "Pair of Ts, 3 kicker",
+    201458: "Pair of Ts, 4 kicker",
+    201459: "Pair of Ts, 5 kicker",
+    201460: "Pair of Ts, 6 kicker",
+    201461: "Pair of Ts, 7 kicker",
+    201462: "Pair of Ts, 8 kicker",
+    201463: "Pair of Ts, 9 kicker",
+    201465: "Pair of Ts, J kicker",
+    201466: "Pair of Ts, Q kicker",
+    201467: "Pair of Ts, K kicker",
+    201468: "Pair of Ts, A kicker",
+    201638: "Pair of Js, 2 kicker",
+    201639: "Pair of Js, 3 kicker",
+    201640: "Pair of Js, 4 kicker",
+    201641: "Pair of Js, 5 kicker",
+    201642: "Pair of Js, 6 kicker",
+    201643: "Pair of Js, 7 kicker",
+    201644: "Pair of Js, 8 kicker",
+    201645: "Pair of Js, 9 kicker",
+    201646: "Pair of Js, T kicker",
+    201648: "Pair of Js, Q kicker",
+    201649: "Pair of Js, K kicker",
+    201650: "Pair of Js, A kicker",
+    201820: "Pair of Qs, 2 kicker",
+    201821: "Pair of Qs, 3 kicker",
+    201822: "Pair of Qs, 4 kicker",
+    201823: "Pair of Qs, 5 kicker",
+    201824: "Pair of Qs, 6 kicker",
+    201825: "Pair of Qs, 7 kicker",
+    201826: "Pair of Qs, 8 kicker",
+    201827: "Pair of Qs, 9 kicker",
+    201828: "Pair of Qs, T kicker",
+    201829: "Pair of Qs, J kicker",
+    201831: "Pair of Qs, K kicker",
+    201832: "Pair of Qs, A kicker",
+    202002: "Pair of Ks, 2 kicker",
+    202003: "Pair of Ks, 3 kicker",
+    202004: "Pair of Ks, 4 kicker",
+    202005: "Pair of Ks, 5 kicker",
+    202006: "Pair of Ks, 6 kicker",
+    202007: "Pair of Ks, 7 kicker",
+    202008: "Pair of Ks, 8 kicker",
+    202009: "Pair of Ks, 9 kicker",
+    202010: "Pair of Ks, T kicker",
+    202011: "Pair of Ks, J kicker",
+    202012: "Pair of Ks, Q kicker",
+    202014: "Pair of Ks, A kicker",
+    202184: "Pair of As, 2 kicker",
+    202185: "Pair of As, 3 kicker",
+    202186: "Pair of As, 4 kicker",
+    202187: "Pair of As, 5 kicker",
+    202188: "Pair of As, 6 kicker",
+    202189: "Pair of As, 7 kicker",
+    202190: "Pair of As, 8 kicker",
+    202191: "Pair of As, 9 kicker",
+    202192: "Pair of As, T kicker",
+    202193: "Pair of As, J kicker",
+    202194: "Pair of As, Q kicker",
+    202195: "Pair of As, K kicker",
+    300520: "Flush, 532",
+    300533: "Flush, 542",
+    300689: "Flush, 632",
+    300702: "Flush, 642",
+    300703: "Flush, 643",
+    300715: "Flush, 652",
+    300716: "Flush, 653",
+    300858: "Flush, 732",
+    300871: "Flush, 742",
+    300872: "Flush, 743",
+    300884: "Flush, 752",
+    300885: "Flush, 753",
+    300886: "Flush, 754",
+    300897: "Flush, 762",
+    300898: "Flush, 763",
+    300899: "Flush, 764",
+    301027: "Flush, 832",
+    301040: "Flush, 842",
+    301041: "Flush, 843",
+    301053: "Flush, 852",
+    301054: "Flush, 853",
+    301055: "Flush, 854",
+    301066: "Flush, 862",
+    301067: "Flush, 863",
+    301068: "Flush, 864",
+    301069: "Flush, 865",
+    301079: "Flush, 872",
+    301080: "Flush, 873",
+    301081: "Flush, 874",
+    301082: "Flush, 875",
+    301196: "Flush, 932",
+    301209: "Flush, 942",
+    301210: "Flush, 943",
+    301222: "Flush, 952",
+    301223: "Flush, 953",
+    301224: "Flush, 954",
+    301235: "Flush, 962",
+    301236: "Flush, 963",
+    301237: "Flush, 964",
+    301238: "Flush, 965",
+    301248: "Flush, 972",
+    301249: "Flush, 973",
+    301250: "Flush, 974",
+    301251: "Flush, 975",
+    301252: "Flush, 976",
+    301261: "Flush, 982",
+    301262: "Flush, 983",
+    301263: "Flush, 984",
+    301264: "Flush, 985",
+    301265: "Flush, 986",
+    301365: "Flush, T32",
+    301378: "Flush, T42",
+    301379: "Flush, T43",
+    301391: "Flush, T52",
+    301392: "Flush, T53",
+    301393: "Flush, T54",
+    301404: "Flush, T62",
+    301405: "Flush, T63",
+    301406: "Flush, T64",
+    301407: "Flush, T65",
+    301417: "Flush, T72",
+    301418: "Flush, T73",
+    301419: "Flush, T74",
+    301420: "Flush, T75",
+    301421: "Flush, T76",
+    301430: "Flush, T82",
+    301431: "Flush, T83",
+    301432: "Flush, T84",
+    301433: "Flush, T85",
+    301434: "Flush, T86",
+    301435: "Flush, T87",
+    301443: "Flush, T92",
+    301444: "Flush, T93",
+    301445: "Flush, T94",
+    301446: "Flush, T95",
+    301447: "Flush, T96",
+    301448: "Flush, T97",
+    301534: "Flush, J32",
+    301547: "Flush, J42",
+    301548: "Flush, J43",
+    301560: "Flush, J52",
+    301561: "Flush, J53",
+    301562: "Flush, J54",
+    301573: "Flush, J62",
+    301574: "Flush, J63",
+    301575: "Flush, J64",
+    301576: "Flush, J65",
+    301586: "Flush, J72",
+    301587: "Flush, J73",
+    301588: "Flush, J74",
+    301589: "Flush, J75",
+    301590: "Flush, J76",
+    301599: "Flush, J82",
+    301600: "Flush, J83",
+    301601: "Flush, J84",
+    301602: "Flush, J85",
+    301603: "Flush, J86",
+    301604: "Flush, J87",
+    301612: "Flush, J92",
+    301613: "Flush, J93",
+    301614: "Flush, J94",
+    301615: "Flush, J95",
+    301616: "Flush, J96",
+    301617: "Flush, J97",
+    301618: "Flush, J98",
+    301625: "Flush, JT2",
+    301626: "Flush, JT3",
+    301627: "Flush, JT4",
+    301628: "Flush, JT5",
+    301629: "Flush, JT6",
+    301630: "Flush, JT7",
+    301631: "Flush, JT8",
+    301703: "Flush, Q32",
+    301716: "Flush, Q42",
+    301717: "Flush, Q43",
+    301729: "Flush, Q52",
+    301730: "Flush, Q53",
+    301731: "Flush, Q54",
+    301742: "Flush, Q62",
+    301743: "Flush, Q63",
+    301744: "Flush, Q64",
+    301745: "Flush, Q65",
+    301755: "Flush, Q72",
+    301756: "Flush, Q73",
+    301757: "Flush, Q74",
+    301758: "Flush, Q75",
+    301759: "Flush, Q76",
+    301768: "Flush, Q82",
+    301769: "Flush, Q83",
+    301770: "Flush, Q84",
+    301771: "Flush, Q85",
+    301772: "Flush, Q86",
+    301773: "Flush, Q87",
+    301781: "Flush, Q92",
+    301782: "Flush, Q93",
+    301783: "Flush, Q94",
+    301784: "Flush, Q95",
+    301785: "Flush, Q96",
+    301786: "Flush, Q97",
+    301787: "Flush, Q98",
+    301794: "Flush, QT2",
+    301795: "Flush, QT3",
+    301796: "Flush, QT4",
+    301797: "Flush, QT5",
+    301798: "Flush, QT6",
+    301799: "Flush, QT7",
+    301800: "Flush, QT8",
+    301801: "Flush, QT9",
+    301807: "Flush, QJ2",
+    301808: "Flush, QJ3",
+    301809: "Flush, QJ4",
+    301810: "Flush, QJ5",
+    301811: "Flush, QJ6",
+    301812: "Flush, QJ7",
+    301813: "Flush, QJ8",
+    301814: "Flush, QJ9",
+    301872: "Flush, K32",
+    301885: "Flush, K42",
+    301886: "Flush, K43",
+    301898: "Flush, K52",
+    301899: "Flush, K53",
+    301900: "Flush, K54",
+    301911: "Flush, K62",
+    301912: "Flush, K63",
+    301913: "Flush, K64",
+    301914: "Flush, K65",
+    301924: "Flush, K72",
+    301925: "Flush, K73",
+    301926: "Flush, K74",
+    301927: "Flush, K75",
+    301928: "Flush, K76",
+    301937: "Flush, K82",
+    301938: "Flush, K83",
+    301939: "Flush, K84",
+    301940: "Flush, K85",
+    301941: "Flush, K86",
+    301942: "Flush, K87",
+    301950: "Flush, K92",
+    301951: "Flush, K93",
+    301952: "Flush, K94",
+    301953: "Flush, K95",
+    301954: "Flush, K96",
+    301955: "Flush, K97",
+    301956: "Flush, K98",
+    301963: "Flush, KT2",
+    301964: "Flush, KT3",
+    301965: "Flush, KT4",
+    301966: "Flush, KT5",
+    301967: "Flush, KT6",
+    301968: "Flush, KT7",
+    301969: "Flush, KT8",
+    301970: "Flush, KT9",
+    301976: "Flush, KJ2",
+    301977: "Flush, KJ3",
+    301978: "Flush, KJ4",
+    301979: "Flush, KJ5",
+    301980: "Flush, KJ6",
+    301981: "Flush, KJ7",
+    301982: "Flush, KJ8",
+    301983: "Flush, KJ9",
+    301984: "Flush, KJT",
+    301989: "Flush, KQ2",
+    301990: "Flush, KQ3",
+    301991: "Flush, KQ4",
+    301992: "Flush, KQ5",
+    301993: "Flush, KQ6",
+    301994: "Flush, KQ7",
+    301995: "Flush, KQ8",
+    301996: "Flush, KQ9",
+    301997: "Flush, KQT",
+    302054: "Flush, A42",
+    302055: "Flush, A43",
+    302067: "Flush, A52",
+    302068: "Flush, A53",
+    302069: "Flush, A54",
+    302080: "Flush, A62",
+    302081: "Flush, A63",
+    302082: "Flush, A64",
+    302083: "Flush, A65",
+    302093: "Flush, A72",
+    302094: "Flush, A73",
+    302095: "Flush, A74",
+    302096: "Flush, A75",
+    302097: "Flush, A76",
+    302106: "Flush, A82",
+    302107: "Flush, A83",
+    302108: "Flush, A84",
+    302109: "Flush, A85",
+    302110: "Flush, A86",
+    302111: "Flush, A87",
+    302119: "Flush, A92",
+    302120: "Flush, A93",
+    302121: "Flush, A94",
+    302122: "Flush, A95",
+    302123: "Flush, A96",
+    302124: "Flush, A97",
+    302125: "Flush, A98",
+    302132: "Flush, AT2",
+    302133: "Flush, AT3",
+    302134: "Flush, AT4",
+    302135: "Flush, AT5",
+    302136: "Flush, AT6",
+    302137: "Flush, AT7",
+    302138: "Flush, AT8",
+    302139: "Flush, AT9",
+    302145: "Flush, AJ2",
+    302146: "Flush, AJ3",
+    302147: "Flush, AJ4",
+    302148: "Flush, AJ5",
+    302149: "Flush, AJ6",
+    302150: "Flush, AJ7",
+    302151: "Flush, AJ8",
+    302152: "Flush, AJ9",
+    302153: "Flush, AJT",
+    302158: "Flush, AQ2",
+    302159: "Flush, AQ3",
+    302160: "Flush, AQ4",
+    302161: "Flush, AQ5",
+    302162: "Flush, AQ6",
+    302163: "Flush, AQ7",
+    302164: "Flush, AQ8",
+    302165: "Flush, AQ9",
+    302166: "Flush, AQT",
+    302167: "Flush, AQJ",
+    302171: "Flush, AK2",
+    302172: "Flush, AK3",
+    302173: "Flush, AK4",
+    302174: "Flush, AK5",
+    302175: "Flush, AK6",
+    302176: "Flush, AK7",
+    302177: "Flush, AK8",
+    302178: "Flush, AK9",
+    302179: "Flush, AKT",
+    302180: "Flush, AKJ",
+    400000: "Straight, 32A",
+    400351: "Straight, 432",
+    400534: "Straight, 543",
+    400717: "Straight, 654",
+    400900: "Straight, 765",
+    401083: "Straight, 876",
+    401266: "Straight, 987",
+    401449: "Straight, T98",
+    401632: "Straight, JT9",
+    401815: "Straight, QJT",
+    401998: "Straight, KQJ",
+    402181: "Straight, AKQ",
+    500000: "Trip 2s",
+    500183: "Trip 3s",
+    500366: "Trip 4s",
+    500549: "Trip 5s",
+    500732: "Trip 6s",
+    500915: "Trip 7s",
+    501098: "Trip 8s",
+    501281: "Trip 9s",
+    501464: "Trip Ts",
+    501647: "Trip Js",
+    501830: "Trip Qs",
+    502013: "Trip Ks",
+    502196: "Trip As",
+    600000: "Straight flush, 32A",
+    600351: "Straight flush, 432",
+    600534: "Straight flush, 543",
+    600717: "Straight flush, 654",
+    600900: "Straight flush, 765",
+    601083: "Straight flush, 876",
+    601266: "Straight flush, 987",
+    601449: "Straight flush, T98",
+    601632: "Straight flush, JT9",
+    601815: "Straight flush, QJT",
+    601998: "Straight flush, KQJ",
+    702181: "Mini-Royal"
+};
 class ThreeCardPokerRank {
 }
 ThreeCardPokerRank.Incomplete = 0;
