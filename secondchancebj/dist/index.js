@@ -125,8 +125,8 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         // If desired, initialize test hands by uncommenting.
-        this._testDealerHand = General.cardStringToVector("KC 4S 9C");
-        this._testPlayerHand = General.cardStringToVector("4C 7H KH 3D");
+        // this._testDealerHand = General.cardStringToVector("KC 4S 9C");
+        // this._testPlayerHand = General.cardStringToVector("4C 7H KH 3D");
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         let playerSpot = this.add.image(185, 570, "playerSpot");
