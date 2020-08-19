@@ -1,1 +1,1921 @@
-const _0x2e4d = ['Image', 'Rebet\x20bets', 'isFaceUp', 'removeAll', '23456789TJQKA', 'Add\x20cursor\x20value', 'splitPair', 'TargetFontInstructionSize', 'chipClick', 'Card\x20To\x20Dealer', '-=70', 'Point', 'assets/images/2nd\x20Chance\x20Banner.png', 'Play\x20dealer\x20hand', 'beginDeal', 'setOrigin', 'One\x20pair', 'GameObjects', 'payoffOffset', 'ResolveInsurance', 'assets/images/Red\x20123x35.png', 'SplitPair', 'CheckForInsurance', 'doAnimation', 'dropPixel', 'Straight\x20flush', 'StartDeal', 'random', 'CardsRemaining', 'drawReturningProbabilityOfRank', 'setColor', 'sound', 'BlueSmall', 'DealerHandAnchor', 'Instructions', './assets/sounds.ChipClick.ogg', 'Hint,\x20please', 'handTotalToHandString', 'Flip\x20hole\x20card', 'maximumBet', 'shuffle', 'CDHS', '_playerTotals', 'DealerDrawCard', 'pointerout', 'MinimumBet', 'ChangeCursorValue', 'buttonDown', 'clickNo', 'input', 'length', '_lastWagerAmounts', '_cardNumber', 'scene', 'destroy', 'EventEmitter', '_maximumBet', 'tween', 'SecondChanceLocations', 'params', 'helpFormat', 'Resolve\x20player\x20hand\x20#2', 'updateControls', 'abs', 'pointerup', '_newButton', '_shoe', 'Insurance', 'grayTextSmall', '_isPlayerSpot', 'buttonWidth', 'updateLocation', 'MaximumBet', 'CLEAR', 'Yes', 'logo', 'Soft\x20', 'emit', '_minimumBet', '_doubleButton', 'children', 'flipHoleCard', 'AnnotateDealer', '_cursorValue', 'doubleDown', 'DEAL', 'BANKROLL', 'Two\x20pair', 'Math', 'clearBettingSpots', '_payoutList', 'assets/images/Blue\x20123x35.png', 'REBET', 'HINT', 'chipWidth', 'MainOffset', 'setText', 'resolvePayout', 'CardToDealer', 'giveHint', 'spritesheet', 'grayTextLarge', '_testDealerHand', '_chipButtons', 'Scene', '_label', 'buttonUp', 'RedSmall', 'resolvePlayerHand', 'fillSpot', 'Resolve\x20player\x20hand\x20#1', '_isLocked', '22\x20-\x20push', 'setBackgroundColor', 'assets/images/Drop\x20Shape\x20Pixel.jpg', 'alpha', 'isOptional', '_hintButton', 'Primes', '\x20not\x20resolved\x20in\x20clickYes();', 'ClearBettingSpots', 'Resolve\x20player\x20natural', 'dealerBar', 'lineStyle', '_dealButton', 'round', 'Geom', 'Hand\x20#', 'amount', 'PlayerScoreCommentary', '_isMouseOver', 'Card\x20To\x20Player', 'clearTint', '_rebetButton', 'STEP\x20NOT\x20RESOLVED:\x20', '_gameFelt', 'Full\x20house', '22px', 'Container', 'gameWidth', 'Sprite', 'Resolve\x20player\x20hand\x20#3', 'DoubleBack', 'Score', '_isFaceUp', 'IsPlayerSpot', 'clickEvent', '_caption', 'Split', '_clearButton', 'game-div', 'sprite', 'selectCursorValue', '_insuranceBettingSpot', 'PlayerSpotLocations', 'assets/images/Blue\x20Text\x20130x50.png', 'StraightCodes', 'assets/images/Gray\x20Text\x20345x50.png', 'Five\x20of\x20a\x20kind', 'CHANGE\x20STATE:\x20Main\x20input', 'PlayDealerHand', 'CHANGE\x20STATE:\x20Game\x20Over', 'cardNumberToString', 'create', 'left', 'blueText', '_commentaryList', 'CheckForDoubleBack', 'gameFelt', 'clicked', 'InsuranceLocation', 'buttonGreenSmall', '_clearDealPanel', 'Royal\x20flush', '_scoreField', 'Out', '_value', 'Hit', 'Double', 'push', 'CardToPlayer', 'Resolve\x20Bust', 'HitZone', 'STAND', 'STATE\x20ID#\x20NOT\x20HANDLED:\x20', 'cardHeight', '_bettingSpots', 'setInteractive', '_numCards', '_noButton', 'Easing', '_testPlayerHand', '_dealerAnchor', 'setFrame', 'setStyle', 'No\x20pair', '\x20not\x20resolved\x20in\x20clickNo();', '_currentHand', 'PostDoubleControl', 'addBlackjackValueToHandValue', '_handCount', '_helpField', 'getProbabilityOfDrawingRank', 'YES', 'InsurancePayoffOffset', '_background', 'BeginDeal', 'pop', 'Check\x20hole\x20card', 'IsFaceUp', '_playerAnchors', '_score', 'visible', '\x20of\x20', 'text', 'drawReturningCountOfRank', 'fontColor', 'setWordWrapWidth', 'newBets', 'buttonBlueSmall', '_yesButton', 'buttonOver', 'Change\x20cursor\x20value', 'deliverCard', 'drawCard', 'Amount', '_playerHands', 'selectChip', 'commentaryFormat', 'addCardNumberToHandValue', 'adjustQuantityOfRank', 'scoreFormat', 'Dealer\x20draw\x20card', 'substr', '#FFFFFF', '_newRebetButtonPanel', '_dealerTotal', 'height', 'assets/images/TGS\x20Chips.png', 'Stand', 'Value', 'Arial', 'CardRanks', 'assets/images/Green\x20123x35.png', '_isOptional', 'cardNumber', 'Straight', 'setDisplaySize', 'Clear\x20betting\x20spots', 'debug', 'setTint', 'addCardRankToHandValue', 'angle', 'ResolvePlayer0', 'ChipStackOffset', 'emitter', '20px', 'IsLocked', 'playClick', 'Resolve\x20insurance', '_stepList', 'CardSuits', 'Four\x20of\x20a\x20kind', 'image', 'hitOnHand', 'load', '#000000', 'pointerover', '_splitButton', 'ForceNextHand', '_secondChanceSpots', 'gameReference', 'clearGameObjectArray', 'setFontStyle', 'gameOptions', 'assets/images/2nd\x20Chance\x20Dealer\x20Bar.png', '_mainPanel', 'checkAndReturnHoleCard', 'GameScene', 'predealInitialization', '_standButton', 'center', 'card', '_numDecks', 'fontSize', '_config', 'graphics', 'clickYes', 'Current\x20state\x20', 'HIT', 'blackjack', '_rankCount', 'setFontSize', 'banner', 'MainInput', 'floor', '_payoffOffset', 'getCountOfRank', 'Predeal', 'checkAndFlipHoleCard', 'scale', 'Expo', 'split', 'Check\x20For\x20Insurance', '_yesNoPanel', 'bold', './assets/sounds/ChipClick.mp3', 'SPLIT', 'disableInteractive', 'max', 'HintPlease', 'setPadding', 'initGame', 'assets/images/Gray\x20Text\x20430x50.png', 'add', 'Click\x20on\x20chip\x20to\x20select\x20denomination,\x20click\x20on\x20ANTE\x20and/or\x20BONUS\x20betting\x20spots\x20to\x20add\x20chips,\x20click\x20DEAL\x20to\x20begin.', 'lock', 'CardNumber', 'gameobjectup', 'PayoffOffset', 'chipValues', 'rebetBets', 'Would\x20you\x20like\x20to\x20make\x20a\x20Second\x20Chance\x20wager\x20on\x20your\x20busted\x20hand?\x20(YES\x20/\x20NO)', 'play', 'existing', 'resolveDealerNatural', 'CheckHoleCard', '+=70', 'Events', 'minimumBet', 'cardVectorToString', 'tweens', 'ResolvePlayer3', 'Post\x20double\x20control', 'GameOver', 'Hard\x20', 'buttonHeight', 'Trips', 'setFixedSize', 'Game\x20over.\x20\x20Click\x20\x27REBET\x27\x20to\x20play\x20again\x20with\x20same\x20wagers,\x20or\x20click\x20\x27NEW\x27\x20to\x20set\x20new\x20wagers.', 'playerSpot', 'CardBackFrame', 'ResolvePlayer1', 'buttonRedSmall', '_infiniteDeckMode', 'parentContainer', 'GreenSmall', 'gameHeight', 'strokeRoundedRect', 'CurrentState', 'amountToDollarString', 'caption', 'IsOptional', 'assets/images/2nd\x20Chance\x20Logo.png', '_currentState', 'FiveCardPokerHandNames', 'style', '_hitButton', 'fontFamily', 'ChangeStateGameOver', '_playerBettingSpots', 'cardStringToNumber', 'buttonOut', '_baseRankCount', 'ResolvePlayerNatural', 'ResolvePlayer2', '_numRanks', 'toString', 'PlayerHandOffsets', 'shift', 'FlipHoleCard', 'min', 'chip', 'Caption', 'PredealInstructions', 'indexOf', 'ChangeStateMainInput', 'unlock', 'cardWidth', '_dealerHand', 'fontStyle', 'setFontFamily', 'NewGame', 'standOnHand', 'pointerdown', 'ResolveBust', 'audio', 'PlayerHandAnchors', 'onload', '_amount', 'RebetBets', 'assets/images/TGS\x20Cards.png', 'InsuranceInput', '_hitZone']; (function (_0x564a1c, _0x2e4deb) { const _0x3adb4c = function (_0x3062b3) { while (--_0x3062b3) { _0x564a1c['push'](_0x564a1c['shift']()); } }; _0x3adb4c(++_0x2e4deb); }(_0x2e4d, 0x1ce)); const _0x3adb = function (_0x564a1c, _0x2e4deb) { _0x564a1c = _0x564a1c - 0x0; let _0x3adb4c = _0x2e4d[_0x564a1c]; return _0x3adb4c; }; 'use strict'; class Config { static [_0x3adb('0xf4')]() { let _0x532f37 = { 'width': this['gameOptions'][_0x3adb('0x47')], 'height': this[_0x3adb('0xce')][_0x3adb('0x117')], 'backgroundColor': 0x0, 'parent': _0x3adb('0x52'), 'scene': [LoaderScene, GameScene] }; this[_0x3adb('0xcb')] = new Phaser['Game'](_0x532f37); } } Config['emitter'] = new Phaser[(_0x3adb('0x104'))][(_0x3adb('0x17d'))](), Config[_0x3adb('0xce')] = { 'gameWidth': 0x400, 'gameHeight': 0x2f8, 'buttonWidth': 0x7b, 'buttonHeight': 0x23, 'cardWidth': 0x55, 'cardHeight': 0x83, 'chipWidth': 0x37, 'chipHeight': 0x33, 'chipValues': [0x1388, 0x3e8, 0x1f4, 0x64, 0x19, 0x5, 0x1, 0.5], 'scoreFormat': { 'fontFamily': _0x3adb('0xad'), 'fontSize': '18px', 'fontStyle': _0x3adb('0xed'), 'color': _0x3adb('0xa6'), 'align': _0x3adb('0xd5') }, 'helpFormat': { 'fontFamily': 'Arial', 'fontSize': _0x3adb('0x45'), 'color': '#000000', 'align': _0x3adb('0xd5') }, 'feltFormat': { 'fontFamily': _0x3adb('0xad'), 'fontSize': '12px', 'fontColor': _0x3adb('0xa6'), 'align': _0x3adb('0xd5') }, 'commentaryFormat': { 'fontFamily': _0x3adb('0xad'), 'fontSize': _0x3adb('0xbc'), 'fontColor': _0x3adb('0xa6'), 'fontStyle': _0x3adb('0xed'), 'align': _0x3adb('0x60') } }, window[_0x3adb('0x140')] = () => { Config['initGame'](); }; var Point = Phaser[_0x3adb('0x3a')][_0x3adb('0x151')]; class GameScene extends Phaser['Scene']{ constructor() { super(_0x3adb('0xd2')), this[_0x3adb('0x12c')] = [new Point(-0x22, -0x25), new Point(-0x22, -0x25), new Point(-0x22, -0x25), new Point(-0x22, -0x25)], this[_0x3adb('0x13f')] = [new Point(0x46, 0x1c2), new Point(0x12c, 0x1c2), new Point(0x212, 0x1c2), new Point(0x2f8, 0x1c2)], this[_0x3adb('0x3d')] = [new Point(0x32, 0x226), new Point(0x118, 0x226), new Point(0x1fe, 0x226), new Point(0x2e4, 0x226)], this[_0x3adb('0x56')] = [new Point(0xc3, 0x258), new Point(0x1a9, 0x258), new Point(0x28f, 0x258), new Point(0x375, 0x258)], this[_0x3adb('0x180')] = [new Point(0xc3 + 0x3c, 0x258 - 0x23), new Point(0x1a9 + 0x3c, 0x258 - 0x23), new Point(0x28f + 0x3c, 0x258 - 0x23), new Point(0x375 + 0x3c, 0x258 - 0x23)], this[_0x3adb('0x1b')] = new Point(-0x22, -0x25), this[_0x3adb('0x66')] = new Point(0x122, 0x13b), this['InsurancePayoffOffset'] = new Point(-0x22, -0x25), this[_0x3adb('0x167')] = new Point(0x1c2, 0x46), this[_0x3adb('0x14d')] = 0x16, this['_playerBettingSpots'] = new Array(0x0), this[_0x3adb('0xca')] = new Array(0x0), this['_lastWagerAmounts'] = new Array(0x0), this[_0x3adb('0x8e')] = new Array(0x4), this[_0x3adb('0x9e')] = new Array(0x4), this[_0x3adb('0x170')] = new Array(0x0), this[_0x3adb('0x7c')] = new Point(), this[_0x3adb('0x137')] = new Array(0x0), this[_0x3adb('0xa8')] = 0x0, this[_0x3adb('0x81')] = 0x0, this[_0x3adb('0x84')] = 0x0, this[_0x3adb('0x23')] = new Array(0x0), this[_0x3adb('0x8f')] = 0x0, this[_0x3adb('0xc0')] = new Array(0x0), this[_0x3adb('0x62')] = new Array(0x0), this[_0x3adb('0x16')] = new Array(0x0), this[_0x3adb('0x11e')] = -0x1, this[_0x3adb('0x22')] = new Array(0x0), this['_testPlayerHand'] = new Array(0x0); } [_0x3adb('0x5f')]() { this[_0x3adb('0x43')] = this[_0x3adb('0xf6')][_0x3adb('0xc3')](Config['gameOptions'][_0x3adb('0x47')] / 0x2, Config[_0x3adb('0xce')][_0x3adb('0x117')] / 0x2, 'gameFelt'); let _0x587034 = this[_0x3adb('0xf6')][_0x3adb('0xc3')](0xb9, 0x23a, _0x3adb('0x110')); _0x587034[_0x3adb('0x155')](0.5, 0.5); let _0x1d077a = this[_0x3adb('0xf6')]['image'](0x14a, 0x208, _0x3adb('0xe1')); _0x1d077a[_0x3adb('0x155')](0x0, 0x0), _0x1d077a['scale'] = 0.4; let _0x215679 = this[_0x3adb('0xf6')][_0x3adb('0xc3')](0x33e, 0x208, _0x3adb('0x7')); _0x215679[_0x3adb('0x155')](0x0, 0x0); let _0x476251 = this[_0x3adb('0xf6')][_0x3adb('0xc3')](0x1f4, 0xc8, _0x3adb('0x36')); _0x215679['setOrigin'](0x0, 0x0), this[_0x3adb('0x177')]['on'](_0x3adb('0xfa'), function (_0x253fba, _0x1b9785) { _0x1b9785['emit'](_0x3adb('0x65'), _0x1b9785); }, this); let _0xf7ff9d = new Array(0x34); for (let _0x27c92c = 0x0; _0x27c92c < 0x34; _0x27c92c += 0x1)_0xf7ff9d[_0x27c92c] = 0x1; this[_0x3adb('0x188')] = new QuantumShoe(_0xf7ff9d, 0x6); let _0x534580 = this[_0x3adb('0xf6')][_0x3adb('0xda')](), _0x15fdf7 = this[_0x3adb('0xf6')][_0x3adb('0xc3')](0xf, 0x2b7, _0x3adb('0x61')); _0x15fdf7['setOrigin'](0x0, 0x0), _0x15fdf7['setDisplaySize'](0x82, 0x32), _0x534580[_0x3adb('0x37')](0x5, 0xffffff, 0x1), _0x534580[_0x3adb('0x118')](0xf, 0x2b7, 0x82, 0x32, 0x5), this['_scoreField'] = this[_0x3adb('0xf6')][_0x3adb('0x92')](0xf, 0x2b7, ['']), this[_0x3adb('0x6a')][_0x3adb('0x10e')](0x82, 0x32), this[_0x3adb('0x6a')][_0x3adb('0xf3')](0x0, 0x3, 0x0, 0x0), this[_0x3adb('0x6a')][_0x3adb('0x7e')](Config['gameOptions'][_0x3adb('0xa3')]); let _0x460456 = this[_0x3adb('0xf6')]['image'](0x1b8, 0x2b7, _0x3adb('0x21')); _0x460456[_0x3adb('0x155')](0x0, 0x0), _0x460456[_0x3adb('0xb3')](0x239, 0x32), this[_0x3adb('0x85')] = this[_0x3adb('0xf6')]['text'](0x1b8, 0x2b7, ['']), this[_0x3adb('0x85')][_0x3adb('0x10e')](0x239, 0x0), this[_0x3adb('0x85')][_0x3adb('0xf3')](0x0, 0x3, 0x0, 0x0), this[_0x3adb('0x85')][_0x3adb('0x7e')](Config[_0x3adb('0xce')][_0x3adb('0x182')]), this[_0x3adb('0x85')][_0x3adb('0x95')](0x239), _0x534580[_0x3adb('0x37')](0x6, 0xffffff, 0x1), _0x534580[_0x3adb('0x118')](0x1b8, 0x2b7, 0x239, 0x32, 0x5); let _0x51a88c = [0x1, 0x5, 0x19, 0x64]; for (let _0xa76f01 = 0x0; _0xa76f01 < _0x51a88c['length']; _0xa76f01 += 0x1) { let _0x35f8e4 = new Chip({ 'scene': this, 'x': 0xbc + _0xa76f01 * 0x46, 'y': 0x2d0 }); _0x35f8e4[_0x3adb('0xac')] = _0x51a88c[_0xa76f01], _0x35f8e4[_0x3adb('0x155')](0.5, 0.5), _0x35f8e4[_0x3adb('0x77')]({ 'useHandCursor': !![] }), _0x35f8e4['on']('clicked', this[_0x3adb('0x9f')], this), this['add'][_0x3adb('0x100')](_0x35f8e4), this[_0x3adb('0x23')][_0x3adb('0x6f')](_0x35f8e4); } this[_0x3adb('0x54')](0x5); for (let _0xa8f761 = 0x0; _0xa8f761 < 0x4; _0xa8f761 += 0x1) { this[_0x3adb('0x9e')][_0xa8f761] = new Array(0x0), this['_playerAnchors'][_0xa8f761] = new Point(); } this[_0x3adb('0x51')] = new Button({ 'scene': this, 'style': AssetNames['BlueSmall'], 'caption': _0x3adb('0x5'), 'clickEvent': Emissions[_0x3adb('0x34')], 'x': 0x17b, 'y': 0x299, 'visible': ![] }), this['add'][_0x3adb('0x100')](this[_0x3adb('0x51')]), Config[_0x3adb('0xbb')]['on'](Emissions[_0x3adb('0x34')], this[_0x3adb('0x15')], this), this[_0x3adb('0x38')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x166')], 'caption': _0x3adb('0x11'), 'clickEvent': Emissions[_0x3adb('0x8a')], 'x': 0x20a, 'y': 0x299, 'visible': ![] }), this['add'][_0x3adb('0x100')](this[_0x3adb('0x38')]), Config[_0x3adb('0xbb')]['on'](Emissions[_0x3adb('0x8a')], this[_0x3adb('0x154')], this), this[_0x3adb('0x68')] = [this['_clearButton'], this[_0x3adb('0x38')]], this[_0x3adb('0x187')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x166')], 'caption': 'NEW', 'clickEvent': Emissions[_0x3adb('0x13a')], 'x': 0x17b, 'y': 0x299, 'visible': ![] }), this[_0x3adb('0xf6')][_0x3adb('0x100')](this[_0x3adb('0x187')]), Config[_0x3adb('0xbb')]['on'](Emissions['NewGame'], this[_0x3adb('0x96')], this), this['_rebetButton'] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x166')], 'caption': _0x3adb('0x18'), 'clickEvent': Emissions[_0x3adb('0x142')], 'x': 0x20a, 'y': 0x299, 'visible': ![] }), this['add'][_0x3adb('0x100')](this[_0x3adb('0x41')]), Config[_0x3adb('0xbb')]['on'](Emissions['RebetBets'], this[_0x3adb('0xfd')], this), this[_0x3adb('0xa7')] = [this[_0x3adb('0x187')], this[_0x3adb('0x41')]], this[_0x3adb('0x98')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x116')], 'caption': _0x3adb('0x87'), 'clickEvent': Emissions['Yes'], 'x': 0x17b, 'y': 0x299, 'visible': ![] }), this[_0x3adb('0xf6')][_0x3adb('0x100')](this[_0x3adb('0x98')]), Config[_0x3adb('0xbb')]['on'](Emissions[_0x3adb('0x6')], this[_0x3adb('0xdb')], this), this[_0x3adb('0x79')] = new Button({ 'scene': this, 'style': AssetNames['RedSmall'], 'caption': 'NO', 'clickEvent': Emissions['No'], 'x': 0x20a, 'y': 0x299, 'visible': ![] }), this['add'][_0x3adb('0x100')](this[_0x3adb('0x79')]), Config[_0x3adb('0xbb')]['on'](Emissions['No'], this[_0x3adb('0x176')], this), this['_yesNoPanel'] = [this['_yesButton'], this[_0x3adb('0x79')]], this[_0x3adb('0xc8')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x116')], 'caption': _0x3adb('0xef'), 'clickEvent': Emissions[_0x3adb('0x50')], 'x': 0xec, 'y': 0x299, 'visible': ![] }), this[_0x3adb('0xf6')][_0x3adb('0x100')](this[_0x3adb('0xc8')]), Config[_0x3adb('0xbb')]['on'](Emissions[_0x3adb('0x50')], this[_0x3adb('0x14c')], this), this[_0x3adb('0xb')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x116')], 'caption': 'DOUBLE', 'clickEvent': Emissions[_0x3adb('0x6e')], 'x': 0x17b, 'y': 0x299, 'visible': ![] }), this['add'][_0x3adb('0x100')](this['_doubleButton']), Config[_0x3adb('0xbb')]['on'](Emissions['Double'], this[_0x3adb('0x10')], this), this['_hitButton'] = new Button({ 'scene': this, 'style': AssetNames['GreenSmall'], 'caption': _0x3adb('0xdd'), 'clickEvent': Emissions[_0x3adb('0x6d')], 'x': 0x20a, 'y': 0x299, 'visible': ![] }), this[_0x3adb('0xf6')]['existing'](this['_hitButton']), Config[_0x3adb('0xbb')]['on'](Emissions['Hit'], this[_0x3adb('0xc4')], this), this[_0x3adb('0xd4')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x116')], 'caption': _0x3adb('0x73'), 'clickEvent': Emissions['Stand'], 'x': 0x299, 'y': 0x299, 'visible': ![] }), this[_0x3adb('0xf6')][_0x3adb('0x100')](this[_0x3adb('0xd4')]), Config[_0x3adb('0xbb')]['on'](Emissions[_0x3adb('0xab')], this[_0x3adb('0x13b')], this), this[_0x3adb('0xd0')] = [this[_0x3adb('0xc8')], this[_0x3adb('0xb')], this[_0x3adb('0x121')], this[_0x3adb('0xd4')]], this[_0x3adb('0x31')] = new Button({ 'scene': this, 'style': AssetNames[_0x3adb('0x166')], 'caption': _0x3adb('0x19'), 'clickEvent': Emissions[_0x3adb('0xf2')], 'x': 0x375, 'y': 0x2d3, 'visible': ![] }), this[_0x3adb('0xf6')][_0x3adb('0x100')](this[_0x3adb('0x31')]), Config[_0x3adb('0xbb')]['on'](Emissions[_0x3adb('0xf2')], this[_0x3adb('0x1f')], this), this[_0x3adb('0x55')] = new BettingSpot({ 'scene': this, 'x': this[_0x3adb('0x66')]['x'], 'y': this[_0x3adb('0x66')]['y'], 'isOptional': !![], 'isPlayerSpot': ![], 'isLocked': !![], 'minimumBet': 2.5, 'maximumBet': 0x32, 'payoffOffset': this[_0x3adb('0x88')] }), this[_0x3adb('0xf6')][_0x3adb('0x100')](this[_0x3adb('0x55')]), this[_0x3adb('0x124')][0x0] = new BettingSpot({ 'scene': this, 'x': this[_0x3adb('0x56')][0x0]['x'], 'y': this[_0x3adb('0x56')][0x0]['y'], 'isOptional': ![], 'isLocked': ![], 'isPlayerSpot': !![], 'minimumBet': 0x5, 'maximumBet': 0x64, 'payoffOffset': this[_0x3adb('0x12c')][0x0] }), this[_0x3adb('0x124')][0x0][_0x3adb('0x72')]['on']('clicked', this['addSelectedValue'], this), this[_0x3adb('0xf6')]['existing'](this[_0x3adb('0x124')][0x0]); for (let _0x3392a8 = 0x1; _0x3392a8 <= 0x3; _0x3392a8 += 0x1) { let _0x5a619f = new BettingSpot({ 'scene': this, 'x': this[_0x3adb('0x56')][_0x3392a8]['x'], 'y': this[_0x3adb('0x56')][_0x3392a8]['y'], 'isOptional': !![], 'isPlayerSpot': ![], 'isLocked': !![], 'minimumBet': 0x5, 'maximumBet': 0x64, 'payoffOffset': this[_0x3adb('0x12c')][_0x3392a8], 'amount': 0x0 }); this[_0x3adb('0x124')][_0x3392a8] = _0x5a619f, this[_0x3adb('0xf6')]['existing'](this['_playerBettingSpots'][_0x3392a8]); } for (let _0x50b3b4 = 0x0; _0x50b3b4 < 0x4; _0x50b3b4 += 0x1) { let _0x540df3 = new BettingSpot({ 'scene': this, 'x': this[_0x3adb('0x180')][_0x50b3b4]['x'], 'y': this[_0x3adb('0x180')][_0x50b3b4]['y'], 'isOptional': !![], 'isPlayerSpot': ![], 'isLocked': !![], 'minimumBet': 0x5, 'maximumBet': 0x64, 'amount': 0x0 }); this[_0x3adb('0xca')][_0x50b3b4] = _0x540df3, this[_0x3adb('0xf6')][_0x3adb('0x100')](this['_secondChanceSpots'][_0x50b3b4]); } this[_0x3adb('0x76')] = [this[_0x3adb('0x124')][0x0], this['_playerBettingSpots'][0x1], this[_0x3adb('0x124')][0x2], this[_0x3adb('0x124')][0x3], this[_0x3adb('0x55')], this[_0x3adb('0xca')][0x0], this[_0x3adb('0xca')][0x1], this[_0x3adb('0xca')][0x2], this[_0x3adb('0xca')][0x3]], this[_0x3adb('0x179')]['length'] = this[_0x3adb('0x76')][_0x3adb('0x178')], this[_0x3adb('0x4b')] = 0x2710, this[_0x3adb('0x119')] = GameState[_0x3adb('0xe6')]; } [_0x3adb('0x15d')]() { let _0x53bbef = this[_0x3adb('0xc0')][_0x3adb('0x12d')](); switch (_0x53bbef) { case Steps[_0x3adb('0x70')]: { this[_0x3adb('0x9b')](!![], this[_0x3adb('0x81')]); break; } case Steps['CardToDealer']: { this['deliverCard'](![]); break; } case Steps[_0x3adb('0x15c')]: { let _0xec98cf = Math['floor'](this['_dealerHand'][0x1][_0x3adb('0xf9')] / 0x4); _0xec98cf == 0xc ? this['CurrentState'] = GameState[_0x3adb('0x144')] : this[_0x3adb('0x101')](); break; } case Steps[_0x3adb('0x102')]: { let _0x28f828 = Math[_0x3adb('0xe3')](this[_0x3adb('0x137')][0x1]['CardNumber'] / 0x4); if (this['_dealerTotal'] == -0x15) this[_0x3adb('0xe7')](); else _0x28f828 >= 0x8 ? this[_0x3adb('0xd1')]() : this[_0x3adb('0x15d')](); break; } case Steps[_0x3adb('0x12e')]: { this[_0x3adb('0xd')](); break; } case Steps[_0x3adb('0x159')]: { if (this[_0x3adb('0x55')][_0x3adb('0x9d')] > 0x0) { let _0x384a6f = this[_0x3adb('0xa8')] == -0x15 ? 0x2 : -0x1; this[_0x3adb('0x1d')](this[_0x3adb('0x55')], _0x384a6f, !![]); } else this[_0x3adb('0x15d')](); break; } case Steps[_0x3adb('0x134')]: { this[_0x3adb('0x119')] = GameState['MainInput']; break; } case Steps[_0x3adb('0xe')]: { let _0x7f8e91 = Math[_0x3adb('0x185')](this[_0x3adb('0xa8')]), _0x51cdc9 = ''; if (this[_0x3adb('0xa8')] == -0x15 && this[_0x3adb('0x137')]['length'] == 0x2) _0x51cdc9 = _0x3adb('0xde'); else this[_0x3adb('0xa8')] == 0x16 ? _0x51cdc9 = _0x3adb('0x2c') : _0x51cdc9 = _0x7f8e91[_0x3adb('0x12b')](); var _0x9c8aec = this[_0x3adb('0xf6')][_0x3adb('0x92')](0x154, 0x8c, 'Dealer\x20has\x20' + _0x51cdc9); _0x9c8aec['alpha'] = 0x0, _0x9c8aec['setOrigin'](0x0, 0x0), _0x9c8aec[_0x3adb('0x7e')](Config[_0x3adb('0xce')][_0x3adb('0xa0')]), this['_commentaryList'][_0x3adb('0x6f')](_0x9c8aec), this['tweens']['add']({ 'targets': _0x9c8aec, 'alpha': 0x1, 'duration': 0x12c, 'onComplete': this[_0x3adb('0x15d')], 'onCompleteScope': this }); break; } case Steps[_0x3adb('0xb9')]: { this[_0x3adb('0x28')](0x0); break; } case Steps[_0x3adb('0x112')]: { this[_0x3adb('0x28')](0x1); break; } case Steps[_0x3adb('0x129')]: { this[_0x3adb('0x28')](0x2); break; } case Steps[_0x3adb('0x108')]: { this[_0x3adb('0x28')](0x3); break; } case Steps[_0x3adb('0x13d')]: { this[_0x3adb('0x119')] = GameState[_0x3adb('0x63')]; break; } case Steps[_0x3adb('0x123')]: { this['CurrentState'] = GameState[_0x3adb('0x10a')]; break; } case Steps[_0x3adb('0x128')]: { this[_0x3adb('0x170')][0x0] == -0x15 && this['_dealerTotal'] != -0x15 ? this[_0x3adb('0x1d')](this[_0x3adb('0x124')][0x0], 1.5, !![]) : this[_0x3adb('0x15d')](); break; } case Steps[_0x3adb('0x5c')]: { let _0x54bda5 = ![]; for (let _0x22d55d = 0x0; _0x22d55d < this[_0x3adb('0x84')]; _0x22d55d += 0x1) { this[_0x3adb('0x170')][_0x22d55d] <= 0x15 && (_0x54bda5 = !![]); } _0x54bda5 ? this['_dealerTotal'] < 0x11 && this[_0x3adb('0xa8')] >= -0x11 ? this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x171')]) : (this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0xe')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0xb9')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x112')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x129')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x108')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x123')])) : this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x123')]); this['doAnimation'](); break; } case Steps[_0x3adb('0x171')]: { this[_0x3adb('0x9b')](![]); this[_0x3adb('0xa8')] < 0x11 && this[_0x3adb('0xa8')] >= -0x11 ? this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x171')]) : (this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0xe')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0xb9')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x112')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x129')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x108')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x123')])); break; } case Steps['PostDoubleControl']: { if (this[_0x3adb('0x170')][this['_currentHand']] > 0x15) this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x13d')]); else this[_0x3adb('0x81')] + 0x1 >= this[_0x3adb('0x84')] ? (this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x12e')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x5c')])) : (this[_0x3adb('0x81')] += 0x1, this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x134')])); this[_0x3adb('0x15d')](); break; } case Steps[_0x3adb('0x15b')]: { let _0xb39baf = this[_0x3adb('0x9e')][this[_0x3adb('0x81')]][_0x3adb('0x8b')](); this[_0x3adb('0x9e')][this[_0x3adb('0x84')]]['push'](_0xb39baf), this[_0x3adb('0x124')][this[_0x3adb('0x84')]]['Amount'] = this['_playerBettingSpots'][this['_currentHand']][_0x3adb('0x9d')], this[_0x3adb('0x3')](this[_0x3adb('0x8e')][this[_0x3adb('0x81')]], !![], !![]), this[_0x3adb('0x170')][this[_0x3adb('0x81')]] = Blackjack['addCardNumberToHandValue'](_0xb39baf[_0x3adb('0xf9')], 0x0), this[_0x3adb('0x170')][this[_0x3adb('0x84')]] = Blackjack[_0x3adb('0xa1')](_0xb39baf['CardNumber'], 0x0), this[_0x3adb('0x107')][_0x3adb('0xf6')]({ 'targets': _0xb39baf, 'duration': 0x190, 'x': this[_0x3adb('0x8e')][this[_0x3adb('0x84')]]['x'], 'y': this[_0x3adb('0x8e')][this['_handCount']]['y'], 'onComplete': this[_0x3adb('0x15d')], 'onCompleteScope': this }), this[_0x3adb('0x3')](this['_playerAnchors'][this[_0x3adb('0x84')]], !![], ![]), this[_0x3adb('0x84')] += 0x1; break; } default: { console[_0x3adb('0xb5')](_0x3adb('0x42'), _0x53bbef), this[_0x3adb('0xc0')] = []; } } } [_0x3adb('0x9b')](_0x235317, _0x541532 = 0x0) { let _0x359f9d = _0x235317 || this[_0x3adb('0x137')][_0x3adb('0x178')] > 0x0, _0x127a91; if (_0x235317) { let _0x5472f4 = 0x0; for (let _0x58813a = 0x0; _0x58813a < this[_0x3adb('0x84')]; _0x58813a += 0x1)_0x5472f4 += this[_0x3adb('0x9e')][_0x58813a][_0x3adb('0x178')]; _0x5472f4 >= this[_0x3adb('0x7b')][_0x3adb('0x178')] ? _0x127a91 = this[_0x3adb('0x188')]['drawCard']() : _0x127a91 = this[_0x3adb('0x7b')][_0x5472f4]; } else this['_dealerHand'][_0x3adb('0x178')] >= this['_testDealerHand'][_0x3adb('0x178')] ? _0x127a91 = this[_0x3adb('0x188')][_0x3adb('0x9c')]() : _0x127a91 = this['_testDealerHand'][this[_0x3adb('0x137')]['length']]; let _0x52be50 = new PlayingCard({ 'scene': this, 'x': 0x0, 'y': 0x0, 'cardNumber': _0x127a91, 'isFaceUp': _0x359f9d }); return _0x52be50['setOrigin'](0.5, 0.5), this[_0x3adb('0xf6')][_0x3adb('0x100')](_0x52be50), _0x235317 ? (this[_0x3adb('0x9e')][_0x541532][_0x3adb('0x6f')](_0x52be50), this[_0x3adb('0x170')][_0x541532] = Blackjack['addCardNumberToHandValue'](_0x52be50['CardNumber'], this[_0x3adb('0x170')][_0x541532]), this[_0x3adb('0x107')][_0x3adb('0xf6')]({ 'targets': _0x52be50, 'duration': 0x190, 'x': this[_0x3adb('0x8e')][_0x541532]['x'], 'y': this[_0x3adb('0x8e')][_0x541532]['y'], 'ease': Phaser[_0x3adb('0x14')]['Easing']['Expo'][_0x3adb('0x6b')], 'onComplete': this['doAnimation'], 'onCompleteScope': this }), this['updateLocation'](this[_0x3adb('0x8e')][_0x541532], !![])) : (this[_0x3adb('0x137')][_0x3adb('0x6f')](_0x52be50), this[_0x3adb('0xa8')] = Blackjack[_0x3adb('0xa1')](_0x52be50[_0x3adb('0xf9')], this[_0x3adb('0xa8')]), this['tweens'][_0x3adb('0xf6')]({ 'targets': _0x52be50, 'duration': 0x190, 'x': this[_0x3adb('0x7c')]['x'], 'y': this[_0x3adb('0x7c')]['y'], 'ease': Phaser[_0x3adb('0x14')][_0x3adb('0x7a')][_0x3adb('0xe9')]['Out'], 'onComplete': this['doAnimation'], 'completeDelay': 0xc8, 'onCompleteScope': this }), this['updateLocation'](this['_dealerAnchor'], ![])), _0x52be50; } [_0x3adb('0x101')]() { this[_0x3adb('0x168')] = ''; for (let _0x51070a of this[_0x3adb('0xec')]) _0x51070a['visible'] = ![]; let _0x2adbcc = this[_0x3adb('0x170')][0x0] == -0x15, _0x585849 = this[_0x3adb('0xa8')] == -0x15; if (_0x2adbcc) this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps['CheckHoleCard']), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x159')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x128')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x12e')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x123')]), this[_0x3adb('0x15d')](); else _0x585849 ? (this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x102')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x159')]), this['_stepList'][_0x3adb('0x6f')](Steps['AnnotateDealer']), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0xb9')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x123')]), this[_0x3adb('0x15d')]()) : (this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x102')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x159')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x134')]), this[_0x3adb('0x15d')]()); } [_0x3adb('0xd')]() { let _0x450461 = [0xc8, 0xc8, 0xc8], _0x36a81b = [0x0, 0xc8, 0x190]; this['add'][_0x3adb('0x17f')]({ 'targets': this[_0x3adb('0x137')][0x0], 'delay': _0x36a81b[0x0], 'duration': _0x450461[0x0], 'x': _0x3adb('0x150') }), this[_0x3adb('0xf6')]['tween']({ 'targets': this['_dealerHand'][0x0], 'delay': _0x36a81b[0x1], 'duration': _0x450461[0x1], 'scaleX': 0x0, 'scaleY': 1.2, 'onComplete': () => { this[_0x3adb('0x137')][0x0]['IsFaceUp'] = !![]; } }), this['add'][_0x3adb('0x17f')]({ 'targets': this['_dealerHand'][0x0], 'delay': _0x36a81b[0x2], 'duration': _0x450461[0x2], 'scaleX': 0x1, 'scaleY': 0x1, 'onComplete': this['doAnimation'], 'onCompleteScope': this }); } [_0x3adb('0xe7')]() { let _0x2e5933 = [0x12c, 0x12c, 0xc8], _0x3672eb = [0x0, 0x2bc, 0x3e8]; this[_0x3adb('0xf6')]['tween']({ 'targets': this['_dealerHand'][0x0], 'delay': _0x3672eb[0x0], 'duration': _0x2e5933[0x0], 'x': _0x3adb('0x150') }), this[_0x3adb('0xf6')][_0x3adb('0x17f')]({ 'targets': this[_0x3adb('0x137')][0x0], 'delay': _0x3672eb[0x1], 'duration': _0x2e5933[0x1], 'scaleX': 0x0, 'scaleY': 1.2, 'onComplete': () => { this[_0x3adb('0x137')][0x0][_0x3adb('0x8d')] = !![]; } }), this[_0x3adb('0xf6')][_0x3adb('0x17f')]({ 'targets': this[_0x3adb('0x137')][0x0], 'delay': _0x3672eb[0x2], 'duration': _0x2e5933[0x2], 'scaleX': 0x1, 'scaleY': 0x1, 'onComplete': this[_0x3adb('0x15d')], 'onCompleteScope': this }); } [_0x3adb('0xd1')]() { let _0x262895 = [0x12c, 0x12c], _0x42c79a = [0x0, 0x2bc]; this[_0x3adb('0xf6')][_0x3adb('0x17f')]({ 'targets': this[_0x3adb('0x137')][0x0], 'delay': _0x42c79a[0x0], 'duration': _0x262895[0x0], 'x': _0x3adb('0x150') }), this[_0x3adb('0xf6')][_0x3adb('0x17f')]({ 'targets': this[_0x3adb('0x137')][0x0], 'delay': _0x42c79a[0x1], 'duration': _0x262895[0x1], 'x': _0x3adb('0x103'), 'onComplete': this['doAnimation'], 'onCompleteScope': this }); } ['resolvePlayerHand'](_0x14a148) { if (_0x14a148 < this[_0x3adb('0x84')]) { let _0x51ae85 = Math['abs'](this[_0x3adb('0x170')][_0x14a148]), _0x1ecc54 = Math[_0x3adb('0x185')](this[_0x3adb('0xa8')]), _0x519c56 = this[_0x3adb('0xf6')][_0x3adb('0x92')](this[_0x3adb('0x3d')][_0x14a148]['x'], this[_0x3adb('0x3d')][_0x14a148]['y'], _0x51ae85['toString']()); _0x519c56[_0x3adb('0x7e')](Config[_0x3adb('0xce')]['commentaryFormat']), _0x519c56[_0x3adb('0x155')](0x0, 0x0), _0x519c56[_0x3adb('0x2d')](_0x3adb('0xc6')), this['_commentaryList']['push'](_0x519c56); if (_0x51ae85 <= 0x15) { if (this[_0x3adb('0xa8')] == -0x15 && this[_0x3adb('0x137')][_0x3adb('0x178')] == 0x2) this['_playerTotals'][0x0] == -0x15 && this[_0x3adb('0x84')] == 0x1 ? this[_0x3adb('0x15d')]() : this['resolvePayout'](this[_0x3adb('0x124')][_0x14a148], -0x1, !![]); else { if (_0x51ae85 == 0x15) this[_0x3adb('0x1d')](this[_0x3adb('0x124')][_0x14a148], 0x1, !![]); else { if (_0x1ecc54 == 0x16) { } else { if (_0x1ecc54 > 0x15) this[_0x3adb('0x1d')](this[_0x3adb('0x124')][_0x14a148], 0x1, !![]); else { if (_0x1ecc54 > _0x51ae85) this['resolvePayout'](this[_0x3adb('0xca')][_0x14a148], -0x1, ![], ![]), this['resolvePayout'](this['_playerBettingSpots'][_0x14a148], -0x1, !![]); else _0x1ecc54 < _0x51ae85 ? this[_0x3adb('0x1d')](this[_0x3adb('0x124')][_0x14a148], 0x1, !![]) : this[_0x3adb('0x15d')](); } } } } } else this['doAnimation'](); } else this['doAnimation'](); } [_0x3adb('0xcc')](_0xe7c7a4) { for (let _0x3b62e7 = 0x0; _0x3b62e7 < _0xe7c7a4[_0x3adb('0x178')]; _0x3b62e7 += 0x1) { _0xe7c7a4[_0x3b62e7][_0x3adb('0x17c')](); } _0xe7c7a4[_0x3adb('0x178')] = 0x0; } [_0x3adb('0xd3')]() { this[_0x3adb('0x188')][_0x3adb('0x16e')](); for (let _0x6f49ba = 0x0; _0x6f49ba < 0x4; _0x6f49ba += 0x1) { this['_playerTotals'][_0x6f49ba] = 0x0, this[_0x3adb('0x8e')][_0x6f49ba]['x'] = this[_0x3adb('0x13f')][_0x6f49ba]['x'], this['_playerAnchors'][_0x6f49ba]['y'] = this[_0x3adb('0x13f')][_0x6f49ba]['y'], this[_0x3adb('0xcc')](this[_0x3adb('0x9e')][_0x6f49ba]), this[_0x3adb('0x9e')][_0x6f49ba][_0x3adb('0x178')] = 0x0; } this[_0x3adb('0x81')] = 0x0, this[_0x3adb('0x84')] = 0x1, this[_0x3adb('0xa8')] = 0x0, this[_0x3adb('0x7c')]['x'] = this['DealerHandAnchor']['x'], this['_dealerAnchor']['y'] = this[_0x3adb('0x167')]['y'], this[_0x3adb('0xcc')](this[_0x3adb('0x137')]), this['_dealerHand']['length'] = 0x0, this[_0x3adb('0xcc')](this[_0x3adb('0x16')]), this[_0x3adb('0xcc')](this[_0x3adb('0x62')]); for (let _0x4aa5e5 = 0x0; _0x4aa5e5 < this['_bettingSpots']['length']; _0x4aa5e5 += 0x1) { this[_0x3adb('0x76')][_0x4aa5e5]['Amount'] = 0x0, this['_bettingSpots'][_0x4aa5e5][_0x3adb('0x2f')] = 0x1, this['_bettingSpots'][_0x4aa5e5][_0x3adb('0x4d')] && (this['_bettingSpots'][_0x4aa5e5][_0x3adb('0xbd')] = ![]); } for (let _0x5c7eb1 of this[_0x3adb('0xa7')]) { _0x5c7eb1[_0x3adb('0x90')] = ![]; } for (let _0x40c883 of this['_clearDealPanel']) { _0x40c883[_0x3adb('0x90')] = !![]; } this[_0x3adb('0x31')]['visible'] = ![]; for (let _0xa20ed1 of this[_0x3adb('0x23')]) _0xa20ed1[_0x3adb('0x77')](); } ['updateLocation'](_0x42a05b, _0x6be7c8, _0x492402 = ![]) { _0x6be7c8 ? (_0x42a05b['x'] += 0x11 * (_0x492402 ? -0x1 : 0x1), _0x42a05b['y'] -= 0x11 * (_0x492402 ? -0x1 : 0x1)) : _0x42a05b['x'] += 0x11 * (_0x492402 ? -0x1 : 0x1); } [_0x3adb('0xbe')]() { this[_0x3adb('0x165')][_0x3adb('0xff')](_0x3adb('0x14e')); } ['resolvePayout'](_0x34c948, _0x41d5f4, _0x51ae7a, _0x2186f2 = !![], _0x138495 = 0x0) { if (_0x34c948['Amount'] != 0x0) { if (_0x41d5f4 == -0x1) { this['Score'] -= _0x34c948[_0x3adb('0x9d')]; let _0x57bd61 = new BettingSpot({ 'scene': this, 'x': _0x34c948['x'], 'y': _0x34c948['y'], 'amount': _0x34c948[_0x3adb('0x9d')], 'isLocked': !![] }); this[_0x3adb('0x16')][_0x3adb('0x6f')](_0x57bd61), this[_0x3adb('0xf6')][_0x3adb('0x100')](_0x57bd61), _0x34c948[_0x3adb('0x2f')] = 0x0, _0x34c948['Amount'] = 0x0, this[_0x3adb('0x107')][_0x3adb('0xf6')]({ 'targets': _0x57bd61, 'duration': 0x12c, 'x': 0x0, 'y': 0x0, 'alpha': 0x0, 'delay': _0x138495, 'onComplete': _0x2186f2 ? this[_0x3adb('0x15d')] : null, 'onCompleteScope': this }); } else { let _0x4500b5 = new BettingSpot({ 'scene': this, 'amount': _0x34c948[_0x3adb('0x9d')] * _0x41d5f4, 'x': 0x0, 'y': 0x0, 'isLocked': !![] }); this[_0x3adb('0x4b')] += _0x4500b5[_0x3adb('0x9d')], this[_0x3adb('0x16')]['push'](_0x4500b5), this[_0x3adb('0xf6')]['existing'](_0x4500b5); if (_0x51ae7a) this[_0x3adb('0xc')]['bringToTop'](_0x34c948); this['tweens'][_0x3adb('0xf6')]({ 'targets': _0x4500b5, 'duration': 0x12c, 'x': _0x34c948['x'] + _0x34c948[_0x3adb('0xfb')]['x'], 'y': _0x34c948['y'] + _0x34c948[_0x3adb('0xfb')]['y'], 'onComplete': _0x2186f2 ? this[_0x3adb('0x15d')] : null, 'onCompleteScope': this }); } } else { if (_0x2186f2) this[_0x3adb('0x15d')](); } } [_0x3adb('0x54')](_0x3434b1) { for (let _0x54ab12 = 0x0; _0x54ab12 < this['_chipButtons'][_0x3adb('0x178')]; _0x54ab12 += 0x1) { this['_chipButtons'][_0x54ab12]['Value'] == _0x3434b1 ? (this[_0x3adb('0x23')][_0x54ab12][_0x3adb('0xe8')] = 1.2, this[_0x3adb('0xf')] = _0x3434b1) : this[_0x3adb('0x23')][_0x54ab12][_0x3adb('0xe8')] = 0x1; } } [_0x3adb('0x184')]() { switch (this[_0x3adb('0x119')]) { case GameState[_0x3adb('0xe6')]: { this[_0x3adb('0xd3')](), this[_0x3adb('0x168')] = StringTable[_0x3adb('0x132')]; break; } case GameState[_0x3adb('0x160')]: { for (let _0x14f6c3 of this[_0x3adb('0x68')]) _0x14f6c3[_0x3adb('0x90')] = ![]; for (let _0x311b47 of this[_0x3adb('0x23')]) _0x311b47['disableInteractive'](); this[_0x3adb('0x168')] = ''; for (let _0x5f0ec4 of this[_0x3adb('0x76')]) { (!_0x5f0ec4[_0x3adb('0x11c')] || _0x5f0ec4['Amount'] > 0x0) && (_0x5f0ec4[_0x3adb('0x9d')] = Math[_0x3adb('0xf1')](_0x5f0ec4[_0x3adb('0x9d')], _0x5f0ec4[_0x3adb('0x173')])); } for (let _0x414723 = 0x0; _0x414723 < this[_0x3adb('0x179')][_0x3adb('0x178')]; _0x414723 += 0x1) { this[_0x3adb('0x76')][_0x414723][_0x3adb('0xf0')](), this[_0x3adb('0x76')][_0x414723]['IsLocked'] = !![], this['_lastWagerAmounts'][_0x414723] = this[_0x3adb('0x76')][_0x414723][_0x3adb('0x9d')]; } this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x70')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x1e')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x70')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x1e')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x15c')]), this['doAnimation'](); break; } case GameState[_0x3adb('0x144')]: { for (let _0x1a4451 of this[_0x3adb('0xec')]) _0x1a4451[_0x3adb('0x90')] = !![]; this[_0x3adb('0x168')] = StringTable[_0x3adb('0x189')]; break; } case GameState[_0x3adb('0xe2')]: { if (this[_0x3adb('0x9e')][this[_0x3adb('0x81')]][_0x3adb('0x178')] < 0x2) this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x70')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x134')]), this['doAnimation'](); else { for (let _0xb8869b of this[_0x3adb('0xd0')]) _0xb8869b[_0x3adb('0x90')] = !![]; this['_playerHands'][this[_0x3adb('0x81')]][_0x3adb('0x178')] == 0x2 && this[_0x3adb('0x84')] < 0x4 && Math['floor'](this[_0x3adb('0x9e')][this['_currentHand']][0x0][_0x3adb('0xf9')] / 0x4) == Math[_0x3adb('0xe3')](this['_playerHands'][this[_0x3adb('0x81')]][0x1][_0x3adb('0xf9')] / 0x4) ? this[_0x3adb('0xc8')][_0x3adb('0x135')]() : this[_0x3adb('0xc8')][_0x3adb('0xf8')](), this[_0x3adb('0x9e')][this['_currentHand']][_0x3adb('0x178')] == 0x2 ? this[_0x3adb('0xb')][_0x3adb('0x135')]() : this[_0x3adb('0xb')]['lock'](), this[_0x3adb('0x168')] = _0x3adb('0x3b') + (this[_0x3adb('0x81')] + 0x1) + _0x3adb('0x91') + this[_0x3adb('0x84')] + ':\x20' + Blackjack[_0x3adb('0x16b')](this[_0x3adb('0x170')][this[_0x3adb('0x81')]]); } break; } case GameState[_0x3adb('0x63')]: { for (let _0x3f5fae of this[_0x3adb('0xec')]) _0x3f5fae[_0x3adb('0x90')] = !![]; this[_0x3adb('0x168')] = StringTable[_0x3adb('0x4a')]; break; } case GameState[_0x3adb('0x10a')]: { for (let _0x340108 of this[_0x3adb('0xa7')]) _0x340108[_0x3adb('0x90')] = !![]; this[_0x3adb('0x168')] = StringTable[_0x3adb('0x10a')]; break; } default: { console[_0x3adb('0xb5')](_0x3adb('0x74'), this['CurrentState']); break; } } } ['addSelectedValue'](_0x224999) { if (this[_0x3adb('0xf')] > 0x0) { let _0xccb9dc = _0x224999[_0x3adb('0x115')], _0x55173d = Math['min'](_0xccb9dc[_0x3adb('0x9d')] + this[_0x3adb('0xf')], _0xccb9dc[_0x3adb('0x4')]); this[_0x3adb('0xbe')](), _0xccb9dc[_0x3adb('0x9d')] = _0x55173d; } } [_0x3adb('0x154')]() { this[_0x3adb('0xbe')](), this[_0x3adb('0x119')] = GameState[_0x3adb('0x160')]; } [_0x3adb('0x15')]() { for (let _0x562fb8 of this[_0x3adb('0x76')]) { _0x562fb8['Amount'] = 0x0; } this[_0x3adb('0xbe')](); } ['newBets']() { this[_0x3adb('0xbe')](), this[_0x3adb('0x119')] = GameState['Predeal']; } [_0x3adb('0xfd')]() { this[_0x3adb('0xbe')](), this['predealInitialization'](); for (let _0x550bfb = 0x0; _0x550bfb < this[_0x3adb('0x76')][_0x3adb('0x178')]; _0x550bfb += 0x1) { this['_bettingSpots'][_0x550bfb][_0x3adb('0x9d')] = this[_0x3adb('0x179')][_0x550bfb]; } this[_0x3adb('0x119')] = GameState[_0x3adb('0x160')]; } [_0x3adb('0xdb')]() { this[_0x3adb('0xbe')](); if (this[_0x3adb('0x11e')] == GameState[_0x3adb('0x144')]) this[_0x3adb('0x55')][_0x3adb('0x9d')] = this[_0x3adb('0x124')][0x0][_0x3adb('0x9d')] / 0x2, this[_0x3adb('0x101')](); else { if (this[_0x3adb('0x11e')] == GameState[_0x3adb('0x63')]) { for (let _0x52c330 of this[_0x3adb('0xec')]) _0x52c330[_0x3adb('0x90')] = ![]; this[_0x3adb('0x168')] = '', this['_secondChanceSpots'][this['_currentHand']][_0x3adb('0x9d')] = this[_0x3adb('0x124')][this[_0x3adb('0x81')]][_0x3adb('0x9d')], this[_0x3adb('0x8e')][this[_0x3adb('0x81')]]['x'] -= 0x28, this[_0x3adb('0x8e')][this[_0x3adb('0x81')]]['y'] -= 0x5a; let _0x379670 = this[_0x3adb('0x170')][this[_0x3adb('0x81')]], _0x37b36a = this[_0x3adb('0x9b')](!![], this[_0x3adb('0x81')]); _0x37b36a[_0x3adb('0xb8')] = 0x5a, this[_0x3adb('0x170')][this[_0x3adb('0x81')]] = _0x379670; let _0x190404 = Blackjack[_0x3adb('0xa1')](_0x37b36a[_0x3adb('0xf9')], 0x0); if (_0x190404 == -0xb) _0x190404 = 0x1; this[_0x3adb('0x170')][this[_0x3adb('0x81')]] = Math[_0x3adb('0x185')](this[_0x3adb('0x170')][this['_currentHand']]), this[_0x3adb('0x170')][this[_0x3adb('0x81')]] -= _0x190404, this[_0x3adb('0x170')][this['_currentHand']] > 0x15 ? (this['_currentHand'] + 0x1 >= this['_handCount'] ? (this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x12e')]), this['_stepList']['push'](Steps[_0x3adb('0x5c')])) : this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x134')]), this[_0x3adb('0x1d')](this[_0x3adb('0xca')][this[_0x3adb('0x81')]], -0x1, ![], ![], 0x2bc), this[_0x3adb('0x1d')](this[_0x3adb('0x124')][this['_currentHand']], -0x1, ![], !![], 0x3e8), this[_0x3adb('0x81')] += 0x1) : (this[_0x3adb('0x81')] + 0x1 >= this[_0x3adb('0x84')] ? (this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x12e')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x5c')])) : (this[_0x3adb('0x81')] += 0x1, this['_stepList']['push'](Steps[_0x3adb('0x134')])), this[_0x3adb('0x107')][_0x3adb('0xf6')]({ 'target': this['_gameFelt'], 'alpha': 0x1, 'duration': 0x12c, 'onComplete': this[_0x3adb('0x15d')], 'onCompleteScope': this })); } else console[_0x3adb('0xb5')](_0x3adb('0xdc') + this['_currentState'] + _0x3adb('0x33')); } } [_0x3adb('0x176')]() { this[_0x3adb('0xbe')](); if (this[_0x3adb('0x11e')] == GameState[_0x3adb('0x144')]) this[_0x3adb('0x101')](); else { if (this[_0x3adb('0x11e')] == GameState['CheckForDoubleBack']) { for (let _0x49834f of this[_0x3adb('0xec')]) _0x49834f['visible'] = ![]; this[_0x3adb('0x168')] = '', this[_0x3adb('0x81')] + 0x1 >= this[_0x3adb('0x84')] ? (this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x12e')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x5c')])) : this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x134')]), this[_0x3adb('0x1d')](this[_0x3adb('0x124')][this['_currentHand']], -0x1, ![], !![]), this[_0x3adb('0x81')] += 0x1; } else console['debug']('Current\x20state\x20' + this[_0x3adb('0x11e')] + _0x3adb('0x80')); } } ['splitPair']() { this[_0x3adb('0xbe')](); for (let _0x1381a5 of this['_mainPanel']) _0x1381a5[_0x3adb('0x90')] = ![]; this[_0x3adb('0x31')][_0x3adb('0x90')] = ![], this['Instructions'] = ''; let _0x1c5ee1 = Math[_0x3adb('0xe3')](this[_0x3adb('0x9e')][this[_0x3adb('0x81')]][0x0][_0x3adb('0xf9')] / 0x4); _0x1c5ee1 == 0xc ? (this['_stepList'][_0x3adb('0x6f')](Steps['SplitPair']), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x70')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0xc9')]), this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x70')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x12e')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x5c')])) : (this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x15b')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x70')]), this['_stepList'][_0x3adb('0x6f')](Steps[_0x3adb('0x134')])), this[_0x3adb('0x15d')](); } [_0x3adb('0x10')]() { this[_0x3adb('0xbe')](); for (let _0x582bc0 of this[_0x3adb('0xd0')]) _0x582bc0[_0x3adb('0x90')] = ![]; this[_0x3adb('0x31')][_0x3adb('0x90')] = ![], this['Instructions'] = ''; let _0x252c3e = this[_0x3adb('0x124')][this[_0x3adb('0x81')]], _0x39885b = Math[_0x3adb('0x12f')](_0x252c3e['Amount'] * 0x2, _0x252c3e[_0x3adb('0x9d')] + _0x252c3e[_0x3adb('0x4')]); _0x252c3e[_0x3adb('0x9d')] = _0x39885b, this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x82')]), this[_0x3adb('0x9b')](!![], this[_0x3adb('0x81')]); } [_0x3adb('0xc4')]() { this[_0x3adb('0xbe')](); for (let _0x17bd92 of this[_0x3adb('0xd0')]) _0x17bd92['visible'] = ![]; this[_0x3adb('0x31')][_0x3adb('0x90')] = ![], this[_0x3adb('0x168')] = '', this[_0x3adb('0x9b')](!![], this['_currentHand']), this[_0x3adb('0x170')][this[_0x3adb('0x81')]] > 0x15 ? this[_0x3adb('0xc0')]['push'](Steps[_0x3adb('0x13d')]) : this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x134')]); } [_0x3adb('0x13b')]() { this['playClick'](); for (let _0x2b77a4 of this[_0x3adb('0xd0')]) _0x2b77a4[_0x3adb('0x90')] = ![]; this[_0x3adb('0x31')]['visible'] = ![], this['Instructions'] = '', this[_0x3adb('0x170')][this[_0x3adb('0x81')]] > 0x15 ? this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x13d')]) : (this[_0x3adb('0x81')] + 0x1 >= this[_0x3adb('0x84')] ? (this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x12e')]), this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x5c')])) : this[_0x3adb('0xc0')][_0x3adb('0x6f')](Steps[_0x3adb('0x134')]), this[_0x3adb('0x81')] += 0x1), this[_0x3adb('0x15d')](); } [_0x3adb('0x1f')]() { } [_0x3adb('0x9f')](_0x4d42ae) { this[_0x3adb('0xbe')](), this[_0x3adb('0x54')](_0x4d42ae[_0x3adb('0xac')]); } get [_0x3adb('0x119')]() { return this[_0x3adb('0x11e')]; } set [_0x3adb('0x119')](_0x10bb5f) { this[_0x3adb('0x11e')] = _0x10bb5f, this[_0x3adb('0x184')](); } set [_0x3adb('0x168')](_0x156eda) { let _0x150ab8 = this['TargetFontInstructionSize']; this[_0x3adb('0x85')][_0x3adb('0x92')] = _0x156eda; while (this[_0x3adb('0x85')][_0x3adb('0xa9')] > 0x32) { _0x150ab8 -= 0x1, this[_0x3adb('0x85')][_0x3adb('0xe0')](_0x150ab8 - 0x1); } } get ['Score']() { return this[_0x3adb('0x8f')]; } set [_0x3adb('0x4b')](_0x1c5de0) { var _0x17394e; while (_0x1c5de0 < 0x0) { _0x1c5de0 += 0xc350; } this[_0x3adb('0x8f')] = _0x1c5de0; let _0x336134 = [_0x3adb('0x12'), General[_0x3adb('0x11a')](_0x1c5de0)]; (_0x17394e = this[_0x3adb('0x6a')]) === null || _0x17394e === void 0x0 ? void 0x0 : _0x17394e[_0x3adb('0x1c')](_0x336134); } } class LoaderScene extends Phaser[_0x3adb('0x24')]{ constructor() { super('LoaderScene'); } ['preload']() { this['load'][_0x3adb('0x13e')](_0x3adb('0x14e'), [_0x3adb('0xee'), _0x3adb('0x169')]), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x64'), 'assets/images/Blank\x20Game\x20Felt.png'), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x61'), _0x3adb('0x57')), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x0'), _0x3adb('0x59')), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x21'), _0x3adb('0xf5')), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x15e'), _0x3adb('0x2e')), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x110'), 'assets/images/2nd\x20Chance\x20Spot.png'), this[_0x3adb('0xc5')]['image'](_0x3adb('0xe1'), _0x3adb('0x152')), this[_0x3adb('0xc5')][_0x3adb('0xc3')](_0x3adb('0x7'), _0x3adb('0x11d')), this[_0x3adb('0xc5')]['image'](_0x3adb('0x36'), _0x3adb('0xcf')), this[_0x3adb('0xc5')][_0x3adb('0x20')](_0x3adb('0xd6'), _0x3adb('0x143'), { 'frameWidth': Config['gameOptions'][_0x3adb('0x136')], 'frameHeight': Config[_0x3adb('0xce')][_0x3adb('0x75')] }), this[_0x3adb('0xc5')][_0x3adb('0x20')](_0x3adb('0x130'), _0x3adb('0xaa'), { 'frameWidth': Config[_0x3adb('0xce')][_0x3adb('0x1a')], 'frameHeight': Config[_0x3adb('0xce')]['chipHeight'] }), this['load'][_0x3adb('0x20')](AssetNames[_0x3adb('0x27')], _0x3adb('0x15a'), { 'frameWidth': Config[_0x3adb('0xce')][_0x3adb('0x2')], 'frameHeight': Config[_0x3adb('0xce')][_0x3adb('0x10c')] }), this[_0x3adb('0xc5')][_0x3adb('0x20')](AssetNames[_0x3adb('0x166')], _0x3adb('0x17'), { 'frameWidth': Config[_0x3adb('0xce')][_0x3adb('0x2')], 'frameHeight': Config[_0x3adb('0xce')][_0x3adb('0x10c')] }), this[_0x3adb('0xc5')][_0x3adb('0x20')](AssetNames[_0x3adb('0x116')], _0x3adb('0xaf'), { 'frameWidth': Config[_0x3adb('0xce')][_0x3adb('0x2')], 'frameHeight': Config[_0x3adb('0xce')][_0x3adb('0x10c')] }); } [_0x3adb('0x5f')]() { this[_0x3adb('0x17b')]['start'](_0x3adb('0xd2')); } } class AssetNames { } AssetNames[_0x3adb('0x27')] = _0x3adb('0x113'), AssetNames['BlueSmall'] = _0x3adb('0x97'), AssetNames['GreenSmall'] = _0x3adb('0x67'); class BettingSpot extends Phaser[_0x3adb('0x157')][_0x3adb('0x46')]{ constructor(_0x1a5983) { var _0x29908b, _0x4e3bbd, _0x18d185, _0x934fe7, _0xa31d8e, _0x900959, _0x56e448; super(_0x1a5983[_0x3adb('0x17b')], _0x1a5983['x'], _0x1a5983['y']), this[_0x3adb('0xba')] = -0x5, this[_0x3adb('0x141')] = 0x0, this[_0x3adb('0xd9')] = _0x1a5983, this[_0x3adb('0x145')] = new Phaser[(_0x3adb('0x157'))][(_0x3adb('0x146'))](this['scene'], 0x0, 0x0, _0x3adb('0x15e')), this[_0x3adb('0x145')]['setOrigin'](0x1, 0x1), this['_hitZone'][_0x3adb('0x2f')] = 0.00001, this[_0x3adb('0x145')][_0x3adb('0x77')]({ 'useHandCursor': !![] }), this[_0x3adb('0xf6')](this[_0x3adb('0x145')]), this[_0x3adb('0x141')] = (_0x29908b = _0x1a5983[_0x3adb('0x3c')]) !== null && _0x29908b !== void 0x0 ? _0x29908b : 0x0, this[_0x3adb('0xb0')] = (_0x4e3bbd = _0x1a5983[_0x3adb('0x30')]) !== null && _0x4e3bbd !== void 0x0 ? _0x4e3bbd : ![], this[_0x3adb('0x2b')] = (_0x18d185 = _0x1a5983['isLocked']) !== null && _0x18d185 !== void 0x0 ? _0x18d185 : ![], this['_isPlayerSpot'] = (_0x934fe7 = _0x1a5983['isPlayerSpot']) !== null && _0x934fe7 !== void 0x0 ? _0x934fe7 : !![], this[_0x3adb('0xa')] = (_0xa31d8e = _0x1a5983[_0x3adb('0x105')]) !== null && _0xa31d8e !== void 0x0 ? _0xa31d8e : 0x5, this[_0x3adb('0x17e')] = (_0x900959 = _0x1a5983[_0x3adb('0x16d')]) !== null && _0x900959 !== void 0x0 ? _0x900959 : 0x64, this[_0x3adb('0xe4')] = (_0x56e448 = _0x1a5983[_0x3adb('0x158')]) !== null && _0x56e448 !== void 0x0 ? _0x56e448 : new Point(-0x22, -0x25), this[_0x3adb('0x29')](); } [_0x3adb('0x29')]() { let _0xedafc4 = this['_amount'], _0x5119dc = 0x0; this[_0x3adb('0x149')](); if (_0xedafc4 == 0x0) { if (!this[_0x3adb('0x2b')]) { let _0x3b3f06 = new Chip({ 'scene': this[_0x3adb('0x17b')], 'x': 0x0, 'y': 0x0 }); _0x3b3f06['Value'] = 0x5, _0x3b3f06[_0x3adb('0x155')](0x1, 0x1), this[_0x3adb('0xf6')](_0x3b3f06), _0x3b3f06[_0x3adb('0xb6')](0xff); let _0x4ebdb6 = Config[_0x3adb('0xce')][_0x3adb('0x1a')], _0x3eec31 = Config[_0x3adb('0xce')]['chipHeight']; this[_0x3adb('0x145')][_0x3adb('0xb3')](_0x4ebdb6, _0x3eec31), this['add'](this['_hitZone']); } } else { let _0x1f11fe = 0x0; do { let _0x2e540b = Config[_0x3adb('0xce')][_0x3adb('0xfc')][_0x5119dc]; if (_0xedafc4 >= _0x2e540b) { let _0x470e11 = 0x0, _0x57698a = _0x1f11fe * this[_0x3adb('0xba')]; _0x1f11fe > 0x0 && (_0x470e11 += Math[_0x3adb('0x161')]() * 0x3 - 0x1, _0x57698a += Math[_0x3adb('0x161')]() * 0x3 - 0x1);; let _0x3f5bac = new Chip({ 'scene': this[_0x3adb('0x17b')], 'x': _0x470e11, 'y': _0x57698a }); _0x3f5bac[_0x3adb('0xac')] = _0x2e540b, _0x3f5bac[_0x3adb('0x155')](0x1, 0x1), this['add'](_0x3f5bac), _0xedafc4 = Math[_0x3adb('0x39')]((_0xedafc4 - _0x2e540b) * 0x64) / 0x64, _0x1f11fe += 0x1; } else _0x5119dc += 0x1; } while (_0xedafc4 >= 0.5); let _0x405fe9 = Config[_0x3adb('0xce')][_0x3adb('0x1a')], _0x1f98c9 = -(Config[_0x3adb('0xce')]['chipHeight'] * -0x1 + (_0x1f11fe - 0x1) * this[_0x3adb('0xba')]); this['_hitZone'][_0x3adb('0xb3')](_0x405fe9, _0x1f98c9), this[_0x3adb('0xf6')](this[_0x3adb('0x145')]); } } get ['Amount']() { return this[_0x3adb('0x141')]; } set [_0x3adb('0x9d')](_0x5909b3) { this['_amount'] = _0x5909b3, this[_0x3adb('0x29')](); } get [_0x3adb('0x72')]() { return this[_0x3adb('0x145')]; } get [_0x3adb('0xbd')]() { return this[_0x3adb('0x2b')]; } set [_0x3adb('0xbd')](_0x502012) { this[_0x3adb('0x2b')] = _0x502012, _0x502012 ? this['_hitZone'][_0x3adb('0xf0')]() : this['_hitZone'][_0x3adb('0x77')](), this[_0x3adb('0x29')](); } get [_0x3adb('0x11c')]() { return this[_0x3adb('0xb0')]; } set [_0x3adb('0x11c')](_0x1e6c76) { this[_0x3adb('0xb0')] = _0x1e6c76; } get [_0x3adb('0x4d')]() { return this[_0x3adb('0x1')]; } set [_0x3adb('0x4d')](_0x2eafa8) { this['_isPlayerSpot'] = _0x2eafa8; } get [_0x3adb('0x4')]() { return this[_0x3adb('0x17e')]; } set ['MaximumBet'](_0x445cdd) { this[_0x3adb('0x17e')] = _0x445cdd; } get [_0x3adb('0x173')]() { return this[_0x3adb('0xa')]; } set ['MinimumBet'](_0x370a2d) { this['_minimumBet'] = _0x370a2d; } get [_0x3adb('0xfb')]() { return this['_payoffOffset']; } set [_0x3adb('0xfb')](_0x4ff4a5) { this[_0x3adb('0xe4')] = _0x4ff4a5; } } class Blackjack { static [_0x3adb('0xa1')](_0x5d6a58, _0x11836a) { let _0x2531c1 = Math[_0x3adb('0xe3')](_0x5d6a58 / 0x4); return this[_0x3adb('0xb7')](_0x2531c1, _0x11836a, ![]); } static [_0x3adb('0xb7')](_0x1ce9ba, _0x1d8b1a, _0x18ffe8 = ![]) { let _0x4563ba = 0x0; if (_0x18ffe8) switch (_0x1ce9ba) { case 0x0: _0x4563ba = 0xa; break; default: _0x4563ba = _0x1ce9ba; break; } else switch (_0x1ce9ba) { case 0xc: _0x4563ba = 0x1; break; case 0x8: case 0x9: case 0xa: case 0xb: _0x4563ba = 0xa; break; default: _0x4563ba = _0x1ce9ba + 0x2; break; }return this[_0x3adb('0x83')](_0x4563ba, _0x1d8b1a); } static [_0x3adb('0x83')](_0x273782, _0x65a456) { let _0x207f8d = _0x65a456; return _0x273782 == 0x1 ? _0x207f8d < 0x0 ? _0x207f8d -= 0x1 : _0x207f8d = -0x1 * (_0x207f8d + 0xb) : _0x207f8d < 0x0 ? _0x207f8d -= _0x273782 : _0x207f8d += _0x273782, _0x207f8d < -0x15 && (_0x207f8d = Math[_0x3adb('0x185')](_0x207f8d + 0xa)), _0x207f8d; } static [_0x3adb('0x16b')](_0x5a61d9) { return _0x5a61d9 > 0x0 ? _0x3adb('0x10b') + _0x5a61d9 : _0x3adb('0x8') + Math[_0x3adb('0x185')](_0x5a61d9); } } class Button extends Phaser[_0x3adb('0x157')][_0x3adb('0x46')]{ constructor(_0x53ec49) { var _0x4c15c9, _0x107c1c, _0x2d1a7f, _0x4a53e1, _0x55b3fa; super(_0x53ec49[_0x3adb('0x17b')], _0x53ec49['x'], _0x53ec49['y']), this[_0x3adb('0x3e')] = ![], this[_0x3adb('0x17b')] = _0x53ec49[_0x3adb('0x17b')], this[_0x3adb('0xd9')] = _0x53ec49, this[_0x3adb('0x89')] = this['_config'][_0x3adb('0x17b')][_0x3adb('0xf6')][_0x3adb('0x53')](0x0, 0x0, this['_config'][_0x3adb('0x120')], 0x0), this[_0x3adb('0xf6')](this[_0x3adb('0x89')]), this['_background'][_0x3adb('0x77')]({ 'useHandCursor': !![] }), this[_0x3adb('0x89')]['on'](_0x3adb('0x13c'), this[_0x3adb('0x175')], this), this[_0x3adb('0x89')]['on'](_0x3adb('0x186'), this['buttonUp'], this), this[_0x3adb('0x89')]['on'](_0x3adb('0xc7'), this[_0x3adb('0x99')], this), this[_0x3adb('0x89')]['on'](_0x3adb('0x172'), this[_0x3adb('0x126')], this), this[_0x3adb('0x4f')] = _0x53ec49[_0x3adb('0x11b')], this[_0x3adb('0x25')] = this['_config']['scene'][_0x3adb('0xf6')][_0x3adb('0x92')](0x0, 0x0, _0x53ec49['caption']), this['_label'][_0x3adb('0xe0')]((_0x4c15c9 = _0x53ec49[_0x3adb('0xd8')]) !== null && _0x4c15c9 !== void 0x0 ? _0x4c15c9 : 0xe), this[_0x3adb('0x25')][_0x3adb('0xcd')]((_0x107c1c = _0x53ec49[_0x3adb('0x138')]) !== null && _0x107c1c !== void 0x0 ? _0x107c1c : _0x3adb('0xed')), this['_label'][_0x3adb('0x164')]((_0x2d1a7f = _0x53ec49[_0x3adb('0x94')]) !== null && _0x2d1a7f !== void 0x0 ? _0x2d1a7f : '#FFFFFF'), this['_label'][_0x3adb('0x139')]((_0x4a53e1 = _0x53ec49[_0x3adb('0x122')]) !== null && _0x4a53e1 !== void 0x0 ? _0x4a53e1 : 'Arial'), this[_0x3adb('0x25')]['setOrigin'](0.5, 0.5), this[_0x3adb('0x90')] = (_0x55b3fa = _0x53ec49[_0x3adb('0x90')]) !== null && _0x55b3fa !== void 0x0 ? _0x55b3fa : !![], this['add'](this[_0x3adb('0x25')]); } [_0x3adb('0xf8')]() { this[_0x3adb('0x89')][_0x3adb('0xf0')](), this[_0x3adb('0x89')][_0x3adb('0xb6')](0x888888); } [_0x3adb('0x135')]() { this[_0x3adb('0x89')]['setInteractive'](), this[_0x3adb('0x89')][_0x3adb('0x40')](); } [_0x3adb('0x26')]() { this[_0x3adb('0x3e')] ? (this[_0x3adb('0x89')]['setFrame'](0x1), this[_0x3adb('0xd9')]['params'] != undefined ? Config[_0x3adb('0xbb')][_0x3adb('0x9')](this[_0x3adb('0xd9')][_0x3adb('0x4e')], this[_0x3adb('0xd9')][_0x3adb('0x181')]) : Config[_0x3adb('0xbb')][_0x3adb('0x9')](this[_0x3adb('0xd9')][_0x3adb('0x4e')])) : this[_0x3adb('0x89')][_0x3adb('0x7d')](0x0); } ['buttonOver']() { this[_0x3adb('0x89')][_0x3adb('0x7d')](0x1), this[_0x3adb('0x3e')] = !![]; } [_0x3adb('0x175')]() { this[_0x3adb('0x89')][_0x3adb('0x7d')](0x2); } [_0x3adb('0x126')]() { this[_0x3adb('0x89')][_0x3adb('0x7d')](0x0), this[_0x3adb('0x3e')] = ![]; } get [_0x3adb('0x131')]() { return this[_0x3adb('0x4f')]; } set [_0x3adb('0x131')](_0xae02c1) { this['_caption'] = _0xae02c1, this[_0x3adb('0x25')][_0x3adb('0x1c')](_0xae02c1); } } class Chip extends Phaser[_0x3adb('0x157')][_0x3adb('0x48')]{ constructor(_0x1c1d41) { super(_0x1c1d41[_0x3adb('0x17b')], _0x1c1d41['x'], _0x1c1d41['y'], 'chip'), this[_0x3adb('0x6c')] = 0x1; } get [_0x3adb('0xac')]() { return this[_0x3adb('0x6c')]; } set ['Value'](_0x45e400) { let _0x3ba349 = Config[_0x3adb('0xce')][_0x3adb('0xfc')][_0x3adb('0x133')](_0x45e400); _0x3ba349 >= 0x0 && (this[_0x3adb('0x7d')](_0x3ba349), this[_0x3adb('0x6c')] = _0x45e400); } } class Constants { } Constants[_0x3adb('0xae')] = _0x3adb('0x14a'), Constants['CardSuits'] = _0x3adb('0x16f'), Constants[_0x3adb('0x32')] = [0x2, 0x3, 0x5, 0x7, 0xb, 0xd, 0x11, 0x13, 0x17, 0x1d, 0x1f, 0x25, 0x29, 0x2b, 0x2f, 0x35, 0x3b, 0x3d, 0x43, 0x47, 0x49, 0x4f, 0x53, 0x59, 0x61, 0x65, 0x67, 0x6b, 0x6d, 0x71, 0x7f, 0x83, 0x89, 0x8b, 0x95, 0x97, 0x9d, 0xa3, 0xa7, 0xad, 0xb3, 0xb5, 0xbf, 0xc1, 0xc5, 0xc7, 0xd3, 0xdf, 0xe3, 0xe5, 0xe9, 0xef, 0xf1], Constants[_0x3adb('0x11f')] = ['Incomplete', _0x3adb('0x7f'), _0x3adb('0x156'), _0x3adb('0x13'), _0x3adb('0x10d'), _0x3adb('0xb2'), 'Flush', _0x3adb('0x44'), _0x3adb('0xc2'), _0x3adb('0x15f'), _0x3adb('0x69'), _0x3adb('0x5a')], Constants[_0x3adb('0x58')] = [[], [], [], [Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0xc], Constants[_0x3adb('0x32')][0x0] * Constants['Primes'][0x1] * Constants[_0x3adb('0x32')][0x2], Constants['Primes'][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants['Primes'][0x3], Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4], Constants['Primes'][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5], Constants[_0x3adb('0x32')][0x4] * Constants['Primes'][0x5] * Constants[_0x3adb('0x32')][0x6], Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7], Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8], Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants['Primes'][0x9], Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa], Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants[_0x3adb('0x32')][0xb], Constants[_0x3adb('0x32')][0xa] * Constants[_0x3adb('0x32')][0xb] * Constants[_0x3adb('0x32')][0xc]], [Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants['Primes'][0xc], Constants['Primes'][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants['Primes'][0x2] * Constants['Primes'][0x3], Constants['Primes'][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4], Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5], Constants['Primes'][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6], Constants[_0x3adb('0x32')][0x4] * Constants['Primes'][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7], Constants['Primes'][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants['Primes'][0x8], Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9], Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants['Primes'][0x9] * Constants['Primes'][0xa], Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants['Primes'][0xa] * Constants['Primes'][0xb], Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants[_0x3adb('0x32')][0xb] * Constants[_0x3adb('0x32')][0xc]], [Constants[_0x3adb('0x32')][0x0] * Constants['Primes'][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0xc], Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants['Primes'][0x4], Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5], Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants['Primes'][0x6], Constants['Primes'][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7], Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants['Primes'][0x7] * Constants[_0x3adb('0x32')][0x8], Constants[_0x3adb('0x32')][0x5] * Constants['Primes'][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9], Constants['Primes'][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants['Primes'][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa], Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants['Primes'][0xb], Constants[_0x3adb('0x32')][0x8] * Constants['Primes'][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants['Primes'][0xb] * Constants[_0x3adb('0x32')][0xc]], [Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants['Primes'][0xc], Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants['Primes'][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants['Primes'][0x5], Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants['Primes'][0x4] * Constants['Primes'][0x5] * Constants[_0x3adb('0x32')][0x6], Constants['Primes'][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants['Primes'][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7], Constants['Primes'][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8], Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants['Primes'][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants['Primes'][0x9], Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa], Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants[_0x3adb('0x32')][0xb], Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants['Primes'][0xa] * Constants[_0x3adb('0x32')][0xb] * Constants['Primes'][0xc]], [Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0xc], Constants[_0x3adb('0x32')][0x0] * Constants[_0x3adb('0x32')][0x1] * Constants[_0x3adb('0x32')][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants['Primes'][0x4] * Constants['Primes'][0x5] * Constants[_0x3adb('0x32')][0x6], Constants[_0x3adb('0x32')][0x1] * Constants['Primes'][0x2] * Constants[_0x3adb('0x32')][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants['Primes'][0x6] * Constants[_0x3adb('0x32')][0x7], Constants[_0x3adb('0x32')][0x2] * Constants['Primes'][0x3] * Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants['Primes'][0x7] * Constants[_0x3adb('0x32')][0x8], Constants[_0x3adb('0x32')][0x3] * Constants['Primes'][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants['Primes'][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9], Constants[_0x3adb('0x32')][0x4] * Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants['Primes'][0xa], Constants[_0x3adb('0x32')][0x5] * Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants[_0x3adb('0x32')][0x8] * Constants['Primes'][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants[_0x3adb('0x32')][0xb], Constants[_0x3adb('0x32')][0x6] * Constants[_0x3adb('0x32')][0x7] * Constants['Primes'][0x8] * Constants[_0x3adb('0x32')][0x9] * Constants[_0x3adb('0x32')][0xa] * Constants[_0x3adb('0x32')][0xb] * Constants[_0x3adb('0x32')][0xc]]]; class Emissions { } Emissions[_0x3adb('0x174')] = _0x3adb('0x9a'), Emissions['ClearBettingSpots'] = _0x3adb('0xb4'), Emissions['AddCursorValue'] = _0x3adb('0x14b'), Emissions[_0x3adb('0x8a')] = 'Begin\x20deal', Emissions[_0x3adb('0x13a')] = 'New\x20game', Emissions[_0x3adb('0x142')] = _0x3adb('0x147'), Emissions[_0x3adb('0x6')] = 'Yes', Emissions['No'] = 'No', Emissions[_0x3adb('0x50')] = 'Split', Emissions[_0x3adb('0x6e')] = 'Double', Emissions[_0x3adb('0x6d')] = 'Hit', Emissions[_0x3adb('0xab')] = 'Stand', Emissions['HintPlease'] = _0x3adb('0x16a'); class GameState { } GameState[_0x3adb('0xe6')] = 0x0, GameState['StartDeal'] = 0x1, GameState['InsuranceInput'] = 0x2, GameState[_0x3adb('0xe2')] = 0x3, GameState[_0x3adb('0x63')] = 0x4, GameState[_0x3adb('0x10a')] = 0x5; class General { static [_0x3adb('0x11a')](_0x4acf9f) { let _0x4b9674 = Math[_0x3adb('0xe3')](_0x4acf9f), _0x5dfb61 = Math[_0x3adb('0x39')]((_0x4acf9f - _0x4b9674) * 0x64), _0x4ed733 = '', _0x41fb07 = 0x0; do { let _0x3e1bb7 = _0x4b9674 % 0xa; _0x41fb07 > 0x0 && _0x41fb07 % 0x3 == 0x0 && (_0x4ed733 = ',' + _0x4ed733), _0x4ed733 = _0x3e1bb7['toString']() + _0x4ed733, _0x41fb07 += 0x1, _0x4b9674 = Math[_0x3adb('0xe3')](_0x4b9674 / 0xa); } while (_0x4b9674 > 0x0); return _0x5dfb61 < 0xa ? _0x4ed733 = _0x4ed733 + '.0' + _0x5dfb61[_0x3adb('0x12b')]() : _0x4ed733 = _0x4ed733 + '.' + _0x5dfb61, '$' + _0x4ed733; } static [_0x3adb('0x5e')](_0x1fb765) { if (_0x1fb765 == 0x35) return '!!'; else { if (_0x1fb765 == 0x34) return 'ZZ'; else { let _0x201ef8 = Math[_0x3adb('0xe3')](_0x1fb765 / 0x4), _0x37e1b8 = _0x1fb765 % 0x4; return Constants[_0x3adb('0xae')][_0x3adb('0xa5')](_0x201ef8, 0x1) + Constants[_0x3adb('0xc1')][_0x3adb('0xa5')](_0x37e1b8, 0x1); } } } static [_0x3adb('0x125')](_0x28b048) { if (_0x28b048 == '!!') return 0x35; else { if (_0x28b048 == 'ZZ') return 0x34; else { let _0x3d76d7 = _0x28b048[_0x3adb('0xa5')](0x0, 0x1), _0x19c9bf = _0x28b048[_0x3adb('0xa5')](0x1, 0x1); return Constants[_0x3adb('0xae')][_0x3adb('0x133')](_0x3d76d7) * 0x4 + Constants[_0x3adb('0xc1')][_0x3adb('0x133')](_0x19c9bf); } } } static ['cardStringToVector'](_0x2b3efc) { let _0x1ab8a7 = _0x2b3efc[_0x3adb('0xea')]('\x20'), _0x43ac92 = new Array(_0x1ab8a7[_0x3adb('0x178')]); for (let _0x10dcfa = 0x0; _0x10dcfa < _0x43ac92[_0x3adb('0x178')]; _0x10dcfa += 0x1) { _0x43ac92[_0x10dcfa] = this[_0x3adb('0x125')](_0x1ab8a7[_0x10dcfa]); } return _0x43ac92; } static [_0x3adb('0x106')](_0x3505e1) { let _0x1c59cc = this['cardNumberToString'](_0x3505e1[0x0]); for (let _0x24c331 = 0x1; _0x24c331 < _0x3505e1['length']; _0x24c331 += 0x1)_0x1c59cc += '\x20' + this['cardNumberToString'](_0x3505e1[_0x24c331]); return _0x1c59cc; } } class PlayingCard extends Phaser[_0x3adb('0x157')][_0x3adb('0x48')]{ constructor(_0x140253) { var _0xaf82a9, _0x526257; super(_0x140253[_0x3adb('0x17b')], _0x140253['x'], _0x140253['y'], _0x3adb('0xd6')), this['CardBackFrame'] = 0x36, this[_0x3adb('0xf9')] = (_0xaf82a9 = _0x140253[_0x3adb('0xb1')]) !== null && _0xaf82a9 !== void 0x0 ? _0xaf82a9 : 0x0, this[_0x3adb('0x8d')] = (_0x526257 = _0x140253[_0x3adb('0x148')]) !== null && _0x526257 !== void 0x0 ? _0x526257 : ![]; } get ['CardNumber']() { return this[_0x3adb('0x17a')]; } set [_0x3adb('0xf9')](_0x5505e2) { this[_0x3adb('0x17a')] = _0x5505e2, this[_0x3adb('0x4c')] ? this[_0x3adb('0x7d')](_0x5505e2) : this['setFrame'](this[_0x3adb('0x111')]); } get ['IsFaceUp']() { return this['_isFaceUp']; } set [_0x3adb('0x8d')](_0x5c9c20) { this[_0x3adb('0x4c')] = _0x5c9c20, _0x5c9c20 ? this[_0x3adb('0x7d')](this[_0x3adb('0x17a')]) : this[_0x3adb('0x7d')](this[_0x3adb('0x111')]); } } class QuantumShoe { constructor(_0x28841f, _0x307cac = 0x1) { this[_0x3adb('0x114')] = ![], this[_0x3adb('0x127')] = [], this[_0x3adb('0xdf')] = [], this[_0x3adb('0x78')] = 0x0, this[_0x3adb('0xd7')] = _0x307cac; let _0x433a6f = _0x28841f[_0x3adb('0x178')]; this[_0x3adb('0x12a')] = _0x433a6f, this['_baseRankCount'][_0x3adb('0x178')] = _0x433a6f, this[_0x3adb('0xdf')][_0x3adb('0x178')] = _0x433a6f; for (let _0x360741 = 0x0; _0x360741 < _0x433a6f; _0x360741 += 0x1) { this['_baseRankCount'][_0x360741] = _0x28841f[_0x360741] * this['_numDecks']; } this[_0x3adb('0x16e')](); } ['shuffle']() { this[_0x3adb('0x78')] = 0x0; for (let _0x540683 = 0x0; _0x540683 < this[_0x3adb('0x12a')]; _0x540683 += 0x1) { this[_0x3adb('0xdf')][_0x540683] = this[_0x3adb('0x127')][_0x540683], this[_0x3adb('0x78')] += this['_rankCount'][_0x540683]; } } [_0x3adb('0x9c')]() { let _0x527cc7 = Math['floor'](Math[_0x3adb('0x161')]() * this[_0x3adb('0x78')]); for (let _0x513774 = 0x0; _0x513774 < this[_0x3adb('0x12a')]; _0x513774 += 0x1) { _0x527cc7 -= this[_0x3adb('0xdf')][_0x513774]; if (_0x527cc7 < 0x0) return !this['_infiniteDeckMode'] && this[_0x3adb('0xa2')](_0x513774, -0x1), _0x513774; } return -0x1; } [_0x3adb('0x93')](_0x481638) { let _0x5eac38 = this[_0x3adb('0xdf')][_0x481638]; return this['adjustQuantityOfRank'](_0x481638, -0x1), _0x5eac38; } [_0x3adb('0x163')](_0x1438a8) { let _0x54dab3 = 0x0; return this[_0x3adb('0xdf')][_0x1438a8] > 0x0 && (_0x54dab3 = this[_0x3adb('0x86')](_0x1438a8)), _0x54dab3; } [_0x3adb('0xe5')](_0x3000a0) { return this[_0x3adb('0xdf')][_0x3000a0]; } [_0x3adb('0x86')](_0x67eeff) { return this[_0x3adb('0xdf')][_0x67eeff] / this['_numCards']; } ['adjustQuantityOfRank'](_0x543061, _0x2a302b) { return this[_0x3adb('0xdf')][_0x543061] + _0x2a302b < 0x0 ? ![] : (this[_0x3adb('0xdf')][_0x543061] += _0x2a302b, this[_0x3adb('0x78')] += _0x2a302b, !![]); } get [_0x3adb('0x162')]() { return this[_0x3adb('0x78')]; } } class Steps { } Steps[_0x3adb('0x123')] = _0x3adb('0x5d'), Steps[_0x3adb('0x70')] = _0x3adb('0x3f'), Steps[_0x3adb('0x1e')] = _0x3adb('0x14f'), Steps[_0x3adb('0x15c')] = _0x3adb('0xeb'), Steps[_0x3adb('0x102')] = _0x3adb('0x8c'), Steps['ResolveInsurance'] = _0x3adb('0xbf'), Steps[_0x3adb('0x128')] = _0x3adb('0x35'), Steps[_0x3adb('0xe')] = 'Annotate\x20dealer', Steps[_0x3adb('0xb9')] = 'Resolve\x20player\x20hand\x20#0', Steps[_0x3adb('0x112')] = _0x3adb('0x2a'), Steps['ResolvePlayer2'] = _0x3adb('0x183'), Steps['ResolvePlayer3'] = _0x3adb('0x49'), Steps[_0x3adb('0x134')] = _0x3adb('0x5b'), Steps[_0x3adb('0x12e')] = _0x3adb('0x16c'), Steps[_0x3adb('0x5c')] = _0x3adb('0x153'), Steps[_0x3adb('0x171')] = _0x3adb('0xa4'), Steps[_0x3adb('0x82')] = _0x3adb('0x109'), Steps[_0x3adb('0x13d')] = _0x3adb('0x71'), Steps['SplitPair'] = 'Split\x20pair', Steps[_0x3adb('0xc9')] = 'Force\x20next\x20hand'; class StringTable { } StringTable[_0x3adb('0x132')] = _0x3adb('0xf7'), StringTable['GameOver'] = _0x3adb('0x10f'), StringTable['Insurance'] = 'Would\x20you\x20like\x20insurance?\x20(YES\x20/\x20NO)', StringTable[_0x3adb('0x4a')] = _0x3adb('0xfe');
+"use strict";
+class Config {
+    static initGame() {
+        let gameConfig = {
+            width: this.gameOptions.gameWidth,
+            height: this.gameOptions.gameHeight,
+            backgroundColor: 0x000000,
+            parent: 'game-div',
+            scene: [LoaderScene, GameScene]
+        };
+        this.gameReference = new Phaser.Game(gameConfig);
+    }
+}
+Config.emitter = new Phaser.Events.EventEmitter(); //: Phaser.Events.EventEmitter;
+Config.gameOptions = {
+    gameWidth: 1024,
+    gameHeight: 760,
+    buttonWidth: 123,
+    buttonHeight: 35,
+    cardWidth: 85,
+    cardHeight: 131,
+    chipWidth: 55,
+    chipHeight: 51,
+    chipValues: [5000, 1000, 500, 100, 25, 5, 1, 0.5],
+    scoreFormat: {
+        fontFamily: "Arial",
+        fontSize: "18px",
+        fontStyle: "bold",
+        color: "#FFFFFF",
+        align: "center"
+    },
+    helpFormat: {
+        fontFamily: "Arial",
+        fontSize: "22px",
+        color: "#000000",
+        align: "center"
+    },
+    feltFormat: {
+        fontFamily: "Arial",
+        fontSize: "12px",
+        fontColor: "#FFFFFF",
+        align: "center"
+    },
+    commentaryFormat: {
+        fontFamily: "Arial",
+        fontSize: "20px",
+        fontColor: "#FFFFFF",
+        fontStyle: "bold",
+        align: "left"
+    }
+};
+window.onload = () => {
+    Config.initGame();
+};
+var Point = Phaser.Geom.Point;
+class GameScene extends Phaser.Scene {
+    //#endregion
+    constructor() {
+        super("GameScene");
+        //#region Constants
+        this.PlayerHandOffsets = [
+            new Point(-34, -37),
+            new Point(-34, -37),
+            new Point(-34, -37),
+            new Point(-34, -37)
+        ];
+        this.PlayerHandAnchors = [
+            new Point(70, 450),
+            new Point(300, 450),
+            new Point(530, 450),
+            new Point(760, 450)
+        ];
+        this.PlayerScoreCommentary = [
+            new Point(50, 550),
+            new Point(280, 550),
+            new Point(510, 550),
+            new Point(740, 550)
+        ];
+        this.PlayerSpotLocations = [
+            new Point(195, 600),
+            new Point(425, 600),
+            new Point(655, 600),
+            new Point(885, 600)
+        ];
+        this.SecondChanceLocations = [
+            new Point(195 + 60, 600 - 35),
+            new Point(425 + 60, 600 - 35),
+            new Point(655 + 60, 600 - 35),
+            new Point(885 + 60, 600 - 35)
+        ];
+        this.MainOffset = new Point(-34, -37);
+        this.InsuranceLocation = new Point(290, 315);
+        this.InsurancePayoffOffset = new Point(-34, -37);
+        this.DealerHandAnchor = new Point(450, 70);
+        this.TargetFontInstructionSize = 22;
+        //#endregion
+        //#region Betting spots
+        this._playerBettingSpots = new Array(0);
+        this._secondChanceSpots = new Array(0);
+        this._lastWagerAmounts = new Array(0);
+        //#endregion
+        //#region Hand information
+        this._playerAnchors = new Array(4);
+        this._playerHands = new Array(4);
+        this._playerTotals = new Array(0);
+        this._dealerAnchor = new Point();
+        this._dealerHand = new Array(0);
+        this._dealerTotal = 0;
+        this._currentHand = 0;
+        this._handCount = 0;
+        this._chipButtons = new Array(0);
+        this._score = 0;
+        // #endregion
+        //#region Game lists
+        this._stepList = new Array(0);
+        this._commentaryList = new Array(0);
+        this._payoutList = new Array(0);
+        //#endregion
+        //#region Other member letiables
+        this._currentState = -1;
+        //#endregion
+        //#region Test hands
+        this._testDealerHand = new Array(0);
+        this._testPlayerHand = new Array(0);
+    }
+    create() {
+        // If desired, initialize test hands by uncommenting.
+        this._testDealerHand = General.cardStringToVector("KC 4S 9C");
+        this._testPlayerHand = General.cardStringToVector("4C 7H KH 3D");
+        // Add the game felt.
+        this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
+        let playerSpot = this.add.image(185, 570, "playerSpot");
+        playerSpot.setOrigin(0.5, 0.5);
+        let bannerDisplay = this.add.image(330, 520, "banner");
+        bannerDisplay.setOrigin(0, 0);
+        bannerDisplay.scale = 0.4;
+        let logo = this.add.image(830, 520, "logo");
+        logo.setOrigin(0, 0);
+        let dealerBar = this.add.image(500, 200, "dealerBar");
+        logo.setOrigin(0, 0);
+        // dealerBar.scale = 0.25;
+        // Turn on listening to input events
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        // Creates the shoe object
+        let cardRanks = new Array(52);
+        for (let rank = 0; rank < 52; rank += 1)
+            cardRanks[rank] = 1;
+        this._shoe = new QuantumShoe(cardRanks, 6);
+        //#region Bumper panel graphics
+        // create handler to graphics object
+        let graphics = this.add.graphics();
+        // add the score display
+        let scoreBitmap = this.add.image(15, 695, "blueText");
+        scoreBitmap.setOrigin(0, 0);
+        scoreBitmap.setDisplaySize(130, 50);
+        graphics.lineStyle(5, 0xffffff, 1);
+        graphics.strokeRoundedRect(15, 695, 130, 50, 5);
+        this._scoreField = this.add.text(15, 695, [""]);
+        this._scoreField.setFixedSize(130, 50);
+        this._scoreField.setPadding(0, 3, 0, 0);
+        this._scoreField.setStyle(Config.gameOptions.scoreFormat);
+        // Now, add the help field
+        let helpBitmap = this.add.image(440, 695, "grayTextLarge");
+        helpBitmap.setOrigin(0, 0);
+        helpBitmap.setDisplaySize(569, 50);
+        this._helpField = this.add.text(440, 695, [""]);
+        this._helpField.setFixedSize(569, 0);
+        this._helpField.setPadding(0, 3, 0, 0);
+        this._helpField.setStyle(Config.gameOptions.helpFormat);
+        this._helpField.setWordWrapWidth(569);
+        graphics.lineStyle(6, 0xffffff, 1);
+        graphics.strokeRoundedRect(440, 695, 569, 50, 5);
+        let chipDenominations = [1, 5, 25, 100];
+        for (let index = 0; index < chipDenominations.length; index += 1) {
+            let chipButton = new Chip({
+                scene: this,
+                x: 188 + (index * 70),
+                y: 720
+            });
+            chipButton.Value = chipDenominations[index];
+            chipButton.setOrigin(.5, .5);
+            chipButton.setInteractive({ useHandCursor: true });
+            chipButton.on("clicked", this.selectChip, this);
+            this.add.existing(chipButton);
+            this._chipButtons.push(chipButton);
+        }
+        this.selectCursorValue(5);
+        //#endregion
+        for (let index = 0; index < 4; index += 1) {
+            this._playerHands[index] = new Array(0);
+            this._playerAnchors[index] = new Point();
+        }
+        //#region Button panels
+        //#region Clear | Deal panel
+        this._clearButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "CLEAR",
+            clickEvent: Emissions.ClearBettingSpots,
+            x: 379,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._clearButton);
+        Config.emitter.on(Emissions.ClearBettingSpots, this.clearBettingSpots, this);
+        this._dealButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "DEAL",
+            clickEvent: Emissions.BeginDeal,
+            x: 522,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._dealButton);
+        Config.emitter.on(Emissions.BeginDeal, this.beginDeal, this);
+        this._clearDealPanel = [this._clearButton, this._dealButton];
+        //#endregion
+        //#region New | Rebet panel
+        this._newButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "NEW",
+            clickEvent: Emissions.NewGame,
+            x: 379,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._newButton);
+        Config.emitter.on(Emissions.NewGame, this.newBets, this);
+        this._rebetButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "REBET",
+            clickEvent: Emissions.RebetBets,
+            x: 522,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._rebetButton);
+        Config.emitter.on(Emissions.RebetBets, this.rebetBets, this);
+        this._newRebetButtonPanel = [this._newButton, this._rebetButton];
+        //#endregion
+        //#region Yes | No panel
+        this._yesButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "YES",
+            clickEvent: Emissions.Yes,
+            x: 379,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._yesButton);
+        Config.emitter.on(Emissions.Yes, this.clickYes, this);
+        this._noButton = new Button({
+            scene: this,
+            style: AssetNames.RedSmall,
+            caption: "NO",
+            clickEvent: Emissions.No,
+            x: 522,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._noButton);
+        Config.emitter.on(Emissions.No, this.clickNo, this);
+        this._yesNoPanel = [this._yesButton, this._noButton];
+        //#endregion
+        //#region Main panel
+        this._splitButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "SPLIT",
+            clickEvent: Emissions.Split,
+            x: 236,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._splitButton);
+        Config.emitter.on(Emissions.Split, this.splitPair, this);
+        this._doubleButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "DOUBLE",
+            clickEvent: Emissions.Double,
+            x: 379,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._doubleButton);
+        Config.emitter.on(Emissions.Double, this.doubleDown, this);
+        this._hitButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "HIT",
+            clickEvent: Emissions.Hit,
+            x: 522,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._hitButton);
+        Config.emitter.on(Emissions.Hit, this.hitOnHand, this);
+        this._standButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "STAND",
+            clickEvent: Emissions.Stand,
+            x: 665,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._standButton);
+        Config.emitter.on(Emissions.Stand, this.standOnHand, this);
+        this._mainPanel = [
+            this._splitButton,
+            this._doubleButton,
+            this._hitButton,
+            this._standButton
+        ];
+        this._hintButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "HINT",
+            clickEvent: Emissions.HintPlease,
+            x: 885,
+            y: 723,
+            visible: false
+        });
+        this.add.existing(this._hintButton);
+        Config.emitter.on(Emissions.HintPlease, this.giveHint, this);
+        //#endregion
+        //#region Insurance spot
+        this._insuranceBettingSpot = new BettingSpot({
+            scene: this,
+            x: this.InsuranceLocation.x,
+            y: this.InsuranceLocation.y,
+            isOptional: true,
+            isPlayerSpot: false,
+            isLocked: true,
+            minimumBet: 2.50,
+            maximumBet: 50,
+            payoffOffset: this.InsurancePayoffOffset
+        });
+        this.add.existing(this._insuranceBettingSpot);
+        //#region Player spots
+        this._playerBettingSpots[0] = new BettingSpot({
+            scene: this,
+            x: this.PlayerSpotLocations[0].x,
+            y: this.PlayerSpotLocations[0].y,
+            isOptional: false,
+            isLocked: false,
+            isPlayerSpot: true,
+            minimumBet: 5,
+            maximumBet: 100,
+            payoffOffset: this.PlayerHandOffsets[0]
+        });
+        this._playerBettingSpots[0].HitZone.on("clicked", this.addSelectedValue, this);
+        this.add.existing(this._playerBettingSpots[0]);
+        for (let index = 1; index <= 3; index += 1) {
+            let splitSpot = new BettingSpot({
+                scene: this,
+                x: this.PlayerSpotLocations[index].x,
+                y: this.PlayerSpotLocations[index].y,
+                isOptional: true,
+                isPlayerSpot: false,
+                isLocked: true,
+                minimumBet: 5,
+                maximumBet: 100,
+                payoffOffset: this.PlayerHandOffsets[index],
+                amount: 0
+            });
+            this._playerBettingSpots[index] = splitSpot;
+            this.add.existing(this._playerBettingSpots[index]);
+        }
+        for (let index = 0; index < 4; index += 1) {
+            let secondChanceSpot = new BettingSpot({
+                scene: this,
+                x: this.SecondChanceLocations[index].x,
+                y: this.SecondChanceLocations[index].y,
+                isOptional: true,
+                isPlayerSpot: false,
+                isLocked: true,
+                minimumBet: 5,
+                maximumBet: 100,
+                amount: 0
+            });
+            this._secondChanceSpots[index] = secondChanceSpot;
+            this.add.existing(this._secondChanceSpots[index]);
+        }
+        this._bettingSpots = [
+            this._playerBettingSpots[0],
+            this._playerBettingSpots[1],
+            this._playerBettingSpots[2],
+            this._playerBettingSpots[3],
+            this._insuranceBettingSpot,
+            this._secondChanceSpots[0],
+            this._secondChanceSpots[1],
+            this._secondChanceSpots[2],
+            this._secondChanceSpots[3]
+        ];
+        this._lastWagerAmounts.length = this._bettingSpots.length;
+        //#endregion
+        this.Score = 10000;
+        this.CurrentState = GameState.Predeal;
+    }
+    //#region Animation methods
+    doAnimation() {
+        let thisAction = this._stepList.shift();
+        switch (thisAction) {
+            case Steps.CardToPlayer: {
+                this.deliverCard(true, this._currentHand);
+                break;
+            }
+            case Steps.CardToDealer: {
+                this.deliverCard(false);
+                break;
+            }
+            case Steps.CheckForInsurance: {
+                let upcardRank = Math.floor(this._dealerHand[1].CardNumber / 4);
+                if (upcardRank == 12) {
+                    this.CurrentState = GameState.InsuranceInput;
+                }
+                else {
+                    this.resolveDealerNatural();
+                }
+                break;
+            }
+            case Steps.CheckHoleCard: {
+                let upcardRank = Math.floor(this._dealerHand[1].CardNumber / 4);
+                if (this._dealerTotal == -21) {
+                    this.checkAndFlipHoleCard();
+                }
+                else if (upcardRank >= 8) {
+                    this.checkAndReturnHoleCard();
+                }
+                else {
+                    this.doAnimation();
+                }
+                break;
+            }
+            case Steps.FlipHoleCard: {
+                this.flipHoleCard();
+                break;
+            }
+            case Steps.ResolveInsurance: {
+                if (this._insuranceBettingSpot.Amount > 0) {
+                    let insurancePayout = (this._dealerTotal == -21 ? 2 : -1);
+                    this.resolvePayout(this._insuranceBettingSpot, insurancePayout, true);
+                }
+                else {
+                    this.doAnimation();
+                }
+                break;
+            }
+            case Steps.ChangeStateMainInput: {
+                this.CurrentState = GameState.MainInput;
+                break;
+            }
+            case Steps.AnnotateDealer: {
+                let dealerScore = Math.abs(this._dealerTotal);
+                let dealerScoreString = "";
+                if (this._dealerTotal == -21 && this._dealerHand.length == 2) {
+                    dealerScoreString = "blackjack";
+                }
+                else if (this._dealerTotal == 22) {
+                    dealerScoreString = "22 - push";
+                }
+                else {
+                    dealerScoreString = dealerScore.toString();
+                }
+                var dealerScoreField = this.add.text(340, 140, "Dealer has " + dealerScoreString);
+                dealerScoreField.alpha = 0;
+                dealerScoreField.setOrigin(0, 0);
+                // dealerScoreField.setFixedSize(550, 25);
+                dealerScoreField.setStyle(Config.gameOptions.commentaryFormat);
+                this._commentaryList.push(dealerScoreField);
+                this.tweens.add({
+                    targets: dealerScoreField,
+                    alpha: 1,
+                    duration: 300,
+                    onComplete: this.doAnimation,
+                    onCompleteScope: this
+                });
+                // this.doAnimation();
+                break;
+            }
+            case Steps.ResolvePlayer0: {
+                this.resolvePlayerHand(0);
+                break;
+            }
+            case Steps.ResolvePlayer1: {
+                this.resolvePlayerHand(1);
+                break;
+            }
+            case Steps.ResolvePlayer2: {
+                this.resolvePlayerHand(2);
+                break;
+            }
+            case Steps.ResolvePlayer3: {
+                this.resolvePlayerHand(3);
+                break;
+            }
+            case Steps.ResolveBust: {
+                this.CurrentState = GameState.CheckForDoubleBack;
+                break;
+            }
+            case Steps.ChangeStateGameOver: {
+                this.CurrentState = GameState.GameOver;
+                break;
+            }
+            case Steps.ResolveAutoWinner: {
+                if ((this._currentHand + 1) >= this._handCount) {
+                    // the game is over
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else {
+                    this._stepList.push(Steps.ChangeStateMainInput); // for the next hand
+                }
+                this.resolvePayout(this._playerBettingSpots[this._currentHand], 1, false, true);
+                this._currentHand += 1;
+                break;
+            }
+            case Steps.ResolvePlayerNatural: {
+                if (this._playerTotals[0] == -21) {
+                    this.resolvePayout(this._playerBettingSpots[0], 2.0, true);
+                }
+                else {
+                    this.doAnimation();
+                }
+                break;
+            }
+            case Steps.PlayDealerHand: {
+                let dealerMustPlay = false;
+                for (let i = 0; i < this._handCount; i += 1) {
+                    // Note that it's less than 21, since a 21 is resolved already.
+                    if (this._playerTotals[i] < 21) {
+                        dealerMustPlay = true;
+                    }
+                }
+                if (dealerMustPlay) {
+                    if (this._dealerTotal < 17 && this._dealerTotal >= -17) {
+                        this._stepList.push(Steps.DealerDrawCard);
+                    }
+                    else {
+                        this._stepList.push(Steps.AnnotateDealer);
+                        this._stepList.push(Steps.ResolvePlayer0);
+                        this._stepList.push(Steps.ResolvePlayer1);
+                        this._stepList.push(Steps.ResolvePlayer2);
+                        this._stepList.push(Steps.ResolvePlayer3);
+                        this._stepList.push(Steps.ChangeStateGameOver);
+                    }
+                }
+                else {
+                    this._stepList.push(Steps.ChangeStateGameOver);
+                }
+                this.doAnimation();
+                break;
+            }
+            case Steps.DealerDrawCard: {
+                this.deliverCard(false);
+                if (this._dealerTotal < 17 && this._dealerTotal >= -17) {
+                    this._stepList.push(Steps.DealerDrawCard);
+                }
+                else {
+                    this._stepList.push(Steps.AnnotateDealer);
+                    this._stepList.push(Steps.ResolvePlayer0);
+                    this._stepList.push(Steps.ResolvePlayer1);
+                    this._stepList.push(Steps.ResolvePlayer2);
+                    this._stepList.push(Steps.ResolvePlayer3);
+                    this._stepList.push(Steps.ChangeStateGameOver);
+                }
+                break;
+            }
+            case Steps.PostDoubleControl: {
+                if (this._playerTotals[this._currentHand] > 21) {
+                    this._stepList.push(Steps.ResolveBust);
+                }
+                else if (this._playerTotals[this._currentHand] == 21) {
+                    this._stepList.push(Steps.ResolveAutoWinner);
+                }
+                else if ((this._currentHand + 1) >= this._handCount) {
+                    // The game is over
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else {
+                    this._currentHand += 1;
+                    this._stepList.push(Steps.ChangeStateMainInput);
+                }
+                this.doAnimation();
+                break;
+            }
+            case Steps.SplitPair: {
+                let splitOffCard = this._playerHands[this._currentHand].pop();
+                this._playerHands[this._handCount].push(splitOffCard);
+                this._playerBettingSpots[this._handCount].Amount = this._playerBettingSpots[this._currentHand].Amount;
+                this.updateLocation(this._playerAnchors[this._currentHand], true, true);
+                this._playerTotals[this._currentHand] = Blackjack.addCardNumberToHandValue(splitOffCard.CardNumber, 0);
+                this._playerTotals[this._handCount] = Blackjack.addCardNumberToHandValue(splitOffCard.CardNumber, 0);
+                this.tweens.add({
+                    targets: splitOffCard,
+                    duration: 400,
+                    x: this._playerAnchors[this._handCount].x,
+                    y: this._playerAnchors[this._handCount].y,
+                    onComplete: this.doAnimation,
+                    onCompleteScope: this
+                });
+                this.updateLocation(this._playerAnchors[this._handCount], true, false);
+                this._handCount += 1;
+                break;
+            }
+            default: {
+                console.debug("STEP NOT RESOLVED: ", thisAction);
+                this._stepList = [];
+            }
+        }
+    }
+    deliverCard(isPlayer, targetHand = 0, isSideways = false) {
+        let dealFaceUp = (isPlayer || (this._dealerHand.length > 0));
+        let nextCardNumber;
+        if (isPlayer) {
+            let cardCount = 0;
+            for (let i = 0; i < this._handCount; i += 1)
+                cardCount += this._playerHands[i].length;
+            if (cardCount >= this._testPlayerHand.length) {
+                nextCardNumber = this._shoe.drawCard();
+            }
+            else {
+                nextCardNumber = this._testPlayerHand[cardCount];
+            }
+        }
+        else {
+            if (this._dealerHand.length >= this._testDealerHand.length) {
+                nextCardNumber = this._shoe.drawCard();
+            }
+            else {
+                nextCardNumber = this._testDealerHand[this._dealerHand.length];
+            }
+        }
+        let nextCard = new PlayingCard({
+            scene: this,
+            x: 0,
+            y: 0,
+            cardNumber: nextCardNumber,
+            isFaceUp: dealFaceUp
+        });
+        nextCard.setOrigin(0.5, 0.5);
+        this.add.existing(nextCard);
+        let adjustX = (isSideways ? 45 : 0);
+        let adjustY = (isSideways ? -55 : 0);
+        nextCard.angle = (isSideways ? 90 : 0);
+        if (isPlayer) {
+            this._playerHands[targetHand].push(nextCard);
+            this._playerTotals[targetHand] = Blackjack.addCardNumberToHandValue(nextCard.CardNumber, this._playerTotals[targetHand]);
+            this.tweens.add({
+                targets: nextCard,
+                duration: 400,
+                x: this._playerAnchors[targetHand].x + adjustX,
+                y: this._playerAnchors[targetHand].y + adjustY,
+                ease: Phaser.Math.Easing.Expo.Out,
+                onComplete: this.doAnimation,
+                onCompleteScope: this
+            });
+            this.updateLocation(this._playerAnchors[targetHand], true);
+        }
+        else {
+            this._dealerHand.push(nextCard);
+            this._dealerTotal = Blackjack.addCardNumberToHandValue(nextCard.CardNumber, this._dealerTotal);
+            this.tweens.add({
+                targets: nextCard,
+                duration: 400,
+                x: this._dealerAnchor.x + adjustX,
+                y: this._dealerAnchor.y + adjustY,
+                ease: Phaser.Math.Easing.Expo.Out,
+                onComplete: this.doAnimation,
+                completeDelay: 200,
+                onCompleteScope: this
+            });
+            this.updateLocation(this._dealerAnchor, false);
+        }
+        return nextCard;
+    }
+    resolveDealerNatural() {
+        this.Instructions = "";
+        for (let thisButton of this._yesNoPanel)
+            thisButton.visible = false;
+        let playerNatural = (this._playerTotals[0] == -21);
+        let dealerNatural = (this._dealerTotal == -21);
+        if (playerNatural) {
+            this._stepList.push(Steps.CheckHoleCard);
+            this._stepList.push(Steps.ResolveInsurance);
+            this._stepList.push(Steps.ResolvePlayerNatural);
+            this._stepList.push(Steps.FlipHoleCard);
+            this._stepList.push(Steps.ChangeStateGameOver);
+            this.doAnimation();
+        }
+        else if (dealerNatural) {
+            this._stepList.push(Steps.CheckHoleCard);
+            this._stepList.push(Steps.ResolveInsurance);
+            this._stepList.push(Steps.AnnotateDealer);
+            this._stepList.push(Steps.ResolvePlayer0);
+            this._stepList.push(Steps.ChangeStateGameOver);
+            this.doAnimation();
+        }
+        else {
+            this._stepList.push(Steps.CheckHoleCard);
+            this._stepList.push(Steps.ResolveInsurance);
+            this._stepList.push(Steps.ChangeStateMainInput);
+            this.doAnimation();
+        }
+    }
+    flipHoleCard() {
+        let tweenDurations = [200, 200, 200];
+        let tweenDelays = [0, 200, 400];
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[0],
+            duration: tweenDurations[0],
+            x: "-=70",
+        });
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[1],
+            duration: tweenDurations[1],
+            scaleX: 0,
+            scaleY: 1.2,
+            onComplete: () => {
+                this._dealerHand[0].IsFaceUp = true;
+            }
+        });
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[2],
+            duration: tweenDurations[2],
+            scaleX: 1.0,
+            scaleY: 1.0,
+            onComplete: this.doAnimation,
+            onCompleteScope: this
+        });
+    }
+    checkAndFlipHoleCard() {
+        let tweenDurations = [300, 300, 200];
+        let tweenDelays = [0, 700, 1000];
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[0],
+            duration: tweenDurations[0],
+            x: "-=70",
+        });
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[1],
+            duration: tweenDurations[1],
+            scaleX: 0,
+            scaleY: 1.2,
+            onComplete: () => {
+                this._dealerHand[0].IsFaceUp = true;
+            }
+        });
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[2],
+            duration: tweenDurations[2],
+            scaleX: 1.0,
+            scaleY: 1.0,
+            onComplete: this.doAnimation,
+            onCompleteScope: this
+        });
+    }
+    checkAndReturnHoleCard() {
+        let tweenDurations = [300, 300];
+        let tweenDelays = [0, 700];
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[0],
+            duration: tweenDurations[0],
+            x: "-=70",
+        });
+        this.add.tween({
+            targets: this._dealerHand[0],
+            delay: tweenDelays[1],
+            duration: tweenDurations[1],
+            x: "+=70",
+            onComplete: this.doAnimation,
+            onCompleteScope: this
+        });
+    }
+    resolvePlayerHand(handNumber) {
+        if (handNumber < this._handCount) {
+            let playerScore = Math.abs(this._playerTotals[handNumber]);
+            let dealerScore = Math.abs(this._dealerTotal);
+            let playerScoreField = this.add.text(this.PlayerScoreCommentary[handNumber].x, this.PlayerScoreCommentary[handNumber].y, playerScore.toString());
+            playerScoreField.setStyle(Config.gameOptions.commentaryFormat);
+            playerScoreField.setOrigin(0, 0);
+            playerScoreField.setBackgroundColor("#000000");
+            this._commentaryList.push(playerScoreField);
+            if (playerScore < 21) { // 21s and Busts are already resolved
+                if (this._dealerTotal == -21 && this._dealerHand.length == 2) {
+                    if (this._playerTotals[0] == -21 && this._handCount == 1) {
+                        // Player natural, NOP for a push
+                        this.doAnimation();
+                    }
+                    else {
+                        this.resolvePayout(this._playerBettingSpots[handNumber], -1, true);
+                    }
+                }
+                else if (playerScore == 21) {
+                    // Player 21 beats dealer 21
+                    // this.resolvePayout(this._playerBettingSpots[handNumber], 1, true);
+                }
+                else if (dealerScore == 22) {
+                    // NOP for a push-22
+                    this.doAnimation();
+                }
+                else if (dealerScore > 21) {
+                    this.resolvePayout(this._playerBettingSpots[handNumber], 1, true);
+                }
+                else if (dealerScore > playerScore) {
+                    this.resolvePayout(this._secondChanceSpots[handNumber], -1, false, false);
+                    this.resolvePayout(this._playerBettingSpots[handNumber], -1, true);
+                }
+                else if (dealerScore < playerScore) {
+                    this.resolvePayout(this._playerBettingSpots[handNumber], 1, true);
+                }
+                else {
+                    // NOP for a push
+                    this.doAnimation();
+                }
+            }
+            else {
+                this.doAnimation();
+            }
+        }
+        else {
+            // Nobody home
+            this.doAnimation();
+        }
+    }
+    //#endregion
+    //#region Logic methods
+    clearGameObjectArray(target) {
+        for (let index = 0; index < target.length; index += 1) {
+            target[index].destroy();
+        }
+        target.length = 0;
+    }
+    predealInitialization() {
+        this._shoe.shuffle();
+        for (let index = 0; index < 4; index += 1) {
+            this._playerTotals[index] = 0;
+            this._playerAnchors[index].x = this.PlayerHandAnchors[index].x;
+            this._playerAnchors[index].y = this.PlayerHandAnchors[index].y;
+            this.clearGameObjectArray(this._playerHands[index]);
+            this._playerHands[index].length = 0;
+        }
+        this._currentHand = 0;
+        this._handCount = 1;
+        // Clear dealer hand
+        this._dealerTotal = 0;
+        this._dealerAnchor.x = this.DealerHandAnchor.x;
+        this._dealerAnchor.y = this.DealerHandAnchor.y;
+        this.clearGameObjectArray(this._dealerHand);
+        this._dealerHand.length = 0;
+        this.clearGameObjectArray(this._payoutList);
+        this.clearGameObjectArray(this._commentaryList);
+        // Clear betting spots
+        for (let i = 0; i < this._bettingSpots.length; i += 1) {
+            this._bettingSpots[i].Amount = 0;
+            this._bettingSpots[i].alpha = 1.0;
+            if (this._bettingSpots[i].IsPlayerSpot) {
+                this._bettingSpots[i].IsLocked = false;
+            }
+        }
+        // Hide "New | Rebet" panel
+        for (let thisButton of this._newRebetButtonPanel) {
+            thisButton.visible = false;
+        }
+        // Show "Clear | Deal" panel
+        for (let thisButton of this._clearDealPanel) {
+            thisButton.visible = true;
+        }
+        // Hide the hint button
+        this._hintButton.visible = false;
+        // Enable wager buttons
+        for (let thisButton of this._chipButtons)
+            thisButton.setInteractive();
+    }
+    updateLocation(location, isPlayer, isBackwards = false) {
+        if (isPlayer) {
+            location.x += (17 * (isBackwards ? -1 : 1));
+            location.y -= (17 * (isBackwards ? -1 : 1));
+        }
+        else {
+            // Is for dealer
+            location.x += (17 * (isBackwards ? -1 : 1));
+        }
+    }
+    //#endregion
+    //#region Animation methods
+    playClick() {
+        this.sound.play("chipClick");
+    }
+    playButtonClick() {
+        this.sound.play("buttonClick");
+    }
+    resolvePayout(wager, multiple, elevateOldBet, continueAnimation = true, delayinMS = 0.0) {
+        if (wager.Amount != 0) {
+            if (multiple == -1) {
+                this.Score -= wager.Amount;
+                let losingPayout = new BettingSpot({
+                    scene: this,
+                    x: wager.x,
+                    y: wager.y,
+                    amount: wager.Amount,
+                    isLocked: true
+                });
+                this._payoutList.push(losingPayout);
+                this.add.existing(losingPayout);
+                wager.alpha = 0;
+                wager.Amount = 0;
+                this.tweens.add({
+                    targets: losingPayout,
+                    duration: 300,
+                    x: 0,
+                    y: 0,
+                    alpha: 0,
+                    delay: delayinMS,
+                    onComplete: (continueAnimation ? this.doAnimation : null),
+                    onCompleteScope: this
+                });
+            }
+            else {
+                let winningPayoutSpot = new BettingSpot({
+                    scene: this,
+                    amount: wager.Amount * multiple,
+                    x: 0,
+                    y: 0,
+                    isLocked: true
+                });
+                this.Score += winningPayoutSpot.Amount;
+                this._payoutList.push(winningPayoutSpot);
+                this.add.existing(winningPayoutSpot);
+                if (elevateOldBet)
+                    this.children.bringToTop(wager);
+                this.tweens.add({
+                    targets: winningPayoutSpot,
+                    duration: 300,
+                    x: wager.x + wager.PayoffOffset.x,
+                    y: wager.y + wager.PayoffOffset.y,
+                    onComplete: (continueAnimation ? this.doAnimation : null),
+                    onCompleteScope: this
+                });
+            }
+        }
+        else {
+            if (continueAnimation)
+                this.doAnimation();
+        }
+    }
+    selectCursorValue(value) {
+        for (let index = 0; index < this._chipButtons.length; index += 1) {
+            if (this._chipButtons[index].Value == value) {
+                this._chipButtons[index].scale = 1.2;
+                this._cursorValue = value;
+            }
+            else {
+                this._chipButtons[index].scale = 1.0;
+            }
+        }
+    }
+    updateControls() {
+        switch (this.CurrentState) {
+            case GameState.Predeal: {
+                this.predealInitialization();
+                this.Instructions = StringTable.PredealInstructions;
+                break;
+            }
+            case GameState.StartDeal: {
+                // Turn off the Clear | Deal panel
+                for (let thisButton of this._clearDealPanel)
+                    thisButton.visible = false;
+                // Disable wager buttons
+                for (let thisButton of this._chipButtons)
+                    thisButton.disableInteractive();
+                this.Instructions = "";
+                // If any non-optional wager OR partially wagered optional is not Min, make it so.
+                for (let thisWager of this._bettingSpots) {
+                    if (!thisWager.IsOptional || thisWager.Amount > 0) {
+                        thisWager.Amount = Math.max(thisWager.Amount, thisWager.MinimumBet);
+                    }
+                }
+                // Store the last wagers, close wagers for business.
+                for (let index = 0; index < this._lastWagerAmounts.length; index += 1) {
+                    this._bettingSpots[index].disableInteractive();
+                    this._bettingSpots[index].IsLocked = true;
+                    this._lastWagerAmounts[index] = this._bettingSpots[index].Amount;
+                }
+                // TODO: load up game starting animations, ending with change to first decision.
+                this._stepList.push(Steps.CardToPlayer);
+                this._stepList.push(Steps.CardToDealer);
+                this._stepList.push(Steps.CardToPlayer);
+                this._stepList.push(Steps.CardToDealer);
+                this._stepList.push(Steps.CheckForInsurance);
+                // and now, if you please, we'll proceed
+                this.doAnimation();
+                break;
+            }
+            case GameState.InsuranceInput: {
+                for (let thisButton of this._yesNoPanel)
+                    thisButton.visible = true;
+                this.Instructions = StringTable.Insurance;
+                break;
+            }
+            case GameState.MainInput: {
+                if (this._playerHands[this._currentHand].length < 2) {
+                    this._stepList.push(Steps.CardToPlayer);
+                    this._stepList.push(Steps.ChangeStateMainInput);
+                    this.doAnimation();
+                }
+                else {
+                    for (let thisButton of this._mainPanel)
+                        thisButton.visible = true;
+                    let isPair = (Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4) ==
+                        Math.floor(this._playerHands[this._currentHand][1].CardNumber / 4));
+                    // OR, any two facecards
+                    if (this._playerHands[this._currentHand][0].CardNumber >= 32 &&
+                        this._playerHands[this._currentHand][0].CardNumber < 48 &&
+                        this._playerHands[this._currentHand][1].CardNumber >= 32 &&
+                        this._playerHands[this._currentHand][1].CardNumber < 48)
+                        isPair = true;
+                    // While you can always hit, double or stand, surrender and split are limited
+                    if (this._playerHands[this._currentHand].length == 2 && this._handCount < 4 && isPair) {
+                        this._splitButton.unlock();
+                    }
+                    else {
+                        this._splitButton.lock();
+                    }
+                    if (this._playerHands[this._currentHand].length == 2) {
+                        this._doubleButton.unlock();
+                    }
+                    else {
+                        this._doubleButton.lock();
+                    }
+                    this.Instructions = "Hand #" + (this._currentHand + 1) + " of " + this._handCount + ": " + Blackjack.handTotalToHandString(this._playerTotals[this._currentHand]);
+                }
+                break;
+            }
+            case GameState.CheckForDoubleBack: {
+                for (let thisButton of this._yesNoPanel)
+                    thisButton.visible = true;
+                this.Instructions =
+                    "You have busted with a total of " +
+                        this._playerTotals[this._currentHand].toString() +
+                        ".\n" +
+                        StringTable.DoubleBack;
+                break;
+            }
+            case GameState.GameOver: {
+                for (let thisButton of this._newRebetButtonPanel)
+                    thisButton.visible = true;
+                this.Instructions = StringTable.GameOver;
+                break;
+            }
+            default: {
+                console.debug("STATE ID# NOT HANDLED: ", this.CurrentState);
+                break;
+            }
+        }
+    }
+    //#endregion
+    //#region Event handlers
+    addSelectedValue(target) {
+        if (this._cursorValue > 0) {
+            let targetSpot = target.parentContainer;
+            let newValue = Math.min(targetSpot.Amount + this._cursorValue, targetSpot.MaximumBet);
+            this.playClick();
+            targetSpot.Amount = newValue;
+        }
+    }
+    beginDeal() {
+        this.playButtonClick();
+        this.CurrentState = GameState.StartDeal;
+    }
+    clearBettingSpots() {
+        for (let spot of this._bettingSpots) {
+            spot.Amount = 0;
+        }
+        this.playButtonClick();
+    }
+    newBets() {
+        this.playButtonClick();
+        this.CurrentState = GameState.Predeal;
+    }
+    rebetBets() {
+        this.playButtonClick();
+        this.predealInitialization();
+        for (let index = 0; index < this._bettingSpots.length; index += 1) {
+            this._bettingSpots[index].Amount = this._lastWagerAmounts[index];
+        }
+        this.CurrentState = GameState.StartDeal;
+    }
+    clickYes() {
+        this.playButtonClick();
+        if (this._currentState == GameState.InsuranceInput) {
+            this._insuranceBettingSpot.Amount = this._playerBettingSpots[0].Amount / 2;
+            this.resolveDealerNatural();
+        }
+        else if (this._currentState == GameState.CheckForDoubleBack) {
+            for (let thisButton of this._yesNoPanel)
+                thisButton.visible = false;
+            this.Instructions = "";
+            this._secondChanceSpots[this._currentHand].Amount = this._playerBettingSpots[this._currentHand].Amount;
+            this._playerAnchors[this._currentHand].x -= 40;
+            this._playerAnchors[this._currentHand].y -= 90;
+            // To counteract the "adding" of the card
+            let oldPlayerTotal = this._playerTotals[this._currentHand];
+            let backCard = this.deliverCard(true, this._currentHand);
+            backCard.angle = 90;
+            this._playerTotals[this._currentHand] = oldPlayerTotal;
+            let backAmount = Blackjack.addCardNumberToHandValue(backCard.CardNumber, 0);
+            if (backAmount == -11)
+                backAmount = 1;
+            this._playerTotals[this._currentHand] = Math.abs(this._playerTotals[this._currentHand]);
+            this._playerTotals[this._currentHand] -= backAmount;
+            if (this._playerTotals[this._currentHand] > 21) {
+                // Still a bust, so off we go
+                if ((this._currentHand + 1) >= this._handCount) {
+                    // the game is over
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else {
+                    this._stepList.push(Steps.ChangeStateMainInput); // for the next hand
+                }
+                this.resolvePayout(this._secondChanceSpots[this._currentHand], -1, false, false, 700);
+                this.resolvePayout(this._playerBettingSpots[this._currentHand], -1, false, true, 1000);
+                this._currentHand += 1;
+            }
+            else if (this._playerTotals[this._currentHand] == 21) {
+                // Auto winner on 21
+                if ((this._currentHand + 1) >= this._handCount) {
+                    // the game is over
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else {
+                    this._stepList.push(Steps.ChangeStateMainInput); // for the next hand
+                }
+                this.resolvePayout(this._playerBettingSpots[this._currentHand], 1, false, true, 700);
+                this._currentHand += 1;
+            }
+            else {
+                if ((this._currentHand + 1) >= this._handCount) {
+                    // The game is over
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else {
+                    this._currentHand += 1;
+                    this._stepList.push(Steps.ChangeStateMainInput);
+                }
+                this.tweens.add({
+                    target: this._gameFelt,
+                    alpha: 1,
+                    duration: 300,
+                    onComplete: this.doAnimation,
+                    onCompleteScope: this
+                });
+                // this.doAnimation();
+            }
+        }
+        else {
+            console.debug("Current state " + this._currentState + " not resolved in clickYes();");
+        }
+    }
+    clickNo() {
+        this.playButtonClick();
+        if (this._currentState == GameState.InsuranceInput) {
+            this.resolveDealerNatural();
+        }
+        else if (this._currentState == GameState.CheckForDoubleBack) {
+            for (let thisButton of this._yesNoPanel)
+                thisButton.visible = false;
+            this.Instructions = "";
+            if ((this._currentHand + 1) >= this._handCount) {
+                // the game is over
+                this._stepList.push(Steps.FlipHoleCard);
+                this._stepList.push(Steps.PlayDealerHand);
+            }
+            else {
+                this._stepList.push(Steps.ChangeStateMainInput); // for the next hand
+            }
+            this.resolvePayout(this._playerBettingSpots[this._currentHand], -1, false, true);
+            this._currentHand += 1;
+        }
+        else {
+            console.debug("Current state " + this._currentState + " not resolved in clickNo();");
+        }
+    }
+    splitPair() {
+        this.playButtonClick();
+        for (let thisButton of this._mainPanel)
+            thisButton.visible = false;
+        this._hintButton.visible = false;
+        this.Instructions = "";
+        let thisRank = Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4);
+        if (thisRank == 12) {
+            // split aces
+            this._stepList.push(Steps.SplitPair);
+            this._stepList.push(Steps.CardToPlayer);
+            this._stepList.push(Steps.ForceNextHand);
+            this._stepList.push(Steps.CardToPlayer);
+            this._stepList.push(Steps.FlipHoleCard);
+            this._stepList.push(Steps.PlayDealerHand);
+        }
+        else {
+            this._stepList.push(Steps.SplitPair);
+            this._stepList.push(Steps.CardToPlayer);
+            this._stepList.push(Steps.ChangeStateMainInput);
+        }
+        this.doAnimation();
+    }
+    doubleDown() {
+        this.playButtonClick();
+        for (let thisButton of this._mainPanel)
+            thisButton.visible = false;
+        this._hintButton.visible = false;
+        this.Instructions = "";
+        let thisSpot = this._playerBettingSpots[this._currentHand];
+        let newAmount = Math.min(thisSpot.Amount * 2, thisSpot.Amount + thisSpot.MaximumBet);
+        thisSpot.Amount = newAmount;
+        this._stepList.push(Steps.PostDoubleControl);
+        this.deliverCard(true, this._currentHand, true);
+    }
+    hitOnHand() {
+        this.playButtonClick();
+        for (let thisButton of this._mainPanel)
+            thisButton.visible = false;
+        this._hintButton.visible = false;
+        this.Instructions = "";
+        this.deliverCard(true, this._currentHand);
+        if (this._playerTotals[this._currentHand] > 21) {
+            this._stepList.push(Steps.ResolveBust);
+        }
+        else if (this._playerTotals[this._currentHand] == 21) {
+            // It's a 21, so put on a "pay auto winner" step
+            this._stepList.push(Steps.ResolveAutoWinner);
+        }
+        else {
+            // Player still has choices, go back to main panel
+            this._stepList.push(Steps.ChangeStateMainInput);
+        }
+    }
+    standOnHand() {
+        this.playButtonClick();
+        for (let thisButton of this._mainPanel)
+            thisButton.visible = false;
+        this._hintButton.visible = false;
+        this.Instructions = "";
+        if (this._playerTotals[this._currentHand] > 21) {
+            this._stepList.push(Steps.ResolveBust);
+        }
+        else {
+            if ((this._currentHand + 1) >= this._handCount) {
+                this._stepList.push(Steps.FlipHoleCard);
+                this._stepList.push(Steps.PlayDealerHand);
+            }
+            else {
+                this._stepList.push(Steps.ChangeStateMainInput);
+            }
+            this._currentHand += 1;
+        }
+        this.doAnimation();
+    }
+    giveHint() {
+    }
+    selectChip(target) {
+        this.playClick();
+        this.selectCursorValue(target.Value);
+    }
+    //#endregion
+    // 	//#region Properties
+    get CurrentState() { return this._currentState; }
+    set CurrentState(value) {
+        this._currentState = value;
+        this.updateControls();
+    }
+    set Instructions(value) {
+        let targetFontSize = this.TargetFontInstructionSize;
+        this._helpField.setFontSize(targetFontSize);
+        this._helpField.text = value;
+        while (this._helpField.height > 50) {
+            targetFontSize -= 1;
+            this._helpField.setFontSize(targetFontSize - 1);
+        }
+    }
+    get Score() { return this._score; }
+    set Score(value) {
+        var _a;
+        while (value < 0) {
+            value += 50000;
+        }
+        this._score = value;
+        let descriptors = ["BANKROLL", General.amountToDollarString(value)];
+        (_a = this._scoreField) === null || _a === void 0 ? void 0 : _a.setText(descriptors);
+    }
+}
+class LoaderScene extends Phaser.Scene {
+    constructor() {
+        super("LoaderScene");
+    }
+    preload() {
+        //#region Load sounds
+        this.load.audio("chipClick", [
+            "./assets/sounds/ChipClick.mp3",
+            "./assets/sounds/ChipClick.ogg"
+        ]);
+        this.load.audio("buttonClick", [
+            "./assets/sounds/Button Click.mp3",
+            "./assets/sounds/Button Click.ogg"
+        ]);
+        //#endregion
+        //#region Load graphics
+        this.load.image("gameFelt", "assets/images/Blank Game Felt.png");
+        this.load.image("blueText", "assets/images/Blue Text 130x50.png");
+        this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
+        this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
+        this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
+        this.load.image("playerSpot", "assets/images/2nd Chance Spot.png");
+        this.load.image("banner", "assets/images/2nd Chance Banner.png");
+        this.load.image("logo", "assets/images/2nd Chance Logo.png");
+        this.load.image("dealerBar", "assets/images/2nd Chance Dealer Bar.png");
+        this.load.spritesheet("card", "assets/images/TGS Cards.png", {
+            frameWidth: Config.gameOptions.cardWidth,
+            frameHeight: Config.gameOptions.cardHeight
+        });
+        this.load.spritesheet("chip", "assets/images/TGS Chips.png", {
+            frameWidth: Config.gameOptions.chipWidth,
+            frameHeight: Config.gameOptions.chipHeight
+        });
+        this.load.spritesheet(AssetNames.RedSmall, "assets/images/Red 123x35.png", {
+            frameWidth: Config.gameOptions.buttonWidth,
+            frameHeight: Config.gameOptions.buttonHeight
+        });
+        this.load.spritesheet(AssetNames.BlueSmall, "assets/images/Blue 123x35.png", {
+            frameWidth: Config.gameOptions.buttonWidth,
+            frameHeight: Config.gameOptions.buttonHeight
+        });
+        this.load.spritesheet(AssetNames.GreenSmall, "assets/images/Green 123x35.png", {
+            frameWidth: Config.gameOptions.buttonWidth,
+            frameHeight: Config.gameOptions.buttonHeight
+        });
+        //#endregion
+    }
+    create() {
+        this.scene.start("GameScene");
+    }
+}
+class AssetNames {
+}
+AssetNames.RedSmall = "buttonRedSmall";
+AssetNames.BlueSmall = "buttonBlueSmall";
+AssetNames.GreenSmall = "buttonGreenSmall";
+class BettingSpot extends Phaser.GameObjects.Container {
+    constructor(config) {
+        var _a, _b, _c, _d, _e, _f, _g;
+        super(config.scene, config.x, config.y);
+        this.ChipStackOffset = -5;
+        this._amount = 0;
+        this._config = config;
+        this._hitZone = new Phaser.GameObjects.Image(this.scene, 0, 0, "dropPixel");
+        this._hitZone.setOrigin(1, 1);
+        this._hitZone.alpha = 0.00001;
+        this._hitZone.setInteractive({ useHandCursor: true });
+        this.add(this._hitZone);
+        this._amount = (_a = config.amount) !== null && _a !== void 0 ? _a : 0;
+        this._isOptional = (_b = config.isOptional) !== null && _b !== void 0 ? _b : false;
+        this._isLocked = (_c = config.isLocked) !== null && _c !== void 0 ? _c : false;
+        this._isPlayerSpot = (_d = config.isPlayerSpot) !== null && _d !== void 0 ? _d : true;
+        this._minimumBet = (_e = config.minimumBet) !== null && _e !== void 0 ? _e : 5;
+        this._maximumBet = (_f = config.maximumBet) !== null && _f !== void 0 ? _f : 100;
+        this._payoffOffset = (_g = config.payoffOffset) !== null && _g !== void 0 ? _g : new Point(-34, -37);
+        this.fillSpot();
+    }
+    //#region Methods
+    fillSpot() {
+        let remainingAmount = this._amount;
+        let currentChipIndex = 0;
+        // First, eliminate all existing children.
+        this.removeAll();
+        if (remainingAmount == 0) {
+            if (!this._isLocked) {
+                let dummyChip = new Chip({ scene: this.scene, x: 0, y: 0 });
+                dummyChip.Value = 5;
+                dummyChip.setOrigin(1, 1);
+                this.add(dummyChip);
+                dummyChip.setTint(0x0000FF);
+                let width = Config.gameOptions.chipWidth;
+                let height = Config.gameOptions.chipHeight;
+                this._hitZone.setDisplaySize(width, height);
+                this.add(this._hitZone);
+            }
+        }
+        else {
+            let stackSize = 0;
+            do {
+                let currentChipAmount = Config.gameOptions.chipValues[currentChipIndex];
+                if (remainingAmount >= currentChipAmount) {
+                    let x = 0;
+                    let y = (stackSize * this.ChipStackOffset);
+                    if (stackSize > 0) {
+                        x += (Math.random() * 3) - 1;
+                        y += (Math.random() * 3) - 1;
+                    }
+                    ;
+                    let nextChip = new Chip({
+                        scene: this.scene,
+                        x: x,
+                        y: y
+                    });
+                    nextChip.Value = currentChipAmount;
+                    nextChip.setOrigin(1, 1);
+                    this.add(nextChip);
+                    remainingAmount = Math.round((remainingAmount - currentChipAmount) * 100) / 100;
+                    stackSize += 1;
+                }
+                else {
+                    currentChipIndex += 1;
+                }
+            } while (remainingAmount >= 0.5);
+            let width = Config.gameOptions.chipWidth;
+            let height = -((Config.gameOptions.chipHeight * -1) + ((stackSize - 1) * this.ChipStackOffset));
+            this._hitZone.setDisplaySize(width, height);
+            this.add(this._hitZone);
+        }
+    }
+    //#endregion
+    //#region Properties
+    get Amount() { return this._amount; }
+    set Amount(value) {
+        this._amount = value;
+        this.fillSpot();
+    }
+    get HitZone() { return this._hitZone; }
+    get IsLocked() { return this._isLocked; }
+    set IsLocked(value) {
+        this._isLocked = value;
+        if (value) {
+            this._hitZone.disableInteractive();
+        }
+        else {
+            this._hitZone.setInteractive();
+        }
+        this.fillSpot();
+    }
+    get IsOptional() { return this._isOptional; }
+    set IsOptional(value) { this._isOptional = value; }
+    get IsPlayerSpot() { return this._isPlayerSpot; }
+    set IsPlayerSpot(value) { this._isPlayerSpot = value; }
+    get MaximumBet() { return this._maximumBet; }
+    set MaximumBet(value) { this._maximumBet = value; }
+    get MinimumBet() { return this._minimumBet; }
+    set MinimumBet(value) { this._minimumBet = value; }
+    get PayoffOffset() { return this._payoffOffset; }
+    set PayoffOffset(value) { this._payoffOffset = value; }
+}
+class Blackjack {
+    static addCardNumberToHandValue(cardNumber, handValue) {
+        let cardRank = Math.floor(cardNumber / 4);
+        return this.addCardRankToHandValue(cardRank, handValue, false);
+    }
+    static addCardRankToHandValue(cardRank, handValue, usingBlackjackRanks = false) {
+        let blackjackValue = 0;
+        if (usingBlackjackRanks) {
+            switch (cardRank) {
+                case 0:
+                    blackjackValue = 10;
+                    break;
+                default:
+                    blackjackValue = cardRank;
+                    break;
+            }
+        }
+        else {
+            switch (cardRank) {
+                case 12:
+                    blackjackValue = 1;
+                    break;
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                    blackjackValue = 10;
+                    break;
+                default:
+                    blackjackValue = cardRank + 2;
+                    break;
+            }
+        }
+        return this.addBlackjackValueToHandValue(blackjackValue, handValue);
+    }
+    static addBlackjackValueToHandValue(blackjackValue, handValue) {
+        let output = handValue;
+        if (blackjackValue == 1) { // separate case for adding an ace.
+            if (output < 0) { // soft hands require specific cases.
+                output -= 1; // soft hand + ace = still soft hand, one higher -- WATCH THE SIGNS
+            }
+            else {
+                output = -1 * (output + 11); // mollify a hard hand.
+            }
+        }
+        else {
+            if (output < 0) { // soft hands require specific cases
+                output -= blackjackValue;
+            }
+            else {
+                output += blackjackValue;
+            }
+        }
+        if (output < -21) { // soft hand with a 'busting total' becomes a 10-point less hard hand.
+            output = Math.abs(output + 10); // remember to WATCH THE SIGNS.
+        }
+        return output;
+    }
+    static handTotalToHandString(total) {
+        if (total > 0) {
+            return "Hard " + total;
+        }
+        else {
+            return "Soft " + Math.abs(total);
+        }
+    }
+}
+class Button extends Phaser.GameObjects.Container {
+    constructor(config) {
+        var _a, _b, _c, _d, _e;
+        super(config.scene, config.x, config.y);
+        this._isMouseOver = false;
+        this.scene = config.scene;
+        this._config = config;
+        this._background = this._config.scene.add.sprite(0, 0, this._config.style, 0);
+        this.add(this._background);
+        this._background.setInteractive({ useHandCursor: true });
+        this._background.on("pointerdown", this.buttonDown, this);
+        this._background.on("pointerup", this.buttonUp, this);
+        this._background.on("pointerover", this.buttonOver, this);
+        this._background.on("pointerout", this.buttonOut, this);
+        this._caption = config.caption;
+        this._label = this._config.scene.add.text(0, 0, config.caption);
+        this._label.setFontSize((_a = config.fontSize) !== null && _a !== void 0 ? _a : 14);
+        this._label.setFontStyle((_b = config.fontStyle) !== null && _b !== void 0 ? _b : "bold");
+        this._label.setColor((_c = config.fontColor) !== null && _c !== void 0 ? _c : "#FFFFFF");
+        this._label.setFontFamily((_d = config.fontFamily) !== null && _d !== void 0 ? _d : "Arial");
+        this._label.setOrigin(0.5, 0.5);
+        this.visible = ((_e = config.visible) !== null && _e !== void 0 ? _e : true);
+        this.add(this._label);
+    }
+    //#region Methods
+    lock() {
+        this._background.disableInteractive();
+        this._background.setTint(0x888888);
+    }
+    unlock() {
+        this._background.setInteractive();
+        this._background.clearTint();
+    }
+    //#endregion
+    //#region Event handlers
+    buttonUp() {
+        if (this._isMouseOver) {
+            this._background.setFrame(1);
+            if (this._config.params != undefined) {
+                Config.emitter.emit(this._config.clickEvent, this._config.params);
+            }
+            else {
+                Config.emitter.emit(this._config.clickEvent);
+            }
+        }
+        else {
+            this._background.setFrame(0);
+        }
+    }
+    buttonOver() {
+        this._background.setFrame(1);
+        this._isMouseOver = true;
+    }
+    buttonDown() {
+        this._background.setFrame(2);
+    }
+    buttonOut() {
+        this._background.setFrame(0);
+        this._isMouseOver = false;
+    }
+    //#endregion
+    //#region Properties	
+    get Caption() { return this._caption; }
+    set Caption(value) {
+        this._caption = value;
+        this._label.setText(value);
+    }
+}
+class Chip extends Phaser.GameObjects.Sprite {
+    constructor(config) {
+        super(config.scene, config.x, config.y, "chip");
+        this._value = 1;
+    }
+    get Value() { return this._value; }
+    set Value(value) {
+        // Only set the chip value if it's a legal one.
+        let chipIndex = Config.gameOptions.chipValues.indexOf(value);
+        if (chipIndex >= 0) {
+            this.setFrame(chipIndex);
+            this._value = value;
+        }
+    }
+}
+class Constants {
+}
+Constants.CardRanks = "23456789TJQKA";
+Constants.CardSuits = "CDHS";
+Constants.Primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227, 229, 233, 239, 241];
+Constants.FiveCardPokerHandNames = [
+    "Incomplete",
+    "No pair",
+    "One pair",
+    "Two pair",
+    "Trips",
+    "Straight",
+    "Flush",
+    "Full house",
+    "Four of a kind",
+    "Straight flush",
+    "Royal flush",
+    "Five of a kind"
+];
+Constants.StraightCodes = [
+    [],
+    [],
+    [],
+    [
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[12],
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2],
+        Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3],
+        Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4],
+        Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5],
+        Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6],
+        Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7],
+        Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8],
+        Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9],
+        Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10],
+        Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11],
+        Constants.Primes[10] * Constants.Primes[11] * Constants.Primes[12]
+    ],
+    [
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[12],
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3],
+        Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4],
+        Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5],
+        Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6],
+        Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7],
+        Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8],
+        Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9],
+        Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10],
+        Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11],
+        Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11] * Constants.Primes[12]
+    ],
+    [
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[12],
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4],
+        Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5],
+        Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6],
+        Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7],
+        Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8],
+        Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9],
+        Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10],
+        Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11],
+        Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11] * Constants.Primes[12]
+    ],
+    [
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[12],
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5],
+        Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6],
+        Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7],
+        Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8],
+        Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9],
+        Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10],
+        Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11],
+        Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11] * Constants.Primes[12]
+    ],
+    [
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[12],
+        Constants.Primes[0] * Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6],
+        Constants.Primes[1] * Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7],
+        Constants.Primes[2] * Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8],
+        Constants.Primes[3] * Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9],
+        Constants.Primes[4] * Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10],
+        Constants.Primes[5] * Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11],
+        Constants.Primes[6] * Constants.Primes[7] * Constants.Primes[8] * Constants.Primes[9] * Constants.Primes[10] * Constants.Primes[11] * Constants.Primes[12]
+    ]
+];
+class Emissions {
+}
+Emissions.ChangeCursorValue = "Change cursor value";
+Emissions.ClearBettingSpots = "Clear betting spots";
+Emissions.AddCursorValue = "Add cursor value";
+Emissions.BeginDeal = "Begin deal";
+Emissions.NewGame = "New game";
+Emissions.RebetBets = "Rebet bets";
+Emissions.Yes = "Yes";
+Emissions.No = "No";
+Emissions.Split = "Split";
+Emissions.Double = "Double";
+Emissions.Hit = "Hit";
+Emissions.Stand = "Stand";
+Emissions.HintPlease = "Hint, please";
+class GameState {
+}
+GameState.Predeal = 0;
+GameState.StartDeal = 1;
+GameState.InsuranceInput = 2;
+GameState.MainInput = 3;
+GameState.CheckForDoubleBack = 4;
+GameState.GameOver = 5;
+class General {
+    static amountToDollarString(value) {
+        let remainder = Math.floor(value);
+        let cents = Math.round((value - remainder) * 100);
+        let output = "";
+        let digitCount = 0;
+        do {
+            let thisDigit = remainder % 10;
+            if (digitCount > 0 && digitCount % 3 == 0) {
+                output = "," + output;
+            }
+            output = thisDigit.toString() + output;
+            digitCount += 1;
+            remainder = Math.floor(remainder / 10);
+        } while (remainder > 0);
+        if (cents < 10) {
+            output = output + ".0" + cents.toString();
+        }
+        else {
+            output = output + "." + cents;
+        }
+        return "$" + output;
+    }
+    static cardNumberToString(cardNumber) {
+        if (cardNumber == 53) {
+            return "!!";
+        }
+        else if (cardNumber == 52) {
+            return "ZZ";
+        }
+        else {
+            let rank = Math.floor(cardNumber / 4);
+            let suit = cardNumber % 4;
+            return Constants.CardRanks.substr(rank, 1) + Constants.CardSuits.substr(suit, 1);
+        }
+    }
+    static cardStringToNumber(cardString) {
+        if (cardString == "!!") {
+            return 53;
+        }
+        else if (cardString == "ZZ") {
+            return 52;
+        }
+        else {
+            let rank = cardString.substr(0, 1);
+            let suit = cardString.substr(1, 1);
+            return Constants.CardRanks.indexOf(rank) * 4 + Constants.CardSuits.indexOf(suit);
+        }
+    }
+    static cardStringToVector(cardString) {
+        let particles = cardString.split(" ");
+        let output = new Array(particles.length);
+        for (let index = 0; index < output.length; index += 1) {
+            output[index] = this.cardStringToNumber(particles[index]);
+        }
+        return output;
+    }
+    static cardVectorToString(cardVector) {
+        let output = this.cardNumberToString(cardVector[0]);
+        for (let index = 1; index < cardVector.length; index += 1)
+            output += (" " + this.cardNumberToString(cardVector[index]));
+        return output;
+    }
+}
+class PlayingCard extends Phaser.GameObjects.Sprite {
+    constructor(config) {
+        var _a, _b;
+        super(config.scene, config.x, config.y, "card");
+        this.CardBackFrame = 54;
+        this.CardNumber = ((_a = config.cardNumber) !== null && _a !== void 0 ? _a : 0);
+        this.IsFaceUp = ((_b = config.isFaceUp) !== null && _b !== void 0 ? _b : false);
+    }
+    get CardNumber() { return this._cardNumber; }
+    set CardNumber(value) {
+        this._cardNumber = value;
+        if (this._isFaceUp) {
+            this.setFrame(value);
+        }
+        else {
+            this.setFrame(this.CardBackFrame);
+        }
+    }
+    get IsFaceUp() { return this._isFaceUp; }
+    set IsFaceUp(value) {
+        this._isFaceUp = value;
+        if (value) {
+            this.setFrame(this._cardNumber);
+        }
+        else {
+            this.setFrame(this.CardBackFrame);
+        }
+    }
+}
+class QuantumShoe {
+    // #region Constructors
+    constructor(rankVector, numberOfDecks = 1) {
+        this._infiniteDeckMode = false;
+        this._baseRankCount = [];
+        this._rankCount = [];
+        this._numCards = 0;
+        this._numDecks = numberOfDecks;
+        let vectorSize = rankVector.length;
+        this._numRanks = vectorSize;
+        this._baseRankCount.length = vectorSize;
+        this._rankCount.length = vectorSize;
+        for (let rank = 0; rank < vectorSize; rank += 1) {
+            this._baseRankCount[rank] = rankVector[rank] * this._numDecks;
+        }
+        this.shuffle();
+    }
+    // #endregion
+    // #region Standard methods
+    shuffle() {
+        this._numCards = 0;
+        for (let rank = 0; rank < this._numRanks; rank += 1) {
+            this._rankCount[rank] = this._baseRankCount[rank];
+            this._numCards += this._rankCount[rank];
+        }
+    }
+    drawCard() {
+        let seed = Math.floor(Math.random() * this._numCards);
+        for (let rank = 0; rank < this._numRanks; rank += 1) {
+            seed -= this._rankCount[rank];
+            if (seed < 0) {
+                // remove the card, unless in infinite deck mode.
+                if (!this._infiniteDeckMode) {
+                    this.adjustQuantityOfRank(rank, -1);
+                }
+                return rank;
+            }
+        }
+        return -1;
+    }
+    drawReturningCountOfRank(rank) {
+        let output = this._rankCount[rank];
+        this.adjustQuantityOfRank(rank, -1);
+        return output;
+    }
+    drawReturningProbabilityOfRank(rank) {
+        let output = 0.0;
+        if (this._rankCount[rank] > 0) {
+            output = this.getProbabilityOfDrawingRank(rank);
+        }
+        return output;
+    }
+    getCountOfRank(rank) {
+        return this._rankCount[rank];
+    }
+    getProbabilityOfDrawingRank(rank) {
+        return this._rankCount[rank] / this._numCards;
+    }
+    adjustQuantityOfRank(rank, quantity) {
+        if (this._rankCount[rank] + quantity < 0) {
+            return false;
+        }
+        else {
+            this._rankCount[rank] += quantity;
+            this._numCards += quantity;
+            return true;
+        }
+    }
+    // #endregion
+    // #region Properties
+    get CardsRemaining() { return this._numCards; }
+}
+class Steps {
+}
+Steps.ChangeStateGameOver = "CHANGE STATE: Game Over";
+Steps.CardToPlayer = "Card To Player";
+Steps.CardToDealer = "Card To Dealer";
+Steps.CheckForInsurance = "Check For Insurance";
+Steps.CheckHoleCard = "Check hole card";
+Steps.ResolveInsurance = "Resolve insurance";
+Steps.ResolvePlayerNatural = "Resolve player natural";
+Steps.AnnotateDealer = "Annotate dealer";
+Steps.ResolvePlayer0 = "Resolve player hand #0";
+Steps.ResolvePlayer1 = "Resolve player hand #1";
+Steps.ResolvePlayer2 = "Resolve player hand #2";
+Steps.ResolvePlayer3 = "Resolve player hand #3";
+Steps.ChangeStateMainInput = "CHANGE STATE: Main input";
+Steps.FlipHoleCard = "Flip hole card";
+Steps.PlayDealerHand = "Play dealer hand";
+Steps.DealerDrawCard = "Dealer draw card";
+Steps.PostDoubleControl = "Post double control";
+Steps.ResolveBust = "Resolve Bust";
+Steps.SplitPair = "Split pair";
+Steps.ForceNextHand = "Force next hand";
+Steps.ResolveAutoWinner = "Resolve Auto Winner";
+class StringTable {
+}
+StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE and/or BONUS betting spots to add chips, click DEAL to begin.";
+StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
+StringTable.Insurance = "Would you like insurance? (YES / NO)";
+StringTable.DoubleBack = "Would you like to make a Second Chance wager on your busted hand? (YES / NO)";
+//# sourceMappingURL=index.js.map
