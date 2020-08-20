@@ -93,6 +93,21 @@ class GameScene extends Phaser.Scene {
         this.InsurancePayoffOffset = new Point(-34, -37);
         this.DealerHandAnchor = new Point(450, 70);
         this.TargetFontInstructionSize = 22;
+        this.UpcardDescriptors = [
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "Ten",
+            "Face",
+            "Face",
+            "Face",
+            "Ace",
+        ];
         //#endregion
         //#region Betting spots
         this._playerBettingSpots = new Array(0);
@@ -125,8 +140,8 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         // If desired, initialize test hands by uncommenting.
-        // this._testDealerHand = General.cardStringToVector("KC 4S 9C");
-        // this._testPlayerHand = General.cardStringToVector("4C 7H KH 3D");
+        // this._testDealerHand = General.cardStringToVector("4H AD");
+        // this._testPlayerHand = General.cardStringToVector("KH KD");
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         let playerSpot = this.add.image(185, 570, "playerSpot");
@@ -193,6 +208,17 @@ class GameScene extends Phaser.Scene {
             this._playerAnchors[index] = new Point();
         }
         //#region Button panels
+        this._hintButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "HINT",
+            clickEvent: Emissions.HintPlease,
+            x: 885,
+            y: 665,
+            visible: false
+        });
+        this.add.existing(this._hintButton);
+        Config.emitter.on(Emissions.HintPlease, this.giveHint, this);
         //#region Clear | Deal panel
         this._clearButton = new Button({
             scene: this,
@@ -266,7 +292,7 @@ class GameScene extends Phaser.Scene {
         });
         this.add.existing(this._noButton);
         Config.emitter.on(Emissions.No, this.clickNo, this);
-        this._yesNoPanel = [this._yesButton, this._noButton];
+        this._yesNoPanel = [this._yesButton, this._noButton, this._hintButton];
         //#endregion
         //#region Main panel
         this._splitButton = new Button({
@@ -317,19 +343,9 @@ class GameScene extends Phaser.Scene {
             this._splitButton,
             this._doubleButton,
             this._hitButton,
-            this._standButton
+            this._standButton,
+            this._hintButton
         ];
-        this._hintButton = new Button({
-            scene: this,
-            style: AssetNames.BlueSmall,
-            caption: "HINT",
-            clickEvent: Emissions.HintPlease,
-            x: 885,
-            y: 723,
-            visible: false
-        });
-        this.add.existing(this._hintButton);
-        Config.emitter.on(Emissions.HintPlease, this.giveHint, this);
         //#endregion
         //#region Insurance spot
         this._insuranceBettingSpot = new BettingSpot({
@@ -419,7 +435,8 @@ class GameScene extends Phaser.Scene {
             }
             case Steps.CheckForInsurance: {
                 let upcardRank = Math.floor(this._dealerHand[1].CardNumber / 4);
-                if (upcardRank == 12) {
+                let playerNatural = (Math.abs(this._playerTotals[this._currentHand]) == 21);
+                if (upcardRank == 12 && !playerNatural) {
                     this.CurrentState = GameState.InsuranceInput;
                 }
                 else {
@@ -578,7 +595,7 @@ class GameScene extends Phaser.Scene {
                 if (this._playerTotals[this._currentHand] > 21) {
                     this._stepList.push(Steps.ResolveBust);
                 }
-                else if (this._playerTotals[this._currentHand] == 21) {
+                else if (Math.abs(this._playerTotals[this._currentHand]) == 21) {
                     this._stepList.push(Steps.ResolveAutoWinner);
                 }
                 else if ((this._currentHand + 1) >= this._handCount) {
@@ -610,6 +627,21 @@ class GameScene extends Phaser.Scene {
                 });
                 this.updateLocation(this._playerAnchors[this._handCount], true, false);
                 this._handCount += 1;
+                break;
+            }
+            case Steps.ForceNextHand: {
+                this._currentHand += 1;
+                this.doAnimation();
+                break;
+            }
+            case Steps.PaySplitAceIf21: {
+                let thisTotal = Math.abs(this._playerTotals[this._currentHand]);
+                if (thisTotal == 21) {
+                    this.resolvePayout(this._bettingSpots[this._currentHand], 1, true, true);
+                }
+                else {
+                    this.doAnimation();
+                }
                 break;
             }
             default: {
@@ -690,8 +722,8 @@ class GameScene extends Phaser.Scene {
         let playerNatural = (this._playerTotals[0] == -21);
         let dealerNatural = (this._dealerTotal == -21);
         if (playerNatural) {
-            this._stepList.push(Steps.CheckHoleCard);
-            this._stepList.push(Steps.ResolveInsurance);
+            // this._stepList.push(Steps.CheckHoleCard);
+            // this._stepList.push(Steps.ResolveInsurance);
             this._stepList.push(Steps.ResolvePlayerNatural);
             this._stepList.push(Steps.FlipHoleCard);
             this._stepList.push(Steps.ChangeStateGameOver);
@@ -882,8 +914,6 @@ class GameScene extends Phaser.Scene {
         for (let thisButton of this._clearDealPanel) {
             thisButton.visible = true;
         }
-        // Hide the hint button
-        this._hintButton.visible = false;
         // Enable wager buttons
         for (let thisButton of this._chipButtons)
             thisButton.setInteractive();
@@ -1009,8 +1039,10 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case GameState.InsuranceInput: {
-                for (let thisButton of this._yesNoPanel)
+                for (let thisButton of this._yesNoPanel) {
+                    thisButton.scale = 1.0;
                     thisButton.visible = true;
+                }
                 this.Instructions = StringTable.Insurance;
                 break;
             }
@@ -1021,8 +1053,10 @@ class GameScene extends Phaser.Scene {
                     this.doAnimation();
                 }
                 else {
-                    for (let thisButton of this._mainPanel)
+                    for (let thisButton of this._mainPanel) {
                         thisButton.visible = true;
+                        thisButton.scale = 1.0;
+                    }
                     let isPair = (Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4) ==
                         Math.floor(this._playerHands[this._currentHand][1].CardNumber / 4));
                     // OR, any two facecards
@@ -1049,8 +1083,10 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case GameState.CheckForDoubleBack: {
-                for (let thisButton of this._yesNoPanel)
+                for (let thisButton of this._yesNoPanel) {
+                    thisButton.scale = 1.0;
                     thisButton.visible = true;
+                }
                 this.Instructions =
                     "You have busted with a total of " +
                         this._playerTotals[this._currentHand].toString() +
@@ -1211,8 +1247,10 @@ class GameScene extends Phaser.Scene {
             // split aces
             this._stepList.push(Steps.SplitPair);
             this._stepList.push(Steps.CardToPlayer);
+            this._stepList.push(Steps.PaySplitAceIf21);
             this._stepList.push(Steps.ForceNextHand);
             this._stepList.push(Steps.CardToPlayer);
+            this._stepList.push(Steps.PaySplitAceIf21);
             this._stepList.push(Steps.FlipHoleCard);
             this._stepList.push(Steps.PlayDealerHand);
         }
@@ -1245,7 +1283,7 @@ class GameScene extends Phaser.Scene {
         if (this._playerTotals[this._currentHand] > 21) {
             this._stepList.push(Steps.ResolveBust);
         }
-        else if (this._playerTotals[this._currentHand] == 21) {
+        else if (Math.abs(this._playerTotals[this._currentHand]) == 21) {
             // It's a 21, so put on a "pay auto winner" step
             this._stepList.push(Steps.ResolveAutoWinner);
         }
@@ -1276,6 +1314,155 @@ class GameScene extends Phaser.Scene {
         this.doAnimation();
     }
     giveHint() {
+        this.playButtonClick();
+        let playerTotal = this._playerTotals[this._currentHand];
+        let isSoft = (playerTotal < 0);
+        playerTotal = Math.abs(playerTotal);
+        let handString = (isSoft ? "SOFT " : "HARD ") + playerTotal.toString();
+        let upcard = this._dealerHand[1].CardNumber;
+        let upcardRank = Math.floor(upcard / 4);
+        let upcardString = this.UpcardDescriptors[upcardRank];
+        if (this.CurrentState == GameState.CheckForDoubleBack) {
+            let takeDoubleBack = false;
+            switch (playerTotal) {
+                case 22:
+                case 23: {
+                    takeDoubleBack = true;
+                    break;
+                }
+                case 24:
+                case 29: {
+                    takeDoubleBack = (upcardRank >= 0 && upcardRank <= 7);
+                    break;
+                }
+                case 25:
+                case 26:
+                case 27:
+                case 28: {
+                    takeDoubleBack = (upcardRank >= 0 && upcardRank <= 6);
+                    break;
+                }
+                case 30: {
+                    takeDoubleBack = (upcardRank >= 5 && upcardRank <= 7);
+                    break;
+                }
+                case 31: {
+                    takeDoubleBack = false;
+                    break;
+                }
+                default: {
+                    this.Instructions = "Should not get here with player total of " + playerTotal.toString();
+                    return;
+                }
+            }
+            this.Instructions = handString + " against " + upcardString + " : " + (takeDoubleBack ? "YES" : "NO");
+            if (takeDoubleBack) {
+                this._yesButton.scale = 1.2;
+            }
+            else {
+                this._noButton.scale = 1.2;
+            }
+        }
+        else if (this.CurrentState == GameState.InsuranceInput) {
+            this.Instructions = "Do not take insurance";
+            this._noButton.scale = 1.2;
+        }
+        else {
+            let optimalPlay = "";
+            // Step 1: hit/soft distinction
+            if (isSoft) {
+                if (playerTotal >= 19) {
+                    optimalPlay = "STAND";
+                }
+                else if (playerTotal <= 17) {
+                    optimalPlay = "HIT";
+                }
+                else {
+                    optimalPlay = (upcardRank >= 5 && upcardRank <= 6 ? "STAND" : "HIT");
+                }
+            }
+            else {
+                if (playerTotal >= 17) {
+                    optimalPlay = "STAND";
+                }
+                else if (playerTotal <= 15) {
+                    optimalPlay = "HIT";
+                }
+                else {
+                    optimalPlay = (upcardRank >= 1 && upcardRank <= 4 ? "STAND" : "HIT");
+                }
+            }
+            // Step 2: check for double down
+            let doDouble = false;
+            if (this._playerHands[this._currentHand].length == 2) {
+                if (isSoft) {
+                    if (playerTotal == 18) {
+                        doDouble = (upcardRank >= 3 && upcardRank <= 4);
+                    }
+                    else if (playerTotal == 17) {
+                        doDouble = (upcardRank == 4);
+                    }
+                }
+                else {
+                    if (playerTotal == 11) {
+                        doDouble = (upcardRank != 12);
+                    }
+                    else if (playerTotal == 10) {
+                        doDouble = (upcardRank >= 1 && upcardRank <= 5);
+                    }
+                }
+            }
+            if (doDouble)
+                optimalPlay = "DOUBLE";
+            // Step 3: check for pair split
+            let isPair = (Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4) ==
+                Math.floor(this._playerHands[this._currentHand][1].CardNumber / 4));
+            // OR, any two facecards
+            if (this._playerHands[this._currentHand][0].CardNumber >= 32 &&
+                this._playerHands[this._currentHand][0].CardNumber < 48 &&
+                this._playerHands[this._currentHand][1].CardNumber >= 32 &&
+                this._playerHands[this._currentHand][1].CardNumber < 48)
+                isPair = true;
+            let doSplit = false;
+            if (isPair && this._handCount < 4) {
+                if (isSoft && playerTotal == 12) {
+                    doSplit = true;
+                }
+                else if (playerTotal == 4) {
+                    doSplit = (upcardRank >= 1 && upcardRank <= 5);
+                }
+                else if (playerTotal == 6) {
+                    doSplit = (upcardRank >= 1 && upcardRank <= 6);
+                }
+                else if (playerTotal == 8) {
+                    doSplit = (upcardRank >= 3 && upcardRank <= 4);
+                }
+                else if (!isSoft && playerTotal == 12) {
+                    doSplit = (upcardRank == 4);
+                }
+                else if (playerTotal == 14) {
+                    doSplit = (upcardRank >= 1 && upcardRank <= 5);
+                }
+                else if (playerTotal == 16 || playerTotal == 18) {
+                    doSplit = (upcardRank >= 0 && upcardRank <= 7);
+                }
+            }
+            if (doSplit)
+                optimalPlay = "SPLIT";
+            this.Instructions = handString + " against " + upcardString + " : " + optimalPlay;
+            if (optimalPlay == "HIT") {
+                this._hitButton.scale = 1.2;
+            }
+            else if (optimalPlay == "STAND") {
+                this._standButton.scale = 1.2;
+            }
+            else if (optimalPlay == "DOUBLE") {
+                this._standButton.scale = 1.2;
+            }
+            else if (optimalPlay == "SPLIT") {
+                this._splitButton.scale = 1.2;
+            }
+        }
     }
     selectChip(target) {
         this.playClick();
@@ -1912,6 +2099,7 @@ Steps.ResolveBust = "Resolve Bust";
 Steps.SplitPair = "Split pair";
 Steps.ForceNextHand = "Force next hand";
 Steps.ResolveAutoWinner = "Resolve Auto Winner";
+Steps.PaySplitAceIf21 = "Pay split ace if 21";
 class StringTable {
 }
 StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE and/or BONUS betting spots to add chips, click DEAL to begin.";
