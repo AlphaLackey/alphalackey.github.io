@@ -11,7 +11,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene]
+            scene: [LoaderScene, GameScene, HelpScene]
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
@@ -108,7 +108,14 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         // Add the game felt.
-        this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let paytableGraphic = this.add.image(650, 15, "logo");
+        paytableGraphic.scale = 0.2;
+        paytableGraphic.setOrigin(0, 0);
+        let oddsGraphic = this.add.image(650, 320, "oddsPaytable");
+        oddsGraphic.scale = 0.8;
+        oddsGraphic.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -213,6 +220,18 @@ class GameScene extends Phaser.Scene {
         Config.emitter.on(Emissions.RebetBets, this.rebetBets, this);
         this._newRebetButtonPanel = [this._newButton, this._rebetButton];
         //#endregion
+        // Help button
+        this._helpButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "HELP",
+            clickEvent: Emissions.HelpScreen,
+            x: 952,
+            y: 30,
+            visible: true
+        });
+        this.add.existing(this._helpButton);
+        Config.emitter.on(Emissions.HelpScreen, this.helpScreen, this);
         //#region Control panel
         this._playButton = new Button({
             scene: this,
@@ -885,6 +904,9 @@ class GameScene extends Phaser.Scene {
                         thisWager.Amount = Math.max(thisWager.Amount, thisWager.MinimumBet);
                     }
                 }
+                for (let chip of this._chipButtons) {
+                    chip.disableInteractive();
+                }
                 // Store the last wagers, close wagers for business.
                 for (let index = 0; index < this._lastWagerAmounts.length; index += 1) {
                     this._bettingSpots[index].disableInteractive();
@@ -914,6 +936,8 @@ class GameScene extends Phaser.Scene {
             case GameState.GameOver: {
                 for (let thisButton of this._newRebetButtonPanel)
                     thisButton.visible = true;
+                for (let chip of this._chipButtons)
+                    chip.setInteractive();
                 this.Instructions = StringTable.GameOver;
                 break;
             }
@@ -943,6 +967,10 @@ class GameScene extends Phaser.Scene {
         }
         this.playButtonClick();
     }
+    helpScreen() {
+        this.playButtonClick();
+        this.scene.switch("HelpScene");
+    }
     newBets() {
         this.playButtonClick();
         this.CurrentState = GameState.Predeal;
@@ -956,7 +984,7 @@ class GameScene extends Phaser.Scene {
         this.CurrentState = GameState.StartDeal;
     }
     selectChip(target) {
-        this.playButtonClick();
+        this.playChipClick();
         this.selectCursorValue(target.Value);
     }
     makePlayWager() {
@@ -1082,6 +1110,35 @@ class GameScene extends Phaser.Scene {
         (_a = this._scoreField) === null || _a === void 0 ? void 0 : _a.setText(descriptors);
     }
 }
+class HelpScene extends Phaser.Scene {
+    constructor() {
+        super("HelpScene");
+    }
+    create() {
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let howToPlayGraphic = this.add.image(0, 0, "helpScreen");
+        howToPlayGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.ReturnToGame,
+            x: 726 + 226,
+            y: 665 + 64,
+            visible: true
+        });
+        this.add.existing(button);
+        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+    }
+    returnToGame() {
+        this.sound.play("buttonClick");
+        this.scene.switch("GameScene");
+    }
+}
 class LoaderScene extends Phaser.Scene {
     constructor() {
         super("LoaderScene");
@@ -1107,10 +1164,9 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
-        this.load.image("playerSpot", "assets/images/2nd Chance Spot.png");
-        this.load.image("banner", "assets/images/2nd Chance Banner.png");
-        this.load.image("logo", "assets/images/2nd Chance Logo.png");
-        this.load.image("dealerBar", "assets/images/2nd Chance Dealer Bar.png");
+        this.load.image("logo", "assets/images/POB Logo.png");
+        this.load.image("oddsPaytable", "assets/images/POB Bonus Paytable.png");
+        this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -1424,6 +1480,8 @@ Emissions.MakePlayWager = "Make play wager";
 Emissions.MakeBustWager = "Make bust wager";
 Emissions.Fold = "Fold";
 Emissions.HintPlease = "Hint, please";
+Emissions.HelpScreen = "Help Screen";
+Emissions.ReturnToGame = "Return to game";
 class GameState {
 }
 GameState.Predeal = 0;
