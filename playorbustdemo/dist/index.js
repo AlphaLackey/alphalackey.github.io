@@ -12,12 +12,6 @@ class Config {
             backgroundColor: 0x000000,
             parent: 'game-div',
             scene: [LoaderScene, GameScene, HelpScene],
-            scale: {
-                parent: 'game-div',
-                mode: Phaser.Scale.FIT,
-                width: this.gameOptions.gameWidth,
-                height: this.gameOptions.gameHeight
-            }
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
