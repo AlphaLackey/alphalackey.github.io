@@ -13,8 +13,8 @@ class Config {
 }
 Config.emitter = new Phaser.Events.EventEmitter(); //: Phaser.Events.EventEmitter;
 Config.gameOptions = {
-    gameWidth: 1024,
-    gameHeight: 760,
+    gameWidth: 400,
+    gameHeight: 400,
     buttonWidth: 123,
     buttonHeight: 35,
     cardWidth: 85,
@@ -68,7 +68,7 @@ class LoaderScene extends Phaser.Scene {
         super("LoaderScene");
     }
     preload() {
-        this.load.image("felt", "assets/images/Blank Game Felt.png");
+        this.load.image("felt", "assets/images/Felt.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
