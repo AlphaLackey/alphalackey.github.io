@@ -17,8 +17,8 @@ Config.gameOptions = {
     gameHeight: 400,
     buttonWidth: 123,
     buttonHeight: 35,
-    cardWidth: 85,
-    cardHeight: 131,
+    cardWidth: 79,
+    cardHeight: 110,
     chipWidth: 55,
     chipHeight: 51,
     chipValues: [5000, 1000, 500, 100, 25, 5, 1, 0.5],
@@ -69,7 +69,7 @@ class LoaderScene extends Phaser.Scene {
     }
     preload() {
         this.load.image("felt", "assets/images/Felt.png");
-        this.load.spritesheet("card", "assets/images/TGS Cards.png", {
+        this.load.spritesheet("card", "assets/images/Galaxy Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
         });
