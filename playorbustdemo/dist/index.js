@@ -16,8 +16,8 @@ class Config {
             scale: {
                 parent: 'game-div',
                 mode: Phaser.Scale.FIT,
-                width: 800,
-                height: 600
+                width: this.gameOptions.gameWidth,
+                height: this.gameOptions.gameHeight
             }
         };
         this.gameReference = new Phaser.Game(gameConfig);
