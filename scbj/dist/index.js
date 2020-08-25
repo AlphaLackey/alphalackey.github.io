@@ -148,8 +148,12 @@ class GameScene extends Phaser.Scene {
         // If desired, initialize test hands by uncommenting.
         // this._testDealerHand = General.cardStringToVector("4H AD");
         // this._testPlayerHand = General.cardStringToVector("4H AC 6D");
-        // Add the game felt.
-        this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
+        // // Add the game felt.
+        // this._gameFelt = this.add.image(
+        // 	Config.gameOptions.gameWidth / 2,
+        // 	Config.gameOptions.gameHeight / 2,
+        // 	"gameFelt"
+        // );
         let playerSpot = this.add.image(185, 570, "playerSpot");
         playerSpot.setOrigin(0.5, 0.5);
         let bannerDisplay = this.add.image(330, 520, "banner");
@@ -164,7 +168,6 @@ class GameScene extends Phaser.Scene {
         this.input.on('gameobjectup', function (_, gameObject) {
             gameObject.emit('clicked', gameObject);
         }, this);
-        this.input.disable(this._gameFelt);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
