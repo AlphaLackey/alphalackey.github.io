@@ -9,9 +9,16 @@ class Config {
         let gameConfig = {
             width: this.gameOptions.gameWidth,
             height: this.gameOptions.gameHeight,
+            type: Phaser.AUTO,
             backgroundColor: 0x000000,
             parent: 'game-div',
             scene: [LoaderScene, GameScene, HelpScene],
+            scale: {
+                parent: 'game-div',
+                mode: Phaser.Scale.FIT,
+                width: 800,
+                height: 600
+            }
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
