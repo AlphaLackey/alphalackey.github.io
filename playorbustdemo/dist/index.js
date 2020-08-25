@@ -1171,7 +1171,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("oddsPaytable", "assets/images/POB Bonus Paytable.png");
         this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.image("mainGamePaytable", "assets/images/Main Game Rules.png");
-        this.load.spritesheet("card", "assets/images/TGS Cards.png", {
+        this.load.spritesheet("card", "assets/images/TGS Cards.jpg", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
         });
