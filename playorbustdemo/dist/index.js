@@ -22,8 +22,8 @@ Config.gameOptions = {
     gameHeight: 760,
     buttonWidth: 123,
     buttonHeight: 35,
-    cardWidth: 85,
-    cardHeight: 131,
+    cardWidth: 79,
+    cardHeight: 123,
     chipWidth: 55,
     chipHeight: 51,
     chipValues: [5000, 1000, 500, 100, 25, 5, 1, 0.5],
@@ -1171,7 +1171,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("oddsPaytable", "assets/images/POB Bonus Paytable.png");
         this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.image("mainGamePaytable", "assets/images/Main Game Rules.png");
-        this.load.spritesheet("card", "assets/images/TGS Cards.jpg", {
+        this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
         });
