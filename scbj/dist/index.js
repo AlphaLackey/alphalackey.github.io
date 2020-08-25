@@ -164,6 +164,7 @@ class GameScene extends Phaser.Scene {
         this.input.on('gameobjectup', function (_, gameObject) {
             gameObject.emit('clicked', gameObject);
         }, this);
+        this.input.disable(this._gameFelt);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
