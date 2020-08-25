@@ -3,8 +3,8 @@ class Config {
 	static emitter = new Phaser.Events.EventEmitter();//: Phaser.Events.EventEmitter;
 
 	static gameOptions = {
-		gameWidth: 400,
-		gameHeight: 400,
+		gameWidth: 1024,
+		gameHeight: 760,
 
 		buttonWidth: 123,
 		buttonHeight: 35,
