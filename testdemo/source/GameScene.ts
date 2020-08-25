@@ -10,7 +10,7 @@ class GameScene extends Phaser.Scene {
 		feltAsset.setOrigin(0, 0);
 
 		for (let x = 0; x <= 54; x += 1) {
-			let card = this.add.sprite(x * 15, x * 12, "card", x);
+			let card = this.add.sprite(x * 15, x * 11.3, "card", x);
 			card.setOrigin(0, 0);
 		}
 	}

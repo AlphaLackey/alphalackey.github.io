@@ -7,7 +7,7 @@ class LoaderScene extends Phaser.Scene {
 		this.load.image("felt", "assets/images/Felt.png");
 		this.load.spritesheet(
 			"card",
-			"assets/images/Galaxy Cards.png", {
+			"assets/images/TGS New Cards.png", {
 				frameWidth: Config.gameOptions.cardWidth,
 				frameHeight: Config.gameOptions.cardHeight
 			}

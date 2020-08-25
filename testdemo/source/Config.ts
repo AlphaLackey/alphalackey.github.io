@@ -10,7 +10,7 @@ class Config {
 		buttonHeight: 35,
 
 		cardWidth: 79,
-		cardHeight: 110,
+		cardHeight: 123,
 
 		chipWidth: 55,
 		chipHeight: 51,
