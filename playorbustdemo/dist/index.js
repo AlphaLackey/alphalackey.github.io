@@ -113,9 +113,12 @@ class GameScene extends Phaser.Scene {
         let paytableGraphic = this.add.image(650, 15, "logo");
         paytableGraphic.scale = 0.2;
         paytableGraphic.setOrigin(0, 0);
-        let oddsGraphic = this.add.image(650, 320, "oddsPaytable");
-        oddsGraphic.scale = 0.8;
+        let oddsGraphic = this.add.image(650, 225, "oddsPaytable");
+        oddsGraphic.scale = 0.5;
         oddsGraphic.setOrigin(0, 0);
+        let mainGraphic = this.add.image(628, 435, "mainGamePaytable");
+        mainGraphic.scale = 0.5;
+        mainGraphic.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -1167,6 +1170,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("logo", "assets/images/POB Logo.png");
         this.load.image("oddsPaytable", "assets/images/POB Bonus Paytable.png");
         this.load.image("helpScreen", "assets/images/How To Play.png");
+        this.load.image("mainGamePaytable", "assets/images/Main Game Rules.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
