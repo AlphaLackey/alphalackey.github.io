@@ -58,6 +58,8 @@ class GameScene extends Phaser.Scene {
         super("GameScene");
     }
     create() {
+        let feltAsset = this.add.image(0, 0, "felt");
+        feltAsset.setOrigin(0, 0);
         this.add.sprite(100, 100, "card", 12);
     }
 }
@@ -66,6 +68,7 @@ class LoaderScene extends Phaser.Scene {
         super("LoaderScene");
     }
     preload() {
+        this.load.image("felt", "assets/images/Blank Game Felt.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight

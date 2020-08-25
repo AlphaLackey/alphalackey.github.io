@@ -4,6 +4,7 @@ class LoaderScene extends Phaser.Scene {
 	}
 
 	preload() {
+		this.load.image("felt", "assets/images/Blank Game Felt.png");
 		this.load.spritesheet(
 			"card",
 			"assets/images/TGS Cards.png", {
