@@ -6,44 +6,19 @@ CardTarget.Dealer = 1;
 CardTarget.Board = 2;
 class Config {
     static initGame() {
-        Config.isMobile = navigator.userAgent.indexOf("Mobile");
-        if (Config.isMobile == -1) {
-            Config.isMobile = navigator.userAgent.indexOf("Tablet");
-        }
-        let gameConfig;
-        if (Config.isMobile == -1) {
-            gameConfig = {
+        let gameConfig = {
+            width: this.gameOptions.gameWidth,
+            height: this.gameOptions.gameHeight,
+            backgroundColor: 0x000000,
+            parent: 'game-div',
+            scene: [LoaderScene, GameScene, HelpScene],
+            scale: {
+                parent: 'game-div',
+                mode: Phaser.Scale.FIT,
                 width: this.gameOptions.gameWidth,
-                height: this.gameOptions.gameHeight,
-                type: Phaser.AUTO,
-                backgroundColor: 0x000000,
-                scene: [LoaderScene, GameScene, HelpScene]
-            };
-        }
-        else {
-            gameConfig = {
-                type: Phaser.AUTO,
-                width: window.innerWidth,
-                height: window.innerHeight,
-                parent: 'phaser-game',
-                scene: [LoaderScene, GameScene, HelpScene]
-            };
-            // this.options.width = window.innerWidth;
-            // this.options.height = window.innerHeight;
-        }
-        // let gameConfig = {
-        // 	width: this.gameOptions.gameWidth,
-        // 	height: this.gameOptions.gameHeight,
-        // 	backgroundColor: 0x000000,
-        // 	parent: 'game-div',
-        // 	scene: [LoaderScene, GameScene, HelpScene],
-        // 	// scale: {
-        // 	// 	parent: 'game-div',
-        // 	// 	mode: Phaser.Scale.FIT,
-        // 	// 	width: this.gameOptions.gameWidth * 1.2,
-        // 	// 	height: this.gameOptions.gameHeight * 1.2
-        // 	// }
-        // }
+                height: this.gameOptions.gameHeight
+            }
+        };
         this.gameReference = new Phaser.Game(gameConfig);
     }
 }
