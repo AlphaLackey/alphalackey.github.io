@@ -6,13 +6,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene],
-            scale: {
-                parent: 'game-div',
-                mode: Phaser.Scale.FIT,
-                width: this.gameOptions.gameWidth,
-                height: this.gameOptions.gameHeight
-            }
+            scene: [LoaderScene, GameScene]
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
@@ -23,8 +17,8 @@ Config.gameOptions = {
     gameHeight: 760,
     buttonWidth: 123,
     buttonHeight: 35,
-    cardWidth: 79,
-    cardHeight: 123,
+    cardWidth: 85,
+    cardHeight: 131,
     chipWidth: 55,
     chipHeight: 51,
     chipValues: [5000, 1000, 500, 100, 25, 5, 1, 0.5],
@@ -147,7 +141,7 @@ class GameScene extends Phaser.Scene {
     create() {
         // If desired, initialize test hands by uncommenting.
         // this._testDealerHand = General.cardStringToVector("4H AD");
-        // this._testPlayerHand = General.cardStringToVector("4H AC 6D");
+        // this._testPlayerHand = General.cardStringToVector("4H 4C 4D 6D AC 9S AD 9S");
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         let playerSpot = this.add.image(185, 570, "playerSpot");
@@ -573,7 +567,7 @@ class GameScene extends Phaser.Scene {
                 let dealerMustPlay = false;
                 for (let i = 0; i < this._handCount; i += 1) {
                     // Note that it's less than 21, since a 21 is resolved already.
-                    if (Math.abs(this._playerTotals[i]) < 21) {
+                    if (this._playerTotals[i] < 21) {
                         dealerMustPlay = true;
                     }
                 }
