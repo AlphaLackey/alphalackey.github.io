@@ -117,10 +117,10 @@ class GameScene extends Phaser.Scene {
         // Add the game felt.
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
-        let paytableGraphic = this.add.image(650, 15, "logo");
-        paytableGraphic.scale = 0.2;
-        paytableGraphic.setOrigin(0, 0);
-        let oddsGraphic = this.add.image(650, 225, "oddsPaytable");
+        let gameGraphic = this.add.image(650, 15, "logo");
+        gameGraphic.scale = 0.1;
+        gameGraphic.setOrigin(0, 0);
+        let oddsGraphic = this.add.image(650 + 23, 225, "oddsPaytable");
         oddsGraphic.scale = 0.5;
         oddsGraphic.setOrigin(0, 0);
         let mainGraphic = this.add.image(628, 435, "mainGamePaytable");
@@ -454,7 +454,7 @@ class GameScene extends Phaser.Scene {
                     this._optimalAnnotation = "Any two suited cards: PLAY";
                 }
                 else if (highRank == lowRank) {
-                    this._optimalAnnotation = "Any two suited cards: PLAY";
+                    this._optimalAnnotation = "Any pair: PLAY";
                 }
                 else if (highRank >= 11) {
                     this._optimalAnnotation = "Any king-high or ace-high: PLAY";
@@ -541,7 +541,7 @@ class GameScene extends Phaser.Scene {
             }
             case Steps.ResolveAnteWager: {
                 if (this._antePayout == 0) {
-                    this.addCommentaryField("Ante wager pushes.");
+                    this.addCommentaryField("Ante and Play wager pushes.");
                     this.doAnimation();
                 }
                 else {
@@ -1174,7 +1174,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
-        this.load.image("logo", "assets/images/POB Logo.png");
+        this.load.image("logo", "assets/images/PP Logo.png");
         this.load.image("oddsPaytable", "assets/images/POB Bonus Paytable.png");
         this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.image("mainGamePaytable", "assets/images/Main Game Rules.png");
