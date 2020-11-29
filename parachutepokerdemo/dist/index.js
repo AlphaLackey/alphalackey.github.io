@@ -257,7 +257,7 @@ class GameScene extends Phaser.Scene {
         this._bustButton = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
-            caption: "BUST",
+            caption: "JUMP",
             clickEvent: Emissions.MakeBustWager,
             x: 379 + 204,
             y: 665,
@@ -362,7 +362,7 @@ class GameScene extends Phaser.Scene {
         graphics.closePath();
         graphics.fillPath();
         graphics.strokePath();
-        let bustLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "BUST");
+        let bustLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "JUMP");
         bustLabel.setFixedSize(80, 22);
         bustLabel.setStyle(Config.gameOptions.feltFormat);
         this._bustSpot = new BettingSpot({
@@ -469,7 +469,7 @@ class GameScene extends Phaser.Scene {
                     this._optimalAnnotation = "Any one-gap hand at least seven-five or higher: PLAY";
                 }
                 else {
-                    this._optimalAnnotation = "Make BUST wager.";
+                    this._optimalAnnotation = "Make JUMP wager.";
                     this._optimalPlay = Strategy.Bust;
                 }
                 this.doAnimation();
@@ -1031,7 +1031,7 @@ class GameScene extends Phaser.Scene {
     makeBustWager() {
         if (this._optimalPlay != Strategy.Bust && this._doubleCheck) {
             this.playChing();
-            this.Instructions = "Are you sure you want to make a BUST wager?\nOptimal strategy = " + this._optimalAnnotation;
+            this.Instructions = "Are you sure you want to make a JUMP wager?\nOptimal strategy = " + this._optimalAnnotation;
             if (this._optimalPlay == Strategy.Play) {
                 this._playButton.scale = 1.2;
             }
@@ -1704,8 +1704,6 @@ class StringTable {
 }
 StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE and/or BONUS betting spots to add chips, click DEAL to begin.";
 StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
-StringTable.Insurance = "Would you like insurance? (YES / NO)";
-StringTable.DoubleBack = "Would you like to make a Second Chance Wager? (YES / NO)";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
         let output = -1;
