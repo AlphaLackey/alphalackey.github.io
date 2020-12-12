@@ -120,10 +120,10 @@ class GameScene extends Phaser.Scene {
         let gameGraphic = this.add.image(650, 15, "logo");
         gameGraphic.scale = 0.1;
         gameGraphic.setOrigin(0, 0);
-        let oddsGraphic = this.add.image(650 + 23, 225, "oddsPaytable");
+        let oddsGraphic = this.add.image(650 + 40, 225 - 15, "oddsPaytable");
         oddsGraphic.scale = 0.5;
         oddsGraphic.setOrigin(0, 0);
-        let mainGraphic = this.add.image(628, 435, "mainGamePaytable");
+        let mainGraphic = this.add.image(628, 435 - 35, "mainGamePaytable");
         mainGraphic.scale = 0.5;
         mainGraphic.setOrigin(0, 0);
         // Creates the shoe object
@@ -234,7 +234,7 @@ class GameScene extends Phaser.Scene {
         this._helpButton = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
-            caption: "HELP",
+            caption: "RULES",
             clickEvent: Emissions.HelpScreen,
             x: 952,
             y: 30,
@@ -505,11 +505,11 @@ class GameScene extends Phaser.Scene {
                 }
                 else if (playerRank == ThreeCardPokerRank.NoPair) {
                     if (highCardRank <= 5) {
-                        bonusAnnotation = "Odds pays 10:1 for 6/7 high bust";
+                        bonusAnnotation = "Odds pays 10:1 for 6/7 high";
                         payout = 10;
                     }
                     else if (highCardRank <= 9) {
-                        bonusAnnotation = "Odds pays 2:1 for 8/9/T/J high bust";
+                        bonusAnnotation = "Odds pays 2:1 for 8/9/T/J high";
                         payout = 2;
                     }
                 }
@@ -576,10 +576,10 @@ class GameScene extends Phaser.Scene {
                 }
                 else {
                     if (this._bustPayout == 2) {
-                        this.addCommentaryField("Bust wager pays 2:1");
+                        this.addCommentaryField("Jump wager pays 2:1");
                     }
                     else if (this._bustPayout == -1) {
-                        this.addCommentaryField("Bust wager loses");
+                        this.addCommentaryField("Jump wager loses");
                     }
                     this.resolvePayout(this._bustSpot, this._bustPayout, true, true);
                 }
