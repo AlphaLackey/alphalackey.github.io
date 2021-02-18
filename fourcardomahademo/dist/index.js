@@ -11,7 +11,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene]
+            scene: [LoaderScene, GameScene, HelpScene]
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
@@ -35,7 +35,7 @@ Config.gameOptions = {
         align: "center"
     },
     helpFormat: {
-        fontFamily: "Arial",
+        fontFamily: "Myriad",
         fontSize: "22px",
         color: "#000000",
         align: "center"
@@ -47,10 +47,16 @@ Config.gameOptions = {
         align: "center"
     },
     commentaryFormat: {
-        fontFamily: "Arial",
-        fontSize: "20px",
+        fontFamily: "Myriad",
+        fontSize: "24px",
         fontColor: "#FFFFFF",
         fontStyle: "bold",
+        align: "left"
+    },
+    helpScreenFormat: {
+        fontFamily: "Myriad",
+        fontSize: "18px",
+        fontColor: "#FFFFFF",
         align: "left"
     }
 };
@@ -78,15 +84,15 @@ class GameScene extends Phaser.Scene {
         this.CommentarySpacing = 30;
         this.NumberOfDecks = 1;
         this.FourCardBonusCategories = [
-            "AAKK double suited pays 500:1",
-            "AAKK pays 100:1",
-            "Aces double suited pays 50:1",
-            "Two pair double suited pays 30:1",
-            "Two pair pays 15:1",
-            "Four card straight pays 10:1",
-            "Any two aces pays 5:1",
-            "Any two double suited pays 2:1",
-            "Four Card Bonus wager loses"
+            "4 Card bonus: AAKK double suited pays 500:1",
+            "4 Card bonus: AAKK pays 100:1",
+            "4 Card bonus: Aces double suited pays 50:1",
+            "4 Card bonus: Two pair double suited pays 30:1",
+            "4 Card bonus: Two pair pays 15:1",
+            "4 Card bonus: Four card straight pays 10:1",
+            "4 Card bonus: Any two aces pays 5:1",
+            "4 Card bonus: Any two double suited pays 2:1",
+            "4 Card bonus: Four Card Bonus wager loses"
         ];
         this.FlushBonusCategories = [
             "ERROR",
@@ -95,11 +101,11 @@ class GameScene extends Phaser.Scene {
             "Flush bonus loses",
             "Flush bonus loses",
             "Flush bonus loses",
-            "Flush pays 2:1",
-            "Full house pays 5:1",
-            "Four of a kind pays 25:1",
-            "Straight flush pays 100:1",
-            "Royal flush pays 500:1",
+            "Flush bonus: Flush pays 3:1",
+            "Flush bonus: Full house pays 5:1",
+            "Flush bonus: Four of a kind pays 25:1",
+            "Flush bonus: Straight flush pays 100:1",
+            "Flush bonus: Royal flush pays 500:1",
         ];
         this.BlindCategories = [
             "ERROR",
@@ -134,7 +140,7 @@ class GameScene extends Phaser.Scene {
             -1.0,
             -1.0,
             -1.0,
-            2.0,
+            3.0,
             5.0,
             25.0,
             100.0,
@@ -171,18 +177,24 @@ class GameScene extends Phaser.Scene {
         //#endregion
         //#region Other member variables
         this._currentState = -1;
-        this._antePayout = 0;
-        this._playPayout = 0;
-        this._bustPayout = 0;
+        this._startingRoll = 0.0;
+        this._endingRoll = 0.0;
         //#endregion
         //#region Test hands
         this._testDealerHand = new Array(0);
         this._testPlayerHand = new Array(0);
         this._testBoard = new Array(0);
     }
+    ;
     create() {
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
+        let logoGraphic = this.add.image(600, 350, "logo");
+        logoGraphic.setOrigin(0, 0);
+        logoGraphic.setScale(0.14, 0.14);
+        let limitText = this.add.text(40, 615, "MINIMUM BET $10\nMAXIMUM BET $500");
+        limitText.setStyle(Config.gameOptions.commentaryFormat);
+        limitText.setAlign("center");
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -217,7 +229,7 @@ class GameScene extends Phaser.Scene {
         this._helpField.setWordWrapWidth(569);
         graphics.lineStyle(6, 0xffffff, 1);
         graphics.strokeRoundedRect(440, 695, 569, 50, 5);
-        let chipDenominations = [1, 5, 25, 100];
+        let chipDenominations = [5, 25, 100, 500];
         for (let index = 0; index < chipDenominations.length; index += 1) {
             let chipButton = new Chip({
                 scene: this,
@@ -410,8 +422,8 @@ class GameScene extends Phaser.Scene {
             isOptional: false,
             isLocked: false,
             isPlayerSpot: true,
-            minimumBet: 5,
-            maximumBet: 100,
+            minimumBet: 10,
+            maximumBet: 500,
             payoffOffset: this.AntePayoffOffset
         });
         this._anteSpot.HitZone.on("clicked", this.addSelectedValue, this);
@@ -430,8 +442,8 @@ class GameScene extends Phaser.Scene {
             isOptional: false,
             isLocked: false,
             isPlayerSpot: true,
-            minimumBet: 5,
-            maximumBet: 100,
+            minimumBet: 10,
+            maximumBet: 500,
             payoffOffset: this.BlindPayoffOffset
         });
         this._blindSpot.HitZone.on("clicked", this.addSelectedValue, this);
@@ -450,8 +462,8 @@ class GameScene extends Phaser.Scene {
             isOptional: true,
             isLocked: true,
             isPlayerSpot: false,
-            minimumBet: 5,
-            maximumBet: 100,
+            minimumBet: 10,
+            maximumBet: 500,
             payoffOffset: this.CallPayoffOffset
         });
         this.add.existing(this._callSpot);
@@ -469,8 +481,8 @@ class GameScene extends Phaser.Scene {
             isOptional: true,
             isLocked: false,
             isPlayerSpot: true,
-            minimumBet: 5,
-            maximumBet: 25,
+            minimumBet: 10,
+            maximumBet: 500,
             payoffOffset: this.FlushBonusPayoffOffset
         });
         this._flushBonusSpot.HitZone.on("clicked", this.addSelectedValue, this);
@@ -489,8 +501,8 @@ class GameScene extends Phaser.Scene {
             isOptional: true,
             isLocked: false,
             isPlayerSpot: true,
-            minimumBet: 5,
-            maximumBet: 25,
+            minimumBet: 10,
+            maximumBet: 500,
             payoffOffset: this.FourCardBonusPayoffOffset
         });
         this._fourCardBonusSpot.HitZone.on("clicked", this.addSelectedValue, this);
@@ -504,24 +516,8 @@ class GameScene extends Phaser.Scene {
         ];
         this._lastWagerAmounts = new Array(this._bettingSpots.length);
         //#endregion
-        // let board = [0, 0, 0, 0, 0];
-        // let hc = [0, 0, 0, 0];
-        // for (let index = 0; index < 10000; index += 1) {
-        // 	this._shoe.shuffle();
-        // 	for (let x = 0; x < 4; x += 1) hc[x] = this._shoe.drawCard();
-        // 	for (let x = 0; x < 5; x += 1) board[x] = this._shoe.drawCard();
-        // 	hc.sort((a, b) => a - b);
-        // 	board.sort((a, b) => a - b);
-        // 	let handEval = OmahaEvaluator.findBestHand(hc, board);
-        // 	console.debug(
-        // 		General.cardVectorToString(hc), "\t",
-        // 		General.cardVectorToString(board), "\t",
-        // 		handEval[0], "\t",
-        // 		General.cardVectorToString(handEval.slice(1, 6))
-        // 	);
-        // }
         // Time's up, let's do this!
-        this.Score = 10000;
+        this.Score = 50000;
         this.CurrentState = GameState.Predeal;
     }
     //#region Logic methods
@@ -601,6 +597,9 @@ class GameScene extends Phaser.Scene {
             this._playerEval[x] = 0;
             this._dealerEval[x] = 0;
         }
+        // Reset starting and current score
+        this._startingRoll = this.Score;
+        this._endingRoll = this._startingRoll;
         // Reset anchors, if needed:
         this._playerAnchor.setTo(this.PlayerHandAnchor.x, this.PlayerHandAnchor.y);
         this._dealerAnchor.setTo(this.DealerHandAnchor.x, this.DealerHandAnchor.y);
@@ -791,6 +790,16 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case Steps.ChangeStateGameOver: {
+                let delta = this._endingRoll - this._startingRoll;
+                if (delta > 0) {
+                    this.addCommentaryField("Net result: WIN " + General.amountToDollarString(delta));
+                }
+                else if (delta < 0) {
+                    this.addCommentaryField("Net result: lose " + General.amountToDollarString(delta * -1));
+                }
+                else {
+                    this.addCommentaryField("Net result: break even");
+                }
                 this.CurrentState = GameState.GameOver;
                 break;
             }
@@ -942,6 +951,7 @@ class GameScene extends Phaser.Scene {
     }
     resolvePayout(wager, multiple, elevateOldBet, continueAnimation = true) {
         if (wager.Amount != 0) {
+            this._endingRoll += (multiple * wager.Amount);
             if (multiple == -1) {
                 this.Score -= wager.Amount;
                 let losingPayout = new BettingSpot({
@@ -1252,6 +1262,26 @@ class HelpScene extends Phaser.Scene {
         super("HelpScene");
     }
     create() {
+        let HelpText = [
+            "GETTING STARTED",
+            " * '4 Card Omaha Poker' is an Omaha Hold'em style poker game, played with a standard 52 card deck.  The object of the game is to make your best 5-card poker hand, using 2 of 4 hole cards, plus 3 of 5 community cards, to beat the dealer's hand, using the same rules",
+            "",
+            "HOW TO PLAY",
+            " * Place 'Ante' and 'Blind' wagers of equal amounts.  You may also place optional 'Flush Bonus' and/or '4 Card Bonus' wagers.",
+            " * You will then receive 4 hole cards.  Based on your hole cards, you may 'Check' or place a 'Call' bet in the amount of 3x your 'Ante'.",
+            " * The dealer will expose 3 community cards.",
+            " * If you haven't already placed a 'Call' bet, you may now 'Check' or place a 'Call' bet in the amount of 2x your 'Ante'.",
+            " * The Dealer will expose 2 final community cards.",
+            " * If you haven't already placed a 'Call' bet, you may now 'Fold', forfeiting your 'Ante' and 'Blind' wagers, or place a 'Call' bet in the amount of 1x your 'Ante'.",
+            "",
+            "DEALER QUALIFYING",
+            "",
+            "The dealer needs a pair of 10s to qualify.  When hte dealer doesn't qualify, the 'Ante' is pushed.",
+            "",
+            "WINNING AND LOSING",
+            "",
+            " * The 'Ante' and 'Call' wagers will push on a tie, lose on a loss and win 1:1 on a win.  The 'Blind' Wager will push on a tie, lose on a loss and win according to the game paytable on a win.  The optional bonus wagers will be paid according to their posted paytables, even if you lose, tie, or fold."
+        ];
         this.input.on('gameobjectup', function (_, gameObject) {
             gameObject.emit('clicked', gameObject);
         }, this);
@@ -1261,7 +1291,7 @@ class HelpScene extends Phaser.Scene {
         // howToPlayGraphic.setOrigin(0, 0);
         let button = new Button({
             scene: this,
-            style: AssetNames.BlueSmall,
+            style: AssetNames.GreenSmall,
             caption: "GO BACK",
             clickEvent: Emissions.ReturnToGame,
             x: 726 + 226,
@@ -1270,6 +1300,9 @@ class HelpScene extends Phaser.Scene {
         });
         this.add.existing(button);
         Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+        let helpText = this.add.text(50, 50, HelpText);
+        helpText.setWordWrapWidth(910);
+        helpText.setStyle(Config.gameOptions.helpScreenFormat);
     }
     returnToGame() {
         this.sound.play("buttonClick");
@@ -1302,6 +1335,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
         this.load.image("helpScreen", "assets/images/How To Play.png");
+        this.load.image("logo", "assets/images/Logo No Background.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
