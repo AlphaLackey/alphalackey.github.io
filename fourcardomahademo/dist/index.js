@@ -1303,6 +1303,9 @@ class HelpScene extends Phaser.Scene {
         let helpText = this.add.text(50, 50, HelpText);
         helpText.setWordWrapWidth(910);
         helpText.setStyle(Config.gameOptions.helpScreenFormat);
+        let patPendText = this.add.text(450, 700, "PATENT PENDING\nALL RIGHTS RESERVED");
+        patPendText.setStyle(Config.gameOptions.helpScreenFormat);
+        patPendText.setAlign("center");
     }
     returnToGame() {
         this.sound.play("buttonClick");
