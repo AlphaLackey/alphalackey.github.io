@@ -1429,14 +1429,22 @@ class PaytableScene extends Phaser.Scene {
         });
         this.add.existing(button);
         Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
-        let fourCardGraphic = this.add.image(50, 50, "fourCardBonus");
-        fourCardGraphic.setOrigin(0, 0);
-        let flushGraphic = this.add.image(580, 50, "flushBet");
-        flushGraphic.setOrigin(0, 0);
-        let callGraphic = this.add.image(80, 370, "callBet");
-        callGraphic.setOrigin(0, 0);
-        let blindGraphic = this.add.image(580, 370, "blindBet");
-        blindGraphic.setOrigin(0, 0);
+        // let fourCardGraphic = this.add.image(
+        // 	50, 50, "fourCardBonus"
+        // );
+        // fourCardGraphic.setOrigin(0, 0);
+        // let flushGraphic = this.add.image(
+        // 	580, 50, "flushBet"
+        // );
+        // flushGraphic.setOrigin(0, 0);
+        // let callGraphic = this.add.image(
+        // 	80, 370, "callBet"
+        // );
+        // callGraphic.setOrigin(0, 0);
+        // let blindGraphic = this.add.image(
+        // 	580, 370, "blindBet"
+        // );
+        // blindGraphic.setOrigin(0, 0);
         let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
         patPendText.setFixedSize(1024, 260);
         patPendText.setStyle(Config.gameOptions.helpScreenFormat);
