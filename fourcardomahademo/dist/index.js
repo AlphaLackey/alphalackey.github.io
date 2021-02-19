@@ -1049,8 +1049,8 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case GameState.StartDeal: {
-                this._paytablesButton.visible = false;
-                this._helpButton.visible = false;
+                // this._paytablesButton.visible = false;
+                // this._helpButton.visible = false;
                 // Turn off the Clear | Deal panel
                 for (let thisButton of this._clearDealPanel)
                     thisButton.visible = false;
@@ -1123,8 +1123,8 @@ class GameScene extends Phaser.Scene {
                     thisButton.visible = true;
                 for (let chip of this._chipButtons)
                     chip.setInteractive();
-                this._helpButton.visible = true;
-                this._paytablesButton.visible = true;
+                // this._helpButton.visible = true;
+                // this._paytablesButton.visible = true;
                 this.Instructions = StringTable.GameOver;
                 break;
             }
@@ -1160,11 +1160,11 @@ class GameScene extends Phaser.Scene {
         this.playButtonClick();
     }
     paytablesScreen() {
-        // this.playButtonClick();
+        this.playButtonClick();
         this.scene.switch("PaytableScene");
     }
     helpScreen() {
-        // this.playButtonClick();
+        this.playButtonClick();
         this.scene.switch("HelpScene");
     }
     newBets() {
@@ -1347,7 +1347,7 @@ class HelpScene extends Phaser.Scene {
         patPendText.setAlign("center");
     }
     returnToGame() {
-        // this.sound.play("buttonClick");
+        this.sound.play("buttonClick");
         this.scene.switch("GameScene");
     }
 }
@@ -1416,42 +1416,34 @@ class PaytableScene extends Phaser.Scene {
         this.input.on('gameobjectup', function (_, gameObject) {
             gameObject.emit('clicked', gameObject);
         }, this);
-        // let feltGraphic = this.add.image(0, 0, "gameFelt");
-        // feltGraphic.setOrigin(0, 0);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
         let button = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
             caption: "GO BACK",
-            clickEvent: Emissions.ReturnToGame,
+            clickEvent: Emissions.BackFromPT,
             x: 726 + 226,
             y: 665 + 64,
             visible: true
         });
         this.add.existing(button);
-        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
-        // let fourCardGraphic = this.add.image(
-        // 	50, 50, "fourCardBonus"
-        // );
-        // fourCardGraphic.setOrigin(0, 0);
-        // let flushGraphic = this.add.image(
-        // 	580, 50, "flushBet"
-        // );
-        // flushGraphic.setOrigin(0, 0);
-        // let callGraphic = this.add.image(
-        // 	80, 370, "callBet"
-        // );
-        // callGraphic.setOrigin(0, 0);
-        // let blindGraphic = this.add.image(
-        // 	580, 370, "blindBet"
-        // );
-        // blindGraphic.setOrigin(0, 0);
-        // let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
-        // patPendText.setFixedSize(1024, 260);
-        // patPendText.setStyle(Config.gameOptions.helpScreenFormat);
-        // patPendText.setAlign("center");
+        Config.emitter.on(Emissions.BackFromPT, this.returnToGame, this);
+        let fourCardGraphic = this.add.image(50, 50, "fourCardBonus");
+        fourCardGraphic.setOrigin(0, 0);
+        let flushGraphic = this.add.image(580, 50, "flushBet");
+        flushGraphic.setOrigin(0, 0);
+        let callGraphic = this.add.image(80, 370, "callBet");
+        callGraphic.setOrigin(0, 0);
+        let blindGraphic = this.add.image(580, 370, "blindBet");
+        blindGraphic.setOrigin(0, 0);
+        let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
+        patPendText.setFixedSize(1024, 260);
+        patPendText.setStyle(Config.gameOptions.helpScreenFormat);
+        patPendText.setAlign("center");
     }
     returnToGame() {
-        // this.sound.play("buttonClick");
+        this.sound.play("buttonClick");
         this.scene.switch("GameScene");
     }
 }
@@ -1742,6 +1734,7 @@ Emissions.HintPlease = "Hint, please";
 Emissions.HelpScreen = "Help Screen";
 Emissions.PaytableScreen = "Paytable Screen";
 Emissions.ReturnToGame = "Return to game";
+Emissions.BackFromPT = "Back from paytables";
 Emissions.Make3xPlayWager = "3x Play";
 Emissions.Make2xPlayWager = "2x Play";
 Emissions.Make1xPlayWager = "1x Play";
