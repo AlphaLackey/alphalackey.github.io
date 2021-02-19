@@ -1416,8 +1416,8 @@ class PaytableScene extends Phaser.Scene {
         this.input.on('gameobjectup', function (_, gameObject) {
             gameObject.emit('clicked', gameObject);
         }, this);
-        let feltGraphic = this.add.image(0, 0, "gameFelt");
-        feltGraphic.setOrigin(0, 0);
+        // let feltGraphic = this.add.image(0, 0, "gameFelt");
+        // feltGraphic.setOrigin(0, 0);
         let button = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
@@ -1445,10 +1445,10 @@ class PaytableScene extends Phaser.Scene {
         // 	580, 370, "blindBet"
         // );
         // blindGraphic.setOrigin(0, 0);
-        let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
-        patPendText.setFixedSize(1024, 260);
-        patPendText.setStyle(Config.gameOptions.helpScreenFormat);
-        patPendText.setAlign("center");
+        // let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
+        // patPendText.setFixedSize(1024, 260);
+        // patPendText.setStyle(Config.gameOptions.helpScreenFormat);
+        // patPendText.setAlign("center");
     }
     returnToGame() {
         // this.sound.play("buttonClick");
