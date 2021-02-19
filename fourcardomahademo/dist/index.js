@@ -1049,6 +1049,8 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case GameState.StartDeal: {
+                this._paytablesButton.visible = false;
+                this._helpButton.visible = false;
                 // Turn off the Clear | Deal panel
                 for (let thisButton of this._clearDealPanel)
                     thisButton.visible = false;
@@ -1121,6 +1123,8 @@ class GameScene extends Phaser.Scene {
                     thisButton.visible = true;
                 for (let chip of this._chipButtons)
                     chip.setInteractive();
+                this._helpButton.visible = true;
+                this._paytablesButton.visible = true;
                 this.Instructions = StringTable.GameOver;
                 break;
             }
@@ -1156,11 +1160,11 @@ class GameScene extends Phaser.Scene {
         this.playButtonClick();
     }
     paytablesScreen() {
-        this.playButtonClick();
+        // this.playButtonClick();
         this.scene.switch("PaytableScene");
     }
     helpScreen() {
-        this.playButtonClick();
+        // this.playButtonClick();
         this.scene.switch("HelpScene");
     }
     newBets() {
@@ -1343,7 +1347,7 @@ class HelpScene extends Phaser.Scene {
         patPendText.setAlign("center");
     }
     returnToGame() {
-        this.sound.play("buttonClick");
+        // this.sound.play("buttonClick");
         this.scene.switch("GameScene");
     }
 }
@@ -1441,7 +1445,7 @@ class PaytableScene extends Phaser.Scene {
         patPendText.setAlign("center");
     }
     returnToGame() {
-        this.sound.play("buttonClick");
+        // this.sound.play("buttonClick");
         this.scene.switch("GameScene");
     }
 }
@@ -1480,10 +1484,10 @@ class BettingSpot extends Phaser.GameObjects.Container {
         if (remainingAmount == 0) {
             if (!this._isLocked) {
                 let dummyChip = new Chip({ scene: this.scene, x: 0, y: 0 });
-                dummyChip.Value = 5;
-                dummyChip.setOrigin(1, 1);
-                this.add(dummyChip);
-                dummyChip.setTint(0x0000FF);
+                // dummyChip.Value = 5;
+                // dummyChip.setOrigin(1, 1);
+                // this.add(dummyChip);
+                // dummyChip.setTint(0x0000FF);
                 let width = Config.gameOptions.chipWidth;
                 let height = Config.gameOptions.chipHeight;
                 this._hitZone.setDisplaySize(width, height);
