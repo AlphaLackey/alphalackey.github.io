@@ -1435,10 +1435,8 @@ class PaytableScene extends Phaser.Scene {
         flushGraphic.setOrigin(0, 0);
         let callGraphic = this.add.image(80, 370, "callBet");
         callGraphic.setOrigin(0, 0);
-        callGraphic.setScale(0.28, 0.28);
         let blindGraphic = this.add.image(580, 370, "blindBet");
         blindGraphic.setOrigin(0, 0);
-        blindGraphic.setScale(0.3, 0.3);
         let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
         patPendText.setFixedSize(1024, 260);
         patPendText.setStyle(Config.gameOptions.helpScreenFormat);
