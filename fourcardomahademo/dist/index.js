@@ -11,7 +11,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene, HelpScene]
+            scene: [LoaderScene, GameScene, HelpScene, PaytableScene]
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
@@ -395,6 +395,17 @@ class GameScene extends Phaser.Scene {
         });
         this.add.existing(this._helpButton);
         Config.emitter.on(Emissions.HelpScreen, this.helpScreen, this);
+        this._paytablesButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "PAYTABLES",
+            clickEvent: Emissions.PaytableScreen,
+            x: 952,
+            y: 75,
+            visible: true
+        });
+        this.add.existing(this._paytablesButton);
+        Config.emitter.on(Emissions.PaytableScreen, this.paytablesScreen, this);
         //#endregion
         //#region Betting spots
         let spotAnchor;
@@ -449,7 +460,7 @@ class GameScene extends Phaser.Scene {
         this._blindSpot.HitZone.on("clicked", this.addSelectedValue, this);
         this.add.existing(this._blindSpot);
         // Call spot
-        spotAnchor = new Point(baseAnchor.x + 0, baseAnchor.y + 90);
+        spotAnchor = new Point(baseAnchor.x + 0, baseAnchor.y + 92);
         graphics.strokeCircle(spotAnchor.x - 27, spotAnchor.y - 25, 29);
         let callLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 7, "CALL");
         callLabel.setFixedSize(80, 22);
@@ -468,10 +479,10 @@ class GameScene extends Phaser.Scene {
         });
         this.add.existing(this._callSpot);
         // Flush bonus spot
-        spotAnchor = new Point(baseAnchor.x + 0, baseAnchor.y - 90);
+        spotAnchor = new Point(baseAnchor.x + 0, baseAnchor.y - 92);
         graphics.strokeCircle(spotAnchor.x - 27, spotAnchor.y - 25, 29);
-        let flushLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 7, "FLUSH");
-        flushLabel.setFixedSize(80, 22);
+        let flushLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 7, "FLUSH\nBONUS");
+        flushLabel.setFixedSize(80, 35);
         flushLabel.setStyle(Config.gameOptions.feltFormat);
         this._flushBonusSpot = new BettingSpot({
             scene: this,
@@ -488,10 +499,10 @@ class GameScene extends Phaser.Scene {
         this._flushBonusSpot.HitZone.on("clicked", this.addSelectedValue, this);
         this.add.existing(this._flushBonusSpot);
         // Four Card Bonus Bet
-        spotAnchor = new Point(baseAnchor.x + 90, baseAnchor.y - 90);
+        spotAnchor = new Point(baseAnchor.x + 90, baseAnchor.y - 92);
         graphics.strokeCircle(spotAnchor.x - 27, spotAnchor.y - 25, 29);
-        let fourCardLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 7, "4 CARD");
-        fourCardLabel.setFixedSize(80, 22);
+        let fourCardLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 7, "4 CARD\nBONUS");
+        fourCardLabel.setFixedSize(80, 35);
         fourCardLabel.setStyle(Config.gameOptions.feltFormat);
         this._fourCardBonusSpot = new BettingSpot({
             scene: this,
@@ -695,6 +706,22 @@ class GameScene extends Phaser.Scene {
                 let playerRank = FiveCardEvaluator.HandNumberToHandRank(this._playerEval[0]);
                 let playerAnnotation = "Player hand: " + Constants.FiveCardPokerHandNames[playerRank];
                 playerAnnotation += " ( " + General.cardVectorToString(playerUsedCards.slice(0, 2)) + " + " + General.cardVectorToString(playerUsedCards.slice(2, 5)) + " )";
+                this.addCommentaryField(playerAnnotation);
+                this.doAnimation();
+                break;
+            }
+            case Steps.AnnotateFlopHand: {
+                let boardCards = [
+                    this._boardHand[0].CardNumber,
+                    this._boardHand[1].CardNumber,
+                    this._boardHand[2].CardNumber
+                ];
+                let holeCards = this._playerHand.map(a => a.CardNumber);
+                let flopEval = OmahaEvaluator.findBestHand(holeCards, boardCards);
+                let flopRank = FiveCardEvaluator.HandNumberToHandRank(flopEval[0]);
+                let flopUsedCards = flopEval.slice(1, 6);
+                let playerAnnotation = "Player hand: " + Constants.FiveCardPokerHandNames[flopRank];
+                playerAnnotation += " ( " + General.cardVectorToString(flopUsedCards.slice(0, 2)) + " + " + General.cardVectorToString(flopUsedCards.slice(2, 5)) + " )";
                 this.addCommentaryField(playerAnnotation);
                 this.doAnimation();
                 break;
@@ -1128,6 +1155,10 @@ class GameScene extends Phaser.Scene {
         }
         this.playButtonClick();
     }
+    paytablesScreen() {
+        this.playButtonClick();
+        this.scene.switch("PaytableScene");
+    }
     helpScreen() {
         this.playButtonClick();
         this.scene.switch("HelpScene");
@@ -1191,7 +1222,6 @@ class GameScene extends Phaser.Scene {
         this.Instructions = "";
         this._callSpot.Amount = this._anteSpot.Amount * 1.0;
         this._stepList.push(Steps.ResolveFourCardBonus);
-        this._stepList.push(Steps.AnnotatePlayerHand);
         this._stepList.push(Steps.ResolveFlushBonus);
         this._stepList.push(Steps.FlipDealerHand);
         this._stepList.push(Steps.AnnotateDealerHand);
@@ -1207,6 +1237,7 @@ class GameScene extends Phaser.Scene {
             button.visible = false;
         this.Instructions = "";
         this._stepList.push(Steps.FlipFlop);
+        this._stepList.push(Steps.AnnotateFlopHand);
         this._stepList.push(Steps.ChangeStateFlopInput);
         this.doAnimation();
     }
@@ -1216,6 +1247,7 @@ class GameScene extends Phaser.Scene {
             button.visible = false;
         this.Instructions = "";
         this._stepList.push(Steps.FlipTurnAndRiver);
+        this._stepList.push(Steps.AnnotatePlayerHand);
         this._stepList.push(Steps.ChangeStateRiverInput);
         this.doAnimation();
     }
@@ -1228,6 +1260,8 @@ class GameScene extends Phaser.Scene {
         this._stepList.push(Steps.ResolveFourCardBonus);
         this._stepList.push(Steps.AnnotatePlayerHand);
         this._stepList.push(Steps.ResolveFlushBonus);
+        this._stepList.push(Steps.FlipDealerHand);
+        this._stepList.push(Steps.AnnotateDealerHand);
         this._stepList.push(Steps.ChangeStateGameOver);
         this.doAnimation();
     }
@@ -1276,7 +1310,7 @@ class HelpScene extends Phaser.Scene {
             "",
             "DEALER QUALIFYING",
             "",
-            "The dealer needs a pair of 10s to qualify.  When hte dealer doesn't qualify, the 'Ante' is pushed.",
+            "The dealer needs a pair of 10s to qualify.  When the dealer doesn't qualify, the 'Ante' is pushed.",
             "",
             "WINNING AND LOSING",
             "",
@@ -1303,7 +1337,8 @@ class HelpScene extends Phaser.Scene {
         let helpText = this.add.text(50, 50, HelpText);
         helpText.setWordWrapWidth(910);
         helpText.setStyle(Config.gameOptions.helpScreenFormat);
-        let patPendText = this.add.text(450, 700, "PATENT PENDING\nALL RIGHTS RESERVED");
+        let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
+        patPendText.setFixedSize(1024, 260);
         patPendText.setStyle(Config.gameOptions.helpScreenFormat);
         patPendText.setAlign("center");
     }
@@ -1339,6 +1374,10 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
         this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.image("logo", "assets/images/Logo No Background.png");
+        this.load.image("fourCardBonus", "assets/images/Four Card Bonus Paytable.png");
+        this.load.image("callBet", "assets/images/Call Bet.png");
+        this.load.image("flushBet", "assets/images/Flush Bonus.png");
+        this.load.image("blindBet", "assets/images/Blind Bet.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -1363,6 +1402,47 @@ class LoaderScene extends Phaser.Scene {
     }
     create() {
         this.scene.start("GameScene");
+    }
+}
+class PaytableScene extends Phaser.Scene {
+    constructor() {
+        super("PaytableScene");
+    }
+    create() {
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.ReturnToGame,
+            x: 726 + 226,
+            y: 665 + 64,
+            visible: true
+        });
+        this.add.existing(button);
+        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+        let fourCardGraphic = this.add.image(50, 50, "fourCardBonus");
+        fourCardGraphic.setOrigin(0, 0);
+        let flushGraphic = this.add.image(580, 50, "flushBet");
+        flushGraphic.setOrigin(0, 0);
+        let callGraphic = this.add.image(80, 370, "callBet");
+        callGraphic.setOrigin(0, 0);
+        callGraphic.setScale(0.28, 0.28);
+        let blindGraphic = this.add.image(580, 370, "blindBet");
+        blindGraphic.setOrigin(0, 0);
+        blindGraphic.setScale(0.3, 0.3);
+        let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
+        patPendText.setFixedSize(1024, 260);
+        patPendText.setStyle(Config.gameOptions.helpScreenFormat);
+        patPendText.setAlign("center");
+    }
+    returnToGame() {
+        this.sound.play("buttonClick");
+        this.scene.switch("GameScene");
     }
 }
 class AssetNames {
@@ -1650,6 +1730,7 @@ Emissions.NewGame = "New game";
 Emissions.RebetBets = "Rebet bets";
 Emissions.HintPlease = "Hint, please";
 Emissions.HelpScreen = "Help Screen";
+Emissions.PaytableScreen = "Paytable Screen";
 Emissions.ReturnToGame = "Return to game";
 Emissions.Make3xPlayWager = "3x Play";
 Emissions.Make2xPlayWager = "2x Play";
@@ -3402,9 +3483,9 @@ class OmahaEvaluator {
         output[0] = -1;
         for (let h0 = 0; h0 < 3; h0 += 1) {
             for (let h1 = h0 + 1; h1 < 4; h1 += 1) {
-                for (let b0 = 0; b0 < 3; b0 += 1) {
-                    for (let b1 = b0 + 1; b1 < 4; b1 += 1) {
-                        for (let b2 = b1 + 1; b2 < 5; b2 += 1) {
+                for (let b0 = 0; b0 < board.length - 2; b0 += 1) {
+                    for (let b1 = b0 + 1; b1 < board.length - 1; b1 += 1) {
+                        for (let b2 = b1 + 1; b2 < board.length; b2 += 1) {
                             let testHand = [
                                 holeCards[h0],
                                 holeCards[h1],
@@ -3544,6 +3625,7 @@ Steps.FlipEntireBoard = "Flip entire board";
 Steps.ResolveFlushBonus = "Resolve flush bonus";
 Steps.AnnotatePlayerHand = "Annotate Player Hand";
 Steps.ResolveFourCardBonus = "Resolve Four Card Bonus";
+Steps.AnnotateFlopHand = "Annotate Flop Hand";
 Steps.FlipDealerHand = "Flip dealer hand";
 Steps.AnnotateDealerHand = "Annotate dealer hand";
 Steps.ResolveAnte = "Resolve Ante";
