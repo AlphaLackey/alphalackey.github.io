@@ -183,7 +183,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "CLEAR",
             clickEvent: Emissions.ClearBettingSpots,
-            x: 379,
+            x: 440,
             y: 665,
             visible: false
         });
@@ -194,7 +194,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "DEAL",
             clickEvent: Emissions.BeginDeal,
-            x: 522,
+            x: 583,
             y: 665,
             visible: false
         });
@@ -211,7 +211,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "NEW",
             clickEvent: Emissions.NewGame,
-            x: 379,
+            x: 440,
             y: 665,
             visible: false
         });
@@ -222,7 +222,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "REBET",
             clickEvent: Emissions.RebetBets,
-            x: 522,
+            x: 583,
             y: 665,
             visible: false
         });
@@ -248,7 +248,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.GreenSmall,
             caption: "PLAYER",
             clickEvent: Emissions.MakePlayWager,
-            x: 236 + 204,
+            x: 440,
             y: 665,
             visible: false
         });
@@ -259,7 +259,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.GreenSmall,
             caption: "DEALER",
             clickEvent: Emissions.MakeBustWager,
-            x: 379 + 204,
+            x: 583,
             y: 665,
             visible: false
         });
@@ -270,7 +270,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.RedSmall,
             caption: "FOLD",
             clickEvent: Emissions.Fold,
-            x: 522 + 204,
+            x: 297,
             y: 665,
             visible: false
         });
