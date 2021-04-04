@@ -77,6 +77,7 @@ class GameScene extends Phaser.Scene {
         this.PlayPayoffOffset = new Point(-34, -37);
         this.BonusPayoffOffset = new Point(-34, -37);
         this.BustPayoffOffset = new Point(34, -37);
+        this.TiePayoffOffset = new Point(-34, -37);
         this.TargetFontInstructionSize = 22;
         this.CommentaryAnchor = new Point(10, 10);
         this.CommentarySpacing = 30;
@@ -123,8 +124,8 @@ class GameScene extends Phaser.Scene {
         let oddsGraphic = this.add.image(650 + 40, 225 - 15, "oddsPaytable");
         oddsGraphic.scale = 0.5;
         oddsGraphic.setOrigin(0, 0);
-        let mainGraphic = this.add.image(610, 400, "mainGamePaytable");
-        mainGraphic.scale = 0.5;
+        let mainGraphic = this.add.image(642, 410, "mainGamePaytable");
+        mainGraphic.scale = 0.6;
         mainGraphic.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
@@ -351,7 +352,7 @@ class GameScene extends Phaser.Scene {
         });
         this.add.existing(this._playSpot);
         //#endregion
-        //#region Bust spot
+        //#region Dealer spot
         spotAnchor = new Point(590, 591);
         graphics.fillStyle(0xFF0000);
         graphics.beginPath();
@@ -380,7 +381,7 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._dealerSpot);
         //#endregion
         //#region Bonus spot
-        spotAnchor = new Point(540, 389);
+        spotAnchor = new Point(540 + 49, 389);
         graphics.lineStyle(5, 0xff0000, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
         let bonusLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "ODDS");
@@ -400,16 +401,39 @@ class GameScene extends Phaser.Scene {
         });
         this._bonusSpot.HitZone.on("clicked", this.addSelectedValue, this);
         this.add.existing(this._bonusSpot);
+        //#endregion
+        //#region Tie Spot
+        spotAnchor = new Point(442 + 49, 389);
+        graphics.lineStyle(5, 0xff0000, 1);
+        graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
+        let tieLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "TIE");
+        tieLabel.setFixedSize(80, 22);
+        tieLabel.setStyle(Config.gameOptions.feltFormat);
+        this._tieSpot = new BettingSpot({
+            scene: this,
+            x: spotAnchor.x,
+            y: spotAnchor.y,
+            amount: 0,
+            isOptional: true,
+            isLocked: false,
+            isPlayerSpot: true,
+            minimumBet: 5,
+            maximumBet: 100,
+            payoffOffset: this.TiePayoffOffset
+        });
+        this._tieSpot.HitZone.on("clicked", this.addSelectedValue, this);
+        this.add.existing(this._tieSpot);
+        //#endregion
         this._bettingSpots = [
             this._anteSpot,
             this._playSpot,
             this._dealerSpot,
-            this._bonusSpot
+            this._bonusSpot,
+            this._tieSpot
         ];
         this._lastWagerAmounts = new Array(this._bettingSpots.length);
         this.Score = 10000;
         this.CurrentState = GameState.Predeal;
-        //#endregion
     }
     //#region Animation methods
     doAnimation() {
@@ -481,6 +505,17 @@ class GameScene extends Phaser.Scene {
                 this.doAnimation();
                 break;
             }
+            case Steps.ResolveTie: {
+                let payout = -1;
+                let tieAnnotation = "Tie wager loses";
+                if (this._playerTotal == this._dealerTotal) {
+                    payout = 40;
+                    tieAnnotation = "Tie wager wins, pays 40:1";
+                }
+                this.addCommentaryField(tieAnnotation);
+                this.resolvePayout(this._tieSpot, payout, true, true);
+                break;
+            }
             case Steps.ResolveBonus: {
                 let payout = -1;
                 let bonusAnnotation = "Odds wager loses";
@@ -530,19 +565,19 @@ class GameScene extends Phaser.Scene {
                     this._playerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
-                    this._antePayout = 0;
-                    this._playerPayout = 0;
+                    this._antePayout = -1;
+                    this._playerPayout = -1;
                 }
                 else if (playerRank >= ThreeCardPokerRank.Trips) {
                     this._antePayout = 1;
-                    this._playerPayout = 7;
+                    this._playerPayout = 4;
                 }
                 else if (playerRank >= ThreeCardPokerRank.OnePair) {
                     this._antePayout = 1;
                     this._playerPayout = 1;
                 }
                 else {
-                    this._antePayout = 0;
+                    this._antePayout = 1;
                     this._playerPayout = 0;
                 }
                 this.doAnimation();
@@ -555,10 +590,10 @@ class GameScene extends Phaser.Scene {
                     this._dealerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
-                    this._dealerPayout = 0;
+                    this._dealerPayout = -1;
                 }
                 else if (dealerRank >= ThreeCardPokerRank.Trips) {
-                    this._dealerPayout = 8;
+                    this._dealerPayout = 5;
                 }
                 else if (dealerRank >= ThreeCardPokerRank.OnePair) {
                     this._dealerPayout = 2;
@@ -614,8 +649,8 @@ class GameScene extends Phaser.Scene {
                     if (this._playerPayout == 1) {
                         this.addCommentaryField("Play wager pays 1:1");
                     }
-                    else if (this._playerPayout == 7) {
-                        this.addCommentaryField("Play wager pays 1:1\n * Trips Plus bonus pays 6:1\n * Total payout = 7:1");
+                    else if (this._playerPayout == 4) {
+                        this.addCommentaryField("Play wager pays 1:1\n * Trips Plus bonus pays 3:1\n * Total payout = 4:1");
                     }
                     else if (this._playerPayout == -1) {
                         this.addCommentaryField("Play wager loses");
@@ -638,8 +673,8 @@ class GameScene extends Phaser.Scene {
                     else if (this._dealerPayout == 2) {
                         this.addCommentaryField("Dealer wager pays 2:1");
                     }
-                    else if (this._dealerPayout == 8) {
-                        this.addCommentaryField("Dealer wager pays 2:1\n * Trips Plus bonus pays 6:1\n * Total payout = 8:1");
+                    else if (this._dealerPayout == 5) {
+                        this.addCommentaryField("Dealer wager pays 2:1\n * Trips Plus bonus pays 3:1\n * Total payout = 5:1");
                     }
                     else if (this._dealerPayout == -1) {
                         this.addCommentaryField("Dealer wager loses");
@@ -1084,6 +1119,9 @@ class GameScene extends Phaser.Scene {
             }
             this._stepList.push(Steps.FlipDealerHand);
             this._stepList.push(Steps.AnnotateDealer);
+            if (this._tieSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolveTie);
+            }
             this._stepList.push(Steps.SetPlayerPayouts);
             this._stepList.push(Steps.ResolveAnteWager);
             this._stepList.push(Steps.ResolvePlayWager);
@@ -1118,6 +1156,9 @@ class GameScene extends Phaser.Scene {
             }
             this._stepList.push(Steps.FlipDealerHand);
             this._stepList.push(Steps.AnnotateDealer);
+            if (this._tieSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolveTie);
+            }
             this._stepList.push(Steps.ResolveDealerWager);
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
@@ -1140,10 +1181,13 @@ class GameScene extends Phaser.Scene {
             for (let button of this._mainPanel)
                 button.visible = false;
             this._stepList.push(Steps.FoldHand);
-            if (this._bonusSpot.Amount > 0) {
+            if (this._bonusSpot.Amount > 0 || this._tieSpot.Amount > 0) {
                 this._stepList.push(Steps.FlipBoardHand);
                 this._stepList.push(Steps.AnnotatePlayer);
-                this._stepList.push(Steps.ResolveBonus);
+                if (this._bonusSpot.Amount > 0)
+                    this._stepList.push(Steps.ResolveBonus);
+                if (this._tieSpot.Amount > 0)
+                    this._stepList.push(Steps.ResolveTie);
             }
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
@@ -1197,6 +1241,7 @@ class HelpScene extends Phaser.Scene {
         feltGraphic.setOrigin(0, 0);
         let howToPlayGraphic = this.add.image(20, 20, "helpScreen");
         howToPlayGraphic.setOrigin(0, 0);
+        howToPlayGraphic.scale = 0.68;
         let button = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
@@ -1748,6 +1793,7 @@ Steps.SetDealerPayouts = "Set Dealer Payouts";
 Steps.ResolveAnteWager = "Resolve Ante Wager";
 Steps.ResolvePlayWager = "Resolve Play Wager";
 Steps.ResolveDealerWager = "Resolve Bust Wager";
+Steps.ResolveTie = "Resolve Tie Wager";
 Steps.AnnotatePlayer = "Annotate Player";
 Steps.AnnotateDealer = "Annotate Dealer";
 class Strategy {
