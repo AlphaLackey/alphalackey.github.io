@@ -111,7 +111,7 @@ class GameScene extends Phaser.Scene {
         //#endregion
         //#region Test hands
         this._testDealerHand = []; //General.cardStringToVector("JD TH");
-        this._testPlayerHand = []; //General.cardStringToVector("QS 8C");
+        this._testPlayerHand = []; //General.cardStringToVector("8S 8C");
         this._testBoard = []; //General.cardStringToVector("AC 8S");
     }
     create() {
@@ -477,6 +477,7 @@ class GameScene extends Phaser.Scene {
                 this._optimalPlay = Strategy.Bust;
                 if (isSuited) {
                     if (!(lowRank == 0 && highRank == 3)) {
+                        // Not 5-2 suited
                         this._optimalPlay = Strategy.Play;
                     }
                 }
@@ -486,15 +487,21 @@ class GameScene extends Phaser.Scene {
                         this._optimalPlay = Strategy.Play;
                     }
                     else if (highRank == 10 && lowRank >= 5) {
+                        // Q high, with 7+, it's a play
+                        this._optimalPlay = Strategy.Play;
+                    }
+                    else if (gap == 0) {
+                        // it's a pair, so always play
                         this._optimalPlay = Strategy.Play;
                     }
                     else if (gap == 1 && highRank >= 4) {
+                        // no gappers 6 or higher, play
                         this._optimalPlay = Strategy.Play;
                     }
                     else if (gap == 2 && highRank >= 8) {
+                        // one gappers, T or higher, play
                         this._optimalPlay = Strategy.Play;
                     }
-                    // Offsuit strategy different.
                 }
                 if (this._optimalPlay == Strategy.Bust) {
                     this._optimalAnnotation = "Make DEALER wager";
