@@ -121,8 +121,8 @@ class GameScene extends Phaser.Scene {
         let gameGraphic = this.add.image(650, 15, "logo");
         gameGraphic.scale = 0.1;
         gameGraphic.setOrigin(0, 0);
-        let oddsGraphic = this.add.image(650 + 40, 225 - 15, "oddsPaytable");
-        oddsGraphic.scale = 0.5;
+        let oddsGraphic = this.add.image(700, 210, "oddsPaytable");
+        oddsGraphic.scale = 0.7;
         oddsGraphic.setOrigin(0, 0);
         let mainGraphic = this.add.image(642, 410, "mainGamePaytable");
         mainGraphic.scale = 0.6;
@@ -384,8 +384,8 @@ class GameScene extends Phaser.Scene {
         spotAnchor = new Point(540 + 49, 389);
         graphics.lineStyle(5, 0xff0000, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let bonusLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "ODDS");
-        bonusLabel.setFixedSize(80, 22);
+        let bonusLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "HI-LO\nODDS");
+        bonusLabel.setFixedSize(80, 32);
         bonusLabel.setStyle(Config.gameOptions.feltFormat);
         this._bonusSpot = new BettingSpot({
             scene: this,
@@ -406,8 +406,8 @@ class GameScene extends Phaser.Scene {
         spotAnchor = new Point(442 + 49, 389);
         graphics.lineStyle(5, 0xff0000, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let tieLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "TIE");
-        tieLabel.setFixedSize(80, 22);
+        let tieLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "TIE\nPAYS 40-1");
+        tieLabel.setFixedSize(80, 32);
         tieLabel.setStyle(Config.gameOptions.feltFormat);
         this._tieSpot = new BettingSpot({
             scene: this,
@@ -547,7 +547,7 @@ class GameScene extends Phaser.Scene {
             }
             case Steps.ResolveBonus: {
                 let payout = -1;
-                let bonusAnnotation = "Odds wager loses";
+                let bonusAnnotation = "Hi-Lo Odds wager loses";
                 let playerRank = Math.floor(this._playerTotal / 100000);
                 let allPlayerCards = [
                     this._playerHand[0].CardNumber,
@@ -558,28 +558,28 @@ class GameScene extends Phaser.Scene {
                 let highCardNumber = allPlayerCards.reduce((a, b) => a > b ? a : b);
                 let highCardRank = Math.floor(highCardNumber / 4);
                 if (playerRank == ThreeCardPokerRank.MiniRoyal) {
-                    bonusAnnotation = "Odds pays 50:1 for Mini Royal";
+                    bonusAnnotation = "Hi-Lo Odds pays 50:1 for Mini Royal";
                     payout = 50;
                 }
                 else if (playerRank == ThreeCardPokerRank.StraightFlush) {
-                    bonusAnnotation = "Odds pays 10:1 for straight flush";
+                    bonusAnnotation = "Hi-Lo Odds pays 10:1 for straight flush";
                     payout = 10;
                 }
                 else if (playerRank == ThreeCardPokerRank.Trips) {
-                    bonusAnnotation = "Odds pays 10:1 for trips";
+                    bonusAnnotation = "Hi-Lo Odds pays 10:1 for trips";
                     payout = 10;
                 }
                 else if (playerRank == ThreeCardPokerRank.Straight) {
-                    bonusAnnotation = "Odds pays 2:1 for straight";
+                    bonusAnnotation = "Hi-Lo Odds pays 2:1 for straight";
                     payout = 2;
                 }
                 else if (playerRank == ThreeCardPokerRank.NoPair) {
                     if (highCardRank <= 4) {
-                        bonusAnnotation = "Odds pays 50:1 for 6 high";
+                        bonusAnnotation = "Hi-Lo Odds pays 50:1 for 6 high";
                         payout = 50;
                     }
                     else if (highCardRank <= 9) {
-                        bonusAnnotation = "Odds pays 2:1 for 7/8/9/T/J high";
+                        bonusAnnotation = "Hi-Lo Odds pays 2:1 for 7/8/9/T/J high";
                         payout = 2;
                     }
                 }
@@ -1126,7 +1126,7 @@ class GameScene extends Phaser.Scene {
     makePlayWager() {
         if (this._optimalPlay != Strategy.Play && this._doubleCheck) {
             this.playChing();
-            this.Instructions = "Best play is = " + this._optimalAnnotation;
+            this.Instructions = "Best play is: " + this._optimalAnnotation;
             if (this._optimalPlay == Strategy.Play) {
                 this._playButton.scale = 1.2;
             }
@@ -1831,7 +1831,7 @@ Strategy.Bust = 1;
 Strategy.Fold = 2;
 class StringTable {
 }
-StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE and/or ODDS betting spots to add chips, click DEAL to begin.";
+StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE, HI-LO ODDS, and/or TIE betting spots to add chips, click DEAL to begin.";
 StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
