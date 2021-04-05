@@ -110,9 +110,9 @@ class GameScene extends Phaser.Scene {
         this._doubleCheck = false;
         //#endregion
         //#region Test hands
-        this._testDealerHand = new Array(0);
-        this._testPlayerHand = new Array(0);
-        this._testBoard = new Array(0);
+        this._testDealerHand = []; //General.cardStringToVector("JD TH");
+        this._testPlayerHand = []; //General.cardStringToVector("QS 8C");
+        this._testBoard = []; //General.cardStringToVector("AC 8S");
     }
     create() {
         // Add the game felt.
@@ -395,7 +395,7 @@ class GameScene extends Phaser.Scene {
             isOptional: true,
             isLocked: false,
             isPlayerSpot: true,
-            minimumBet: 5,
+            minimumBet: 1,
             maximumBet: 100,
             payoffOffset: this.BonusPayoffOffset
         });
@@ -417,7 +417,7 @@ class GameScene extends Phaser.Scene {
             isOptional: true,
             isLocked: false,
             isPlayerSpot: true,
-            minimumBet: 5,
+            minimumBet: 1,
             maximumBet: 100,
             payoffOffset: this.TiePayoffOffset
         });
@@ -472,36 +472,58 @@ class GameScene extends Phaser.Scene {
                 ];
                 let highRank = Math.floor(Math.max(cardNumbers[0], cardNumbers[1]) / 4);
                 let lowRank = Math.floor(Math.min(cardNumbers[0], cardNumbers[1]) / 4);
+                let gap = highRank - lowRank;
                 let isSuited = (cardNumbers[0] % 4 == cardNumbers[1] % 4);
-                this._optimalPlay = Strategy.Play;
+                this._optimalPlay = Strategy.Bust;
                 if (isSuited) {
-                    this._optimalAnnotation = "Any two suited cards: PLAY";
-                    this._optimalAnnotation = "Make PLAYER wager.";
-                }
-                else if (highRank == lowRank) {
-                    this._optimalAnnotation = "Any pair: PLAY";
-                    this._optimalAnnotation = "Make PLAYER wager.";
-                }
-                else if (highRank >= 10) {
-                    this._optimalAnnotation = "Any queen-high, king-high or ace-high: PLAY";
-                    this._optimalAnnotation = "Make PLAYER wager.";
-                }
-                else if (highRank == 9 && lowRank >= 4) {
-                    this._optimalAnnotation = "Jack-six through Jack-ten: PLAY";
-                    this._optimalAnnotation = "Make PLAYER wager.";
-                }
-                else if ((highRank - lowRank) == 1) {
-                    this._optimalAnnotation = "Any two connected cards: PLAY";
-                    this._optimalAnnotation = "Make PLAYER wager.";
-                }
-                else if ((highRank - lowRank) == 2 && (lowRank >= 3)) {
-                    this._optimalAnnotation = "Any one-gap hand at least seven-five or higher: PLAY";
-                    this._optimalAnnotation = "Make PLAYER wager.";
+                    if (!(lowRank == 0 && highRank == 3)) {
+                        this._optimalPlay = Strategy.Play;
+                    }
                 }
                 else {
-                    this._optimalAnnotation = "Make DEALER wager.";
-                    this._optimalPlay = Strategy.Bust;
+                    if (highRank >= 11) {
+                        // K high or A high, it's a play
+                        this._optimalPlay = Strategy.Play;
+                    }
+                    else if (highRank == 10 && lowRank >= 5) {
+                        this._optimalPlay = Strategy.Play;
+                    }
+                    else if (gap == 1 && highRank >= 4) {
+                        this._optimalPlay = Strategy.Play;
+                    }
+                    else if (gap == 2 && highRank >= 8) {
+                        this._optimalPlay = Strategy.Play;
+                    }
+                    // Offsuit strategy different.
                 }
+                if (this._optimalPlay == Strategy.Bust) {
+                    this._optimalAnnotation = "Make DEALER wager";
+                }
+                else {
+                    this._optimalAnnotation = "Make PLAYER wager";
+                }
+                // if (isSuited) {
+                // 	this._optimalAnnotation = "Any two suited cards: PLAY";
+                // 	this._optimalAnnotation = "Make PLAYER wager.";
+                // } else if (highRank == lowRank) {
+                // 	this._optimalAnnotation = "Any pair: PLAY";
+                // 	this._optimalAnnotation = "Make PLAYER wager.";
+                // } else if (highRank >= 10) {
+                // 	this._optimalAnnotation = "Any queen-high, king-high or ace-high: PLAY";
+                // 	this._optimalAnnotation = "Make PLAYER wager.";
+                // } else if (highRank == 9 && lowRank >= 4) {
+                // 	this._optimalAnnotation = "Jack-six through Jack-ten: PLAY";
+                // 	this._optimalAnnotation = "Make PLAYER wager.";
+                // } else if ((highRank - lowRank) == 1) {
+                // 	this._optimalAnnotation = "Any two connected cards: PLAY";
+                // 	this._optimalAnnotation = "Make PLAYER wager.";
+                // } else if ((highRank - lowRank) == 2 && (lowRank >= 3)) {
+                // 	this._optimalAnnotation = "Any one-gap hand at least seven-five or higher: PLAY";
+                // 	this._optimalAnnotation = "Make PLAYER wager.";
+                // } else {
+                // 	this._optimalAnnotation = "Make DEALER wager."
+                // 	this._optimalPlay = Strategy.Bust;
+                // }
                 this.doAnimation();
                 break;
             }
@@ -572,7 +594,7 @@ class GameScene extends Phaser.Scene {
                     this._antePayout = 1;
                     this._playerPayout = 4;
                 }
-                else if (playerRank >= ThreeCardPokerRank.OnePair) {
+                else if (playerRank >= ThreeCardPokerRank.Flush) {
                     this._antePayout = 1;
                     this._playerPayout = 1;
                 }
@@ -594,12 +616,11 @@ class GameScene extends Phaser.Scene {
                 }
                 else if (dealerRank >= ThreeCardPokerRank.Trips) {
                     this._dealerPayout = 5;
-                }
-                else if (dealerRank >= ThreeCardPokerRank.OnePair) {
-                    this._dealerPayout = 2;
+                    // } else if (dealerRank >= ThreeCardPokerRank.OnePair) {
+                    // 	this._dealerPayout = 2;
                 }
                 else {
-                    this._dealerPayout = 0;
+                    this._dealerPayout = 2;
                 }
                 this.doAnimation();
                 break;
