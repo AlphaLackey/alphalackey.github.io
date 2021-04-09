@@ -74,10 +74,10 @@ class GameScene extends Phaser.Scene {
         this.DealerHandAnchor = new Point(465, 75);
         this.BoardAnchor = new Point(465, 220);
         this.AntePayoffOffset = new Point(-34, -37);
-        this.PlayPayoffOffset = new Point(-34, -37);
-        this.BonusPayoffOffset = new Point(-34, -37);
-        this.BustPayoffOffset = new Point(34, -37);
-        this.TiePayoffOffset = new Point(-34, -37);
+        this.PlayerPayoffOffset = new Point(-34, -37);
+        this.PlayerHiLoOffset = new Point(-34, -37);
+        this.DealerPayoffOffset = new Point(34, -37);
+        this.DealerHiLoOffset = new Point(-34, -37);
         this.TargetFontInstructionSize = 22;
         this.CommentaryAnchor = new Point(10, 10);
         this.CommentarySpacing = 30;
@@ -348,7 +348,7 @@ class GameScene extends Phaser.Scene {
             isPlayerSpot: false,
             minimumBet: 5,
             maximumBet: 100,
-            payoffOffset: this.PlayPayoffOffset
+            payoffOffset: this.PlayerPayoffOffset
         });
         this.add.existing(this._playSpot);
         //#endregion
@@ -376,18 +376,20 @@ class GameScene extends Phaser.Scene {
             isPlayerSpot: false,
             minimumBet: 5,
             maximumBet: 100,
-            payoffOffset: this.BustPayoffOffset
+            payoffOffset: this.DealerPayoffOffset
         });
         this.add.existing(this._dealerSpot);
         //#endregion
         //#region Bonus spot
         spotAnchor = new Point(540 + 49, 389);
-        graphics.lineStyle(5, 0xff0000, 1);
+        graphics.fillStyle(0x000000);
+        graphics.fillCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
+        graphics.lineStyle(5, 0xffffff, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let bonusLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "HI-LO\nODDS");
-        bonusLabel.setFixedSize(80, 32);
-        bonusLabel.setStyle(Config.gameOptions.feltFormat);
-        this._bonusSpot = new BettingSpot({
+        let playerHiLoLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "PLAYER\nHI-LO");
+        playerHiLoLabel.setFixedSize(80, 32);
+        playerHiLoLabel.setStyle(Config.gameOptions.feltFormat);
+        this._playerHiLoSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
             y: spotAnchor.y,
@@ -397,19 +399,21 @@ class GameScene extends Phaser.Scene {
             isPlayerSpot: true,
             minimumBet: 1,
             maximumBet: 100,
-            payoffOffset: this.BonusPayoffOffset
+            payoffOffset: this.PlayerHiLoOffset
         });
-        this._bonusSpot.HitZone.on("clicked", this.addSelectedValue, this);
-        this.add.existing(this._bonusSpot);
+        this._playerHiLoSpot.HitZone.on("clicked", this.addSelectedValue, this);
+        this.add.existing(this._playerHiLoSpot);
         //#endregion
-        //#region Tie Spot
+        //#region dealerHiLo Spot
         spotAnchor = new Point(442 + 49, 389);
-        graphics.lineStyle(5, 0xff0000, 1);
+        graphics.fillStyle(0xFF0000);
+        graphics.fillCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
+        graphics.lineStyle(5, 0xffffff, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let tieLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "TIE\nPAYS 40-1");
-        tieLabel.setFixedSize(80, 32);
-        tieLabel.setStyle(Config.gameOptions.feltFormat);
-        this._tieSpot = new BettingSpot({
+        let dealerHiLoLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 19, "DEALER\nHI-LO");
+        dealerHiLoLabel.setFixedSize(80, 32);
+        dealerHiLoLabel.setStyle(Config.gameOptions.feltFormat);
+        this._dealerHiLoSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
             y: spotAnchor.y,
@@ -419,17 +423,17 @@ class GameScene extends Phaser.Scene {
             isPlayerSpot: true,
             minimumBet: 1,
             maximumBet: 100,
-            payoffOffset: this.TiePayoffOffset
+            payoffOffset: this.DealerHiLoOffset
         });
-        this._tieSpot.HitZone.on("clicked", this.addSelectedValue, this);
-        this.add.existing(this._tieSpot);
+        this._dealerHiLoSpot.HitZone.on("clicked", this.addSelectedValue, this);
+        this.add.existing(this._dealerHiLoSpot);
         //#endregion
         this._bettingSpots = [
             this._anteSpot,
             this._playSpot,
             this._dealerSpot,
-            this._bonusSpot,
-            this._tieSpot
+            this._playerHiLoSpot,
+            this._dealerHiLoSpot
         ];
         this._lastWagerAmounts = new Array(this._bettingSpots.length);
         this.Score = 10000;
@@ -534,20 +538,66 @@ class GameScene extends Phaser.Scene {
                 this.doAnimation();
                 break;
             }
-            case Steps.ResolveTie: {
+            // case Steps.ResolveTie: {
+            // 	let payout = -1;
+            // 	let tieAnnotation = "Tie wager loses";
+            // 	if (this._playerTotal == this._dealerTotal) {
+            // 		payout = 40;
+            // 		tieAnnotation = "Tie wager wins, pays 40:1";
+            // 	}
+            // 	this.addCommentaryField(tieAnnotation);
+            // 	this.resolvePayout(this._tieSpot, payout, true, true);
+            // 	break;
+            // }
+            case Steps.ResolveDealerHiLo: {
                 let payout = -1;
-                let tieAnnotation = "Tie wager loses";
-                if (this._playerTotal == this._dealerTotal) {
+                let bonusAnnotation = "Dealer Hi-Lo wager loses";
+                let dealerRank = Math.floor(this._dealerTotal / 100000);
+                let allDealerCards = [
+                    this._dealerHand[0].CardNumber,
+                    this._dealerHand[1].CardNumber,
+                    this._boardHand[0].CardNumber,
+                    this._boardHand[1].CardNumber
+                ];
+                let highCardNumber = allDealerCards.reduce((a, b) => a > b ? a : b);
+                let highCardRank = Math.floor(highCardNumber / 4);
+                if (dealerRank == ThreeCardPokerRank.MiniRoyal) {
+                    bonusAnnotation = "Dealer Hi-Lo pays 40:1 for Mini Royal";
                     payout = 40;
-                    tieAnnotation = "Tie wager wins, pays 40:1";
                 }
-                this.addCommentaryField(tieAnnotation);
-                this.resolvePayout(this._tieSpot, payout, true, true);
+                else if (dealerRank == ThreeCardPokerRank.StraightFlush) {
+                    bonusAnnotation = "Dealer Hi-Lo pays 10:1 for straight flush";
+                    payout = 10;
+                }
+                else if (dealerRank == ThreeCardPokerRank.Trips) {
+                    bonusAnnotation = "Dealer Hi-Lo pays 8:1 for trips";
+                    payout = 8;
+                }
+                else if (dealerRank == ThreeCardPokerRank.Straight) {
+                    bonusAnnotation = "Dealer Hi-Lo pays 2:1 for straight";
+                    payout = 2;
+                }
+                else if (dealerRank == ThreeCardPokerRank.NoPair) {
+                    if (highCardRank <= 4) {
+                        bonusAnnotation = "Dealer Hi-Lo pays 50:1 for 6 high";
+                        payout = 30;
+                    }
+                    else if (highCardRank <= 6) {
+                        bonusAnnotation = "Dealer Hi-Lo pays 7:1 for 7/8 high";
+                        payout = 7;
+                    }
+                    else if (highCardRank <= 9) {
+                        bonusAnnotation = "Dealer Hi-Lo pays 2:1 for 9/T/J high";
+                        payout = 2;
+                    }
+                }
+                this.addCommentaryField(bonusAnnotation);
+                this.resolvePayout(this._dealerHiLoSpot, payout, true, true);
                 break;
             }
-            case Steps.ResolveBonus: {
+            case Steps.ResolvePlayerHiLo: {
                 let payout = -1;
-                let bonusAnnotation = "Hi-Lo Odds wager loses";
+                let bonusAnnotation = "Player Hi-Lo wager loses";
                 let playerRank = Math.floor(this._playerTotal / 100000);
                 let allPlayerCards = [
                     this._playerHand[0].CardNumber,
@@ -558,33 +608,37 @@ class GameScene extends Phaser.Scene {
                 let highCardNumber = allPlayerCards.reduce((a, b) => a > b ? a : b);
                 let highCardRank = Math.floor(highCardNumber / 4);
                 if (playerRank == ThreeCardPokerRank.MiniRoyal) {
-                    bonusAnnotation = "Hi-Lo Odds pays 50:1 for Mini Royal";
-                    payout = 50;
+                    bonusAnnotation = "Player Hi-Lo pays 40:1 for Mini Royal";
+                    payout = 40;
                 }
                 else if (playerRank == ThreeCardPokerRank.StraightFlush) {
-                    bonusAnnotation = "Hi-Lo Odds pays 10:1 for straight flush";
+                    bonusAnnotation = "Player Hi-Lo pays 10:1 for straight flush";
                     payout = 10;
                 }
                 else if (playerRank == ThreeCardPokerRank.Trips) {
-                    bonusAnnotation = "Hi-Lo Odds pays 10:1 for trips";
-                    payout = 10;
+                    bonusAnnotation = "Player Hi-Lo pays 8:1 for trips";
+                    payout = 8;
                 }
                 else if (playerRank == ThreeCardPokerRank.Straight) {
-                    bonusAnnotation = "Hi-Lo Odds pays 2:1 for straight";
+                    bonusAnnotation = "Player Hi-Lo pays 2:1 for straight";
                     payout = 2;
                 }
                 else if (playerRank == ThreeCardPokerRank.NoPair) {
                     if (highCardRank <= 4) {
-                        bonusAnnotation = "Hi-Lo Odds pays 50:1 for 6 high";
-                        payout = 50;
+                        bonusAnnotation = "Player Hi-Lo pays 50:1 for 6 high";
+                        payout = 30;
+                    }
+                    else if (highCardRank <= 6) {
+                        bonusAnnotation = "Player Hi-Lo pays 7:1 for 7/8 high";
+                        payout = 7;
                     }
                     else if (highCardRank <= 9) {
-                        bonusAnnotation = "Hi-Lo Odds pays 2:1 for 7/8/9/T/J high";
+                        bonusAnnotation = "Player Hi-Lo pays 2:1 for 9/T/J high";
                         payout = 2;
                     }
                 }
                 this.addCommentaryField(bonusAnnotation);
-                this.resolvePayout(this._bonusSpot, payout, true, true);
+                this.resolvePayout(this._playerHiLoSpot, payout, true, true);
                 break;
             }
             case Steps.SetPlayerPayouts: {
@@ -669,7 +723,7 @@ class GameScene extends Phaser.Scene {
                 }
                 break;
             }
-            case Steps.ResolvePlayWager: {
+            case Steps.ResolvePlayerWager: {
                 if (this._playSpot.Amount == 0) {
                     this.doAnimation();
                 }
@@ -1142,17 +1196,20 @@ class GameScene extends Phaser.Scene {
             this._playSpot.Amount = this._anteSpot.Amount;
             this._stepList.push(Steps.FlipBoardHand);
             this._stepList.push(Steps.AnnotatePlayer);
-            if (this._bonusSpot.Amount > 0) {
-                this._stepList.push(Steps.ResolveBonus);
+            if (this._playerHiLoSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolvePlayerHiLo);
             }
             this._stepList.push(Steps.FlipDealerHand);
             this._stepList.push(Steps.AnnotateDealer);
-            if (this._tieSpot.Amount > 0) {
-                this._stepList.push(Steps.ResolveTie);
+            if (this._dealerHiLoSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolveDealerHiLo);
             }
+            // if (this._tieSpot.Amount > 0) {
+            // 	this._stepList.push(Steps.ResolveTie);
+            // }
             this._stepList.push(Steps.SetPlayerPayouts);
             this._stepList.push(Steps.ResolveAnteWager);
-            this._stepList.push(Steps.ResolvePlayWager);
+            this._stepList.push(Steps.ResolvePlayerWager);
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
         }
@@ -1179,14 +1236,17 @@ class GameScene extends Phaser.Scene {
             this._stepList.push(Steps.SetDealerPayouts);
             this._stepList.push(Steps.FlipBoardHand);
             this._stepList.push(Steps.AnnotatePlayer);
-            if (this._bonusSpot.Amount > 0) {
-                this._stepList.push(Steps.ResolveBonus);
+            if (this._playerHiLoSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolvePlayerHiLo);
             }
             this._stepList.push(Steps.FlipDealerHand);
             this._stepList.push(Steps.AnnotateDealer);
-            if (this._tieSpot.Amount > 0) {
-                this._stepList.push(Steps.ResolveTie);
+            if (this._dealerHiLoSpot.Amount > 0) {
+                this._stepList.push(Steps.ResolveDealerHiLo);
             }
+            // if (this._tieSpot.Amount > 0) {
+            // 	this._stepList.push(Steps.ResolveTie);
+            // }
             this._stepList.push(Steps.ResolveDealerWager);
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
@@ -1209,13 +1269,17 @@ class GameScene extends Phaser.Scene {
             for (let button of this._mainPanel)
                 button.visible = false;
             this._stepList.push(Steps.FoldHand);
-            if (this._bonusSpot.Amount > 0 || this._tieSpot.Amount > 0) {
+            if (this._playerHiLoSpot.Amount > 0 || this._dealerHiLoSpot.Amount > 0) {
                 this._stepList.push(Steps.FlipBoardHand);
+            }
+            if (this._playerHiLoSpot.Amount > 0) {
                 this._stepList.push(Steps.AnnotatePlayer);
-                if (this._bonusSpot.Amount > 0)
-                    this._stepList.push(Steps.ResolveBonus);
-                if (this._tieSpot.Amount > 0)
-                    this._stepList.push(Steps.ResolveTie);
+                this._stepList.push(Steps.ResolvePlayerHiLo);
+            }
+            if (this._dealerHiLoSpot.Amount > 0) {
+                this._stepList.push(Steps.FlipDealerHand);
+                this._stepList.push(Steps.AnnotateDealer);
+                this._stepList.push(Steps.ResolveDealerHiLo);
             }
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
@@ -1814,14 +1878,14 @@ Steps.CardToBoard = "Card To Board";
 Steps.FoldHand = "Fold hand";
 Steps.FlipBoardHand = "Flip board hand";
 Steps.FlipDealerHand = "Flip dealer hand";
-Steps.ResolveBonus = "Resolve bonus";
+Steps.ResolvePlayerHiLo = "Resolve player Hi-Lo";
+Steps.ResolveDealerHiLo = "Resolve dealer Hi-Lo";
 Steps.CalculateTotals = "Calculate hands";
 Steps.SetPlayerPayouts = "Set Player Payouts";
 Steps.SetDealerPayouts = "Set Dealer Payouts";
 Steps.ResolveAnteWager = "Resolve Ante Wager";
-Steps.ResolvePlayWager = "Resolve Play Wager";
-Steps.ResolveDealerWager = "Resolve Bust Wager";
-Steps.ResolveTie = "Resolve Tie Wager";
+Steps.ResolvePlayerWager = "Resolve Player Wager";
+Steps.ResolveDealerWager = "Resolve Dealer Wager";
 Steps.AnnotatePlayer = "Annotate Player";
 Steps.AnnotateDealer = "Annotate Dealer";
 class Strategy {
@@ -1831,7 +1895,7 @@ Strategy.Bust = 1;
 Strategy.Fold = 2;
 class StringTable {
 }
-StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE, HI-LO ODDS, and/or TIE betting spots to add chips, click DEAL to begin.";
+StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE, PLAYER or DEALER HI-LO, and/or TIE betting spots to add chips, click DEAL to begin.";
 StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
