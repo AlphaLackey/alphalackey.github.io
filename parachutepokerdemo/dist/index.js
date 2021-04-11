@@ -110,9 +110,9 @@ class GameScene extends Phaser.Scene {
         this._doubleCheck = false;
         //#endregion
         //#region Test hands
-        this._testDealerHand = []; //General.cardStringToVector("JD TH");
-        this._testPlayerHand = []; //General.cardStringToVector("8S 8C");
-        this._testBoard = []; //General.cardStringToVector("AC 8S");
+        this._testDealerHand = []; //General.cardStringToVector("6H 3D");
+        this._testPlayerHand = []; //General.cardStringToVector("5H 6D");
+        this._testBoard = []; //General.cardStringToVector("2D 5S");
     }
     create() {
         // Add the game felt.
@@ -579,7 +579,7 @@ class GameScene extends Phaser.Scene {
                 }
                 else if (dealerRank == ThreeCardPokerRank.NoPair) {
                     if (highCardRank <= 4) {
-                        bonusAnnotation = "Dealer Hi-Lo pays 50:1 for 6 high";
+                        bonusAnnotation = "Dealer Hi-Lo pays 30:1 for 6 high";
                         payout = 30;
                     }
                     else if (highCardRank <= 6) {
@@ -1895,7 +1895,7 @@ Strategy.Bust = 1;
 Strategy.Fold = 2;
 class StringTable {
 }
-StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE, PLAYER or DEALER HI-LO, and/or TIE betting spots to add chips, click DEAL to begin.";
+StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE, PLAYER HI-LO, and/or DEALER HI-LO betting spots to add chips, click DEAL to begin.";
 StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
