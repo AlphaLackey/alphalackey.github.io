@@ -625,7 +625,7 @@ class GameScene extends Phaser.Scene {
                 }
                 else if (playerRank == ThreeCardPokerRank.NoPair) {
                     if (highCardRank <= 4) {
-                        bonusAnnotation = "Player Hi-Lo pays 50:1 for 6 high";
+                        bonusAnnotation = "Player Hi-Lo pays 30:1 for 6 high";
                         payout = 30;
                     }
                     else if (highCardRank <= 6) {
