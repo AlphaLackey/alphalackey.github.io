@@ -124,7 +124,7 @@ class GameScene extends Phaser.Scene {
         let oddsGraphic = this.add.image(700, 210, "oddsPaytable");
         oddsGraphic.scale = 0.7;
         oddsGraphic.setOrigin(0, 0);
-        let mainGraphic = this.add.image(642, 410, "mainGamePaytable");
+        let mainGraphic = this.add.image(641, 410, "mainGamePaytable");
         mainGraphic.scale = 0.6;
         mainGraphic.setOrigin(0, 0);
         // Creates the shoe object
@@ -480,18 +480,15 @@ class GameScene extends Phaser.Scene {
                 let isSuited = (cardNumbers[0] % 4 == cardNumbers[1] % 4);
                 this._optimalPlay = Strategy.Bust;
                 if (isSuited) {
-                    if (!(lowRank == 0 && highRank == 3)) {
-                        // Not 5-2 suited
-                        this._optimalPlay = Strategy.Play;
-                    }
+                    this._optimalPlay = Strategy.Play;
                 }
                 else {
                     if (highRank >= 11) {
                         // K high or A high, it's a play
                         this._optimalPlay = Strategy.Play;
                     }
-                    else if (highRank == 10 && lowRank >= 5) {
-                        // Q high, with 7+, it's a play
+                    else if (highRank == 10 && lowRank >= 3) {
+                        // Q high, with 5+, it's a play
                         this._optimalPlay = Strategy.Play;
                     }
                     else if (gap == 0) {
@@ -648,12 +645,12 @@ class GameScene extends Phaser.Scene {
                     this._playerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
-                    this._antePayout = -1;
-                    this._playerPayout = -1;
+                    this._antePayout = 0;
+                    this._playerPayout = 0;
                 }
                 else if (playerRank >= ThreeCardPokerRank.Trips) {
                     this._antePayout = 1;
-                    this._playerPayout = 4;
+                    this._playerPayout = 3;
                 }
                 else if (playerRank >= ThreeCardPokerRank.Flush) {
                     this._antePayout = 1;
@@ -673,10 +670,9 @@ class GameScene extends Phaser.Scene {
                     this._dealerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
-                    this._dealerPayout = -1;
-                }
-                else if (dealerRank >= ThreeCardPokerRank.Trips) {
-                    this._dealerPayout = 5;
+                    this._dealerPayout = 0;
+                    // } else if (dealerRank >= ThreeCardPokerRank.Trips) {
+                    // 	this._dealerPayout = 5;
                     // } else if (dealerRank >= ThreeCardPokerRank.OnePair) {
                     // 	this._dealerPayout = 2;
                 }
@@ -731,8 +727,8 @@ class GameScene extends Phaser.Scene {
                     if (this._playerPayout == 1) {
                         this.addCommentaryField("Play wager pays 1:1");
                     }
-                    else if (this._playerPayout == 4) {
-                        this.addCommentaryField("Play wager pays 1:1\n * Trips Plus bonus pays 3:1\n * Total payout = 4:1");
+                    else if (this._playerPayout == 3) {
+                        this.addCommentaryField("Play wager pays 1:1\n * Trips Plus bonus pays 2:1\n * Total payout = 3:1");
                     }
                     else if (this._playerPayout == -1) {
                         this.addCommentaryField("Play wager loses");
@@ -754,9 +750,6 @@ class GameScene extends Phaser.Scene {
                     }
                     else if (this._dealerPayout == 2) {
                         this.addCommentaryField("Dealer wager pays 2:1");
-                    }
-                    else if (this._dealerPayout == 5) {
-                        this.addCommentaryField("Dealer wager pays 2:1\n * Trips Plus bonus pays 3:1\n * Total payout = 5:1");
                     }
                     else if (this._dealerPayout == -1) {
                         this.addCommentaryField("Dealer wager loses");
