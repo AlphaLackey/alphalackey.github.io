@@ -728,7 +728,7 @@ class GameScene extends Phaser.Scene {
                         this.addCommentaryField("Play wager pays 1:1");
                     }
                     else if (this._playerPayout == 3) {
-                        this.addCommentaryField("Play wager pays 1:1\n * Trips Plus bonus pays 2:1\n * Total payout = 3:1");
+                        this.addCommentaryField("Play wager pays 3:1");
                     }
                     else if (this._playerPayout == -1) {
                         this.addCommentaryField("Play wager loses");
