@@ -725,16 +725,16 @@ class GameScene extends Phaser.Scene {
                 }
                 else {
                     if (this._playerPayout == 1) {
-                        this.addCommentaryField("Play wager pays 1:1");
+                        this.addCommentaryField("Player wager pays 1:1");
                     }
                     else if (this._playerPayout == 3) {
-                        this.addCommentaryField("Play wager pays 3:1");
+                        this.addCommentaryField("Player wager pays 3:1");
                     }
                     else if (this._playerPayout == -1) {
-                        this.addCommentaryField("Play wager loses");
+                        this.addCommentaryField("Player wager loses");
                     }
                     else if (this._playerPayout == 0) {
-                        this.addCommentaryField("Play wager pushes");
+                        this.addCommentaryField("Player wager pushes");
                     }
                     this.resolvePayout(this._playSpot, this._playerPayout, true, true);
                 }
