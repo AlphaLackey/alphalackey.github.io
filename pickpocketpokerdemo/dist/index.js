@@ -121,12 +121,15 @@ class GameScene extends Phaser.Scene {
         let gameGraphic = this.add.image(650, 15, "logo");
         gameGraphic.scale = 0.1;
         gameGraphic.setOrigin(0, 0);
-        let oddsGraphic = this.add.image(700, 210, "oddsPaytable");
-        oddsGraphic.scale = 0.7;
+        let oddsGraphic = this.add.image(715, 210, "oddsPaytable");
+        oddsGraphic.scale = 0.42;
         oddsGraphic.setOrigin(0, 0);
         let mainGraphic = this.add.image(641, 410, "mainGamePaytable");
         mainGraphic.scale = 0.6;
         mainGraphic.setOrigin(0, 0);
+        let subMainGraphic = this.add.image(670, 488, "mgr2");
+        subMainGraphic.scale = 0.6;
+        subMainGraphic.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -648,11 +651,7 @@ class GameScene extends Phaser.Scene {
                     this._antePayout = 0;
                     this._playerPayout = 0;
                 }
-                else if (playerRank >= ThreeCardPokerRank.Trips) {
-                    this._antePayout = 1;
-                    this._playerPayout = 3;
-                }
-                else if (playerRank >= ThreeCardPokerRank.Flush) {
+                else if (this._playerTotal >= 201638) {
                     this._antePayout = 1;
                     this._playerPayout = 1;
                 }
@@ -1325,8 +1324,8 @@ class HelpScene extends Phaser.Scene {
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
         let howToPlayGraphic = this.add.image(20, 20, "helpScreen");
-        howToPlayGraphic.setOrigin(0, 0);
-        howToPlayGraphic.scale = 0.68;
+        howToPlayGraphic.setOrigin(0.1, 0.1);
+        howToPlayGraphic.scale = 0.85;
         let button = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
@@ -1373,6 +1372,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("oddsPaytable", "assets/images/Odds Paytable.png");
         this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.image("mainGamePaytable", "assets/images/Main Game Rules.png");
+        this.load.image("mgr2", "assets/images/MGR2.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
