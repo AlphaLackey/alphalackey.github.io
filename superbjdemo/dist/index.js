@@ -127,7 +127,7 @@ class GameScene extends Phaser.Scene {
         this._currentState = -1;
         //#endregion
         //#region Test hands
-        this._testDealerHand = []; //General.cardStringToVector("2H AD");
+        this._testDealerHand = []; //General.cardStringToVector("KH AD");
         this._testPlayerHand = []; //General.cardStringToVector("KS QC");
     }
     create() {
@@ -397,13 +397,12 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case Steps.CheckForInsurance: {
-                let dealerRank = Math.floor(this._dealerHand[1].CardNumber / 4);
-                if (dealerRank == 12) {
-                    this.CurrentState = GameState.InsuranceInput;
-                }
-                else {
-                    this.resolveDealerNatural();
-                }
+                // let dealerRank = Math.floor(this._dealerHand[1].CardNumber / 4);
+                // if (dealerRank == 12) {
+                // 	this.CurrentState = GameState.InsuranceInput;
+                // } else {
+                this.resolveDealerNatural();
+                // }
                 break;
             }
             case Steps.CheckHoleCard: {
@@ -425,7 +424,7 @@ class GameScene extends Phaser.Scene {
                 if (this._sidebetBettingSpot.Amount > 0) {
                     let dealerScore = Math.abs(this._dealerTotal);
                     let playerScore = Math.abs(this._playerTotals[0]);
-                    if (playerScore == 21 && this._handCount == 1) {
+                    if (playerScore == 21 && this._handCount == 1 && this._playerHands[0].length == 2) {
                         // it was a natural
                         let highCard = Math.max(this._playerHands[0][0].CardNumber, this._playerHands[0][1].CardNumber);
                         let lowCard = Math.min(this._playerHands[0][0].CardNumber, this._playerHands[0][1].CardNumber);
@@ -453,7 +452,7 @@ class GameScene extends Phaser.Scene {
                         sidebetCommentary = "Ante Wager pays " + sidebetPayout + ":1\nfor a total of $" + (sidebetPayout * this._sidebetBettingSpot.Amount);
                         this.resolvePayout(this._sidebetBettingSpot, sidebetPayout, true, true);
                     }
-                    this.addCommentaryField(sidebetCommentary, 155, 420);
+                    this.addCommentaryField(sidebetCommentary, 10, 420);
                 }
                 else {
                     this.doAnimation();
@@ -496,6 +495,7 @@ class GameScene extends Phaser.Scene {
             case Steps.ResolvePlayerHands: {
                 let dealerCommentary = "Dealer has " + Math.abs(this._dealerTotal).toString();
                 this.addCommentaryField(dealerCommentary, 475, 140);
+                let netResult = 0.0;
                 if (this._handCount == 1 && this._playerTotals[0] == -21 && this._playerHands[0].length == 2) {
                     this.addCommentaryField("21", this.PlayerScoreCommentary[0].x, this.PlayerScoreCommentary[0].y);
                     this.CurrentState = GameState.GameOver;
@@ -509,12 +509,15 @@ class GameScene extends Phaser.Scene {
                         this.addCommentaryField(scoreText, this.PlayerScoreCommentary[i].x, this.PlayerScoreCommentary[i].y);
                         if (playerScore <= 21) { // Busts are already resolved
                             if (dealerScore > 21) {
+                                netResult += (this._playerBettingSpots[i].Amount);
                                 this.resolvePayout(this._playerBettingSpots[i], 1, false, false);
                             }
                             else if (dealerScore > playerScore) {
+                                netResult += (this._playerBettingSpots[i].Amount * -1);
                                 this.resolvePayout(this._playerBettingSpots[i], -1, false, false);
                             }
                             else if (dealerScore < playerScore) {
+                                netResult += (this._playerBettingSpots[i].Amount);
                                 this.resolvePayout(this._playerBettingSpots[i], 1, false, false);
                             }
                             else {
@@ -522,6 +525,13 @@ class GameScene extends Phaser.Scene {
                             }
                         }
                     }
+                    netResult += this._totalBustedLosses;
+                    let resultVerb = " (push)";
+                    if (netResult > 0)
+                        resultVerb = " win";
+                    if (netResult < 0)
+                        resultVerb = " loss";
+                    this.addCommentaryField("Net main result:\n$" + Math.abs(Math.floor(netResult)).toString() + resultVerb, 10, 290);
                     this.CurrentState = GameState.GameOver;
                 }
                 break;
@@ -530,13 +540,7 @@ class GameScene extends Phaser.Scene {
                 if (this._playerTotals[0] == -21) {
                     // Player has a natural
                     let autoWinCommentary = "Player natural automatically wins 2:1\nfor a total of $" + Math.floor(this._playerBettingSpots[0].Amount * 2.0);
-                    let field = this.addCommentaryField(autoWinCommentary, 375, 235);
-                    field.alpha = 0;
-                    this.tweens.add({
-                        targets: field,
-                        duration: 500,
-                        alpha: 1
-                    });
+                    this.addCommentaryField(autoWinCommentary, 10, 290);
                     this.resolvePayout(this._playerBettingSpots[0], 2.0, false, true);
                 }
                 else {
@@ -613,6 +617,7 @@ class GameScene extends Phaser.Scene {
                 else {
                     this._stepList.push(Steps.ChangeStateMainInput); // for the next hand
                 }
+                this._totalBustedLosses -= (this._playerBettingSpots[this._currentHand].Amount);
                 this.resolvePayout(this._playerBettingSpots[this._currentHand], -1, false, true);
                 this._currentHand += 1;
                 break;
@@ -693,6 +698,7 @@ class GameScene extends Phaser.Scene {
         this._dealerTotal = 0;
         this._currentHand = 0;
         this._handCount = 1;
+        this._totalBustedLosses = 0;
         this.clearGameObjectArray(this._dealerHand);
         this.clearGameObjectArray(this._payoutList);
         this.clearGameObjectArray(this._commentaryList);

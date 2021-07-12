@@ -3222,8 +3222,8 @@ Strategy.Fold = 2;
 class StringTable {
 }
 StringTable.PredealInstructions = "Click on chip to select denomination, click on the BLIND wager to add chips, click DEAL to begin.";
-StringTable.PreflopInstructions = "Either fold, or bet 1x or 2x the BLIND wager";
-StringTable.FlopInstructions = "Either fold, or bet 2x or 4x the BLIND wager";
+StringTable.PreflopInstructions = "Either fold, or bet 1x or 3x the BLIND wager";
+StringTable.FlopInstructions = "Either fold, or bet 2x or 5x the BLIND wager";
 StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
