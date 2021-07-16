@@ -294,7 +294,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.RedSmall,
             caption: "FOLD",
             clickEvent: Emissions.Fold,
-            x: 440 - (2 * 143),
+            x: 440 - (1 * 143),
             y: 665,
             visible: false
         });
@@ -303,52 +303,52 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "RAISE 1x",
             clickEvent: Emissions.Raise1x,
-            x: 440 - 143,
+            x: 440 - (0 * 143),
             y: 665,
             visible: false
         });
-        this.m_2xButton = new Button({
-            scene: this,
-            style: AssetNames.BlueSmall,
-            caption: "RAISE 2x",
-            clickEvent: Emissions.Raise2x,
-            x: 440,
-            y: 665,
-            visible: false
-        });
-        this.m_3xButton = new Button({
-            scene: this,
-            style: AssetNames.BlueSmall,
-            caption: "RAISE 3x",
-            clickEvent: Emissions.Raise3x,
-            x: 440 + 143,
-            y: 665,
-            visible: false
-        });
+        // this.m_2xButton = new Button({
+        // 	scene: this,
+        // 	style: AssetNames.BlueSmall,
+        // 	caption: "RAISE 2x",
+        // 	clickEvent: Emissions.Raise2x,
+        // 	x: 440,
+        // 	y: 665,
+        // 	visible: false
+        // });
+        // this.m_3xButton = new Button({
+        // 	scene: this,
+        // 	style: AssetNames.BlueSmall,
+        // 	caption: "RAISE 3x",
+        // 	clickEvent: Emissions.Raise3x,
+        // 	x: 440 + 143,
+        // 	y: 665,
+        // 	visible: false
+        // });
         this.m_4xButton = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
             caption: "RAISE 4x",
             clickEvent: Emissions.Raise4x,
-            x: 440 + (2 * 143),
+            x: 440 + (1 * 143),
             y: 665,
             visible: false
         });
         this.add.existing(this.m_FoldButton);
         this.add.existing(this.m_1xButton);
-        this.add.existing(this.m_2xButton);
-        this.add.existing(this.m_3xButton);
+        // this.add.existing(this.m_2xButton);
+        // this.add.existing(this.m_3xButton);
         this.add.existing(this.m_4xButton);
         Config.emitter.on(Emissions.Fold, this.fold, this);
         Config.emitter.on(Emissions.Raise1x, this.raise1x, this);
-        Config.emitter.on(Emissions.Raise2x, this.raise2x, this);
-        Config.emitter.on(Emissions.Raise3x, this.raise3x, this);
+        // Config.emitter.on(Emissions.Raise2x, this.raise2x, this);
+        // Config.emitter.on(Emissions.Raise3x, this.raise3x, this);
         Config.emitter.on(Emissions.Raise4x, this.raise4x, this);
         this.m_PlayPanel = [
             this.m_FoldButton,
             this.m_1xButton,
-            this.m_2xButton,
-            this.m_3xButton,
+            // this.m_2xButton,
+            // this.m_3xButton,
             this.m_4xButton
         ];
         //#endregion
@@ -1692,7 +1692,6 @@ class GameScene extends Phaser.Scene {
                     thisButton.visible = true;
                 for (let chip of this._chipButtons)
                     chip.setInteractive();
-                this.Instructions = StringTable.GameOver;
                 break;
             }
             default: {
