@@ -301,7 +301,7 @@ class GameScene extends Phaser.Scene {
         this.m_1xButton = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
-            caption: "RAISE 1x",
+            caption: "BET 1x",
             clickEvent: Emissions.Raise1x,
             x: 440 - (0 * 143),
             y: 665,
@@ -328,7 +328,7 @@ class GameScene extends Phaser.Scene {
         this.m_4xButton = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
-            caption: "RAISE 4x",
+            caption: "BET 4X",
             clickEvent: Emissions.Raise4x,
             x: 440 + (1 * 143),
             y: 665,

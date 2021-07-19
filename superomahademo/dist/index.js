@@ -258,7 +258,7 @@ class GameScene extends Phaser.Scene {
         this.m_Raise1XButton = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
-            caption: "CALL 1X",
+            caption: "BET 1X",
             clickEvent: Emissions.Raise1X,
             x: 451 + (143 * -1),
             y: 665,
@@ -267,7 +267,7 @@ class GameScene extends Phaser.Scene {
         this.m_Raise2XButton = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
-            caption: "CALL 1X",
+            caption: "BET 2X",
             clickEvent: Emissions.Raise2X,
             x: 451 + (143 * 0),
             y: 665,
@@ -276,7 +276,7 @@ class GameScene extends Phaser.Scene {
         this.m_Raise3XButton = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
-            caption: "RAISE 3X",
+            caption: "BET 3X",
             clickEvent: Emissions.Raise3X,
             x: 451 + (143 * 1),
             y: 665,
