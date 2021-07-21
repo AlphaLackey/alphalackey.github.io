@@ -251,7 +251,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.RedSmall,
             caption: "FOLD",
             clickEvent: Emissions.Fold,
-            x: 451 + (143 * -2),
+            x: 451 + (143 * -1),
             y: 665,
             visible: false
         });
@@ -260,19 +260,19 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.GreenSmall,
             caption: "BET 1X",
             clickEvent: Emissions.Raise1X,
-            x: 451 + (143 * -1),
-            y: 665,
-            visible: false
-        });
-        this.m_Raise2XButton = new Button({
-            scene: this,
-            style: AssetNames.GreenSmall,
-            caption: "BET 2X",
-            clickEvent: Emissions.Raise2X,
             x: 451 + (143 * 0),
             y: 665,
             visible: false
         });
+        // this.m_Raise2XButton = new Button({
+        // 	scene: this,
+        // 	style: AssetNames.GreenSmall,
+        // 	caption: "BET 2X",
+        // 	clickEvent: Emissions.Raise2X,
+        // 	x: 451 + (143 * 0),
+        // 	y: 665,
+        // 	visible: false
+        // });
         this.m_Raise3XButton = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
@@ -284,16 +284,16 @@ class GameScene extends Phaser.Scene {
         });
         this.add.existing(this.m_FoldButton);
         this.add.existing(this.m_Raise1XButton);
-        this.add.existing(this.m_Raise2XButton);
+        // this.add.existing(this.m_Raise2XButton);
         this.add.existing(this.m_Raise3XButton);
         Config.emitter.on(Emissions.Fold, this.fold, this);
         Config.emitter.on(Emissions.Raise1X, this.raise1x, this);
-        Config.emitter.on(Emissions.Raise2X, this.raise2x, this);
+        // Config.emitter.on(Emissions.Raise2X, this.raise2x, this);
         Config.emitter.on(Emissions.Raise3X, this.raise3x, this);
         this.m_RaiseOrFoldPanel = [
             this.m_FoldButton,
             this.m_Raise1XButton,
-            this.m_Raise2XButton,
+            // this.m_Raise2XButton,
             this.m_Raise3XButton
         ];
         //#endregion
@@ -10772,9 +10772,9 @@ Strategy.Fold = 2;
 class StringTable {
 }
 StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE and/or BONUS betting spots to add chips, click DEAL to begin.";
-StringTable.FlopInstructions = "Either fold, or bet between 1x to 3x the ANTE wager";
+StringTable.FlopInstructions = "Either fold, or bet 1x-3x the ANTE wager";
 StringTable.Raise1XName = "RAISE 1X";
-StringTable.Raise2XName = "RAISE 2X";
+// public static readonly Raise2XName = "RAISE 2X";
 StringTable.Raise3XName = "RAISE 3X";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild) {
