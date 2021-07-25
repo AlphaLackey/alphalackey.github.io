@@ -118,20 +118,15 @@ class GameScene extends Phaser.Scene {
         // Add the game felt.
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
-        let gameGraphic = this.add.image(650 - 5, 15 + 10, "logo");
-        gameGraphic.scale = 0.18;
+        let gameGraphic = this.add.image(650, 15, "logo");
+        gameGraphic.scale = 0.1;
         gameGraphic.setOrigin(0, 0);
-        let oddsGraphic = this.add.image(715, 210 + 57, "oddsPaytable");
-        oddsGraphic.scale = 0.42;
+        let oddsGraphic = this.add.image(700, 210, "oddsPaytable");
+        oddsGraphic.scale = 0.7;
         oddsGraphic.setOrigin(0, 0);
-        let mainGraphic = this.add.image(600, 410 + 57, "mainGamePaytable");
+        let mainGraphic = this.add.image(642, 410, "mainGamePaytable");
         mainGraphic.scale = 0.6;
         mainGraphic.setOrigin(0, 0);
-        // let subMainGraphic = this.add.image(
-        // 	700, 488+57, "mgr2"
-        // );
-        // subMainGraphic.scale = 0.45;
-        // subMainGraphic.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -254,7 +249,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.GreenSmall,
             caption: "PLAYER",
             clickEvent: Emissions.MakePlayWager,
-            x: 583,
+            x: 440,
             y: 665,
             visible: false
         });
@@ -265,7 +260,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.GreenSmall,
             caption: "DEALER",
             clickEvent: Emissions.MakeBustWager,
-            x: 440,
+            x: 583,
             y: 665,
             visible: false
         });
@@ -330,7 +325,7 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._anteSpot);
         //#endregion
         //#region Play spot
-        spotAnchor = new Point(590, 591);
+        spotAnchor = new Point(492, 591);
         graphics.fillStyle(0x000000);
         graphics.beginPath();
         graphics.moveTo(spotAnchor.x - 27, spotAnchor.y - 68);
@@ -358,7 +353,7 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._playSpot);
         //#endregion
         //#region Dealer spot
-        spotAnchor = new Point(492, 591);
+        spotAnchor = new Point(590, 591);
         graphics.fillStyle(0xFF0000);
         graphics.beginPath();
         graphics.moveTo(spotAnchor.x - 27, spotAnchor.y - 68);
@@ -485,15 +480,18 @@ class GameScene extends Phaser.Scene {
                 let isSuited = (cardNumbers[0] % 4 == cardNumbers[1] % 4);
                 this._optimalPlay = Strategy.Bust;
                 if (isSuited) {
-                    this._optimalPlay = Strategy.Play;
+                    if (!(lowRank == 0 && highRank == 3)) {
+                        // Not 5-2 suited
+                        this._optimalPlay = Strategy.Play;
+                    }
                 }
                 else {
                     if (highRank >= 11) {
                         // K high or A high, it's a play
                         this._optimalPlay = Strategy.Play;
                     }
-                    else if (highRank == 10 && lowRank >= 2) {
-                        // Q high, with 4+, it's a play
+                    else if (highRank == 10 && lowRank >= 5) {
+                        // Q high, with 7+, it's a play
                         this._optimalPlay = Strategy.Play;
                     }
                     else if (gap == 0) {
@@ -651,36 +649,39 @@ class GameScene extends Phaser.Scene {
                 }
                 else if (this._playerTotal == this._dealerTotal) {
                     this._antePayout = -1;
-                    this._playerPayout = 0;
+                    this._playerPayout = -1;
                 }
-                else if (this._playerTotal >= 201638) {
+                else if (playerRank >= ThreeCardPokerRank.Trips) {
+                    this._antePayout = 1;
+                    this._playerPayout = 4;
+                }
+                else if (playerRank >= ThreeCardPokerRank.Flush) {
                     this._antePayout = 1;
                     this._playerPayout = 1;
                 }
                 else {
-                    this._antePayout = 0;
-                    this._playerPayout = 1;
+                    this._antePayout = 1;
+                    this._playerPayout = 0;
                 }
                 this.doAnimation();
                 break;
             }
             case Steps.SetDealerPayouts: {
                 let dealerRank = Math.floor(this._dealerTotal / 100000);
+                this._antePayout = -1;
                 if (this._playerTotal > this._dealerTotal) {
-                    this._antePayout = -1;
                     this._dealerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
-                    this._antePayout = -1;
-                    this._dealerPayout = 0;
-                    // } else if (dealerRank >= ThreeCardPokerRank.Trips) {
-                    // 	this._dealerPayout = 5;
+                    this._dealerPayout = -1;
+                }
+                else if (dealerRank >= ThreeCardPokerRank.Trips) {
+                    this._dealerPayout = 5;
                     // } else if (dealerRank >= ThreeCardPokerRank.OnePair) {
                     // 	this._dealerPayout = 2;
                 }
                 else {
-                    this._antePayout = 0;
-                    this._dealerPayout = 1;
+                    this._dealerPayout = 2;
                 }
                 this.doAnimation();
                 break;
@@ -728,16 +729,16 @@ class GameScene extends Phaser.Scene {
                 }
                 else {
                     if (this._playerPayout == 1) {
-                        this.addCommentaryField("Player wager pays 1:1");
+                        this.addCommentaryField("Play wager pays 1:1");
                     }
-                    else if (this._playerPayout == 3) {
-                        this.addCommentaryField("Player wager pays 3:1");
+                    else if (this._playerPayout == 4) {
+                        this.addCommentaryField("Play wager pays 1:1\n * Trips Plus bonus pays 3:1\n * Total payout = 4:1");
                     }
                     else if (this._playerPayout == -1) {
-                        this.addCommentaryField("Player wager loses");
+                        this.addCommentaryField("Play wager loses");
                     }
                     else if (this._playerPayout == 0) {
-                        this.addCommentaryField("Player wager pushes");
+                        this.addCommentaryField("Play wager pushes");
                     }
                     this.resolvePayout(this._playSpot, this._playerPayout, true, true);
                 }
@@ -753,6 +754,9 @@ class GameScene extends Phaser.Scene {
                     }
                     else if (this._dealerPayout == 2) {
                         this.addCommentaryField("Dealer wager pays 2:1");
+                    }
+                    else if (this._dealerPayout == 5) {
+                        this.addCommentaryField("Dealer wager pays 2:1\n * Trips Plus bonus pays 3:1\n * Total payout = 5:1");
                     }
                     else if (this._dealerPayout == -1) {
                         this.addCommentaryField("Dealer wager loses");
@@ -1227,6 +1231,9 @@ class GameScene extends Phaser.Scene {
             for (let button of this._mainPanel)
                 button.visible = false;
             this._dealerSpot.Amount = this._anteSpot.Amount;
+            this._antePayout = -1;
+            this._stepList.push(Steps.ResolveAnteWager);
+            this._stepList.push(Steps.SetDealerPayouts);
             this._stepList.push(Steps.FlipBoardHand);
             this._stepList.push(Steps.AnnotatePlayer);
             if (this._playerHiLoSpot.Amount > 0) {
@@ -1240,8 +1247,6 @@ class GameScene extends Phaser.Scene {
             // if (this._tieSpot.Amount > 0) {
             // 	this._stepList.push(Steps.ResolveTie);
             // }
-            this._stepList.push(Steps.SetDealerPayouts);
-            this._stepList.push(Steps.ResolveAnteWager);
             this._stepList.push(Steps.ResolveDealerWager);
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
@@ -1328,7 +1333,7 @@ class HelpScene extends Phaser.Scene {
         feltGraphic.setOrigin(0, 0);
         let howToPlayGraphic = this.add.image(20, 20, "helpScreen");
         howToPlayGraphic.setOrigin(0, 0);
-        howToPlayGraphic.scale = 1.0;
+        howToPlayGraphic.scale = 0.68;
         let button = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
@@ -1375,7 +1380,6 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("oddsPaytable", "assets/images/Odds Paytable.png");
         this.load.image("helpScreen", "assets/images/How To Play.png");
         this.load.image("mainGamePaytable", "assets/images/Main Game Rules.png");
-        this.load.image("mgr2", "assets/images/MGR2.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
