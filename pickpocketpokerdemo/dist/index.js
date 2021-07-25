@@ -124,12 +124,14 @@ class GameScene extends Phaser.Scene {
         let oddsGraphic = this.add.image(715, 210 + 57, "oddsPaytable");
         oddsGraphic.scale = 0.42;
         oddsGraphic.setOrigin(0, 0);
-        let mainGraphic = this.add.image(641, 410 + 57, "mainGamePaytable");
+        let mainGraphic = this.add.image(600, 410 + 57, "mainGamePaytable");
         mainGraphic.scale = 0.6;
         mainGraphic.setOrigin(0, 0);
-        let subMainGraphic = this.add.image(700, 488 + 57, "mgr2");
-        subMainGraphic.scale = 0.45;
-        subMainGraphic.setOrigin(0, 0);
+        // let subMainGraphic = this.add.image(
+        // 	700, 488+57, "mgr2"
+        // );
+        // subMainGraphic.scale = 0.45;
+        // subMainGraphic.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -648,27 +650,28 @@ class GameScene extends Phaser.Scene {
                     this._playerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
-                    this._antePayout = 0;
-                    this._playerPayout = -1;
+                    this._antePayout = -1;
+                    this._playerPayout = 0;
                 }
                 else if (this._playerTotal >= 201638) {
                     this._antePayout = 1;
                     this._playerPayout = 1;
                 }
                 else {
-                    this._antePayout = 1;
-                    this._playerPayout = 0;
+                    this._antePayout = 0;
+                    this._playerPayout = 1;
                 }
                 this.doAnimation();
                 break;
             }
             case Steps.SetDealerPayouts: {
                 let dealerRank = Math.floor(this._dealerTotal / 100000);
-                this._antePayout = -1;
                 if (this._playerTotal > this._dealerTotal) {
+                    this._antePayout = -1;
                     this._dealerPayout = -1;
                 }
                 else if (this._playerTotal == this._dealerTotal) {
+                    this._antePayout = -1;
                     this._dealerPayout = 0;
                     // } else if (dealerRank >= ThreeCardPokerRank.Trips) {
                     // 	this._dealerPayout = 5;
@@ -676,7 +679,8 @@ class GameScene extends Phaser.Scene {
                     // 	this._dealerPayout = 2;
                 }
                 else {
-                    this._dealerPayout = 2;
+                    this._antePayout = 0;
+                    this._dealerPayout = 1;
                 }
                 this.doAnimation();
                 break;
@@ -1223,9 +1227,6 @@ class GameScene extends Phaser.Scene {
             for (let button of this._mainPanel)
                 button.visible = false;
             this._dealerSpot.Amount = this._anteSpot.Amount;
-            this._antePayout = -1;
-            this._stepList.push(Steps.ResolveAnteWager);
-            this._stepList.push(Steps.SetDealerPayouts);
             this._stepList.push(Steps.FlipBoardHand);
             this._stepList.push(Steps.AnnotatePlayer);
             if (this._playerHiLoSpot.Amount > 0) {
@@ -1239,6 +1240,8 @@ class GameScene extends Phaser.Scene {
             // if (this._tieSpot.Amount > 0) {
             // 	this._stepList.push(Steps.ResolveTie);
             // }
+            this._stepList.push(Steps.SetDealerPayouts);
+            this._stepList.push(Steps.ResolveAnteWager);
             this._stepList.push(Steps.ResolveDealerWager);
             this._stepList.push(Steps.ChangeStateGameOver);
             this.doAnimation();
@@ -1324,8 +1327,8 @@ class HelpScene extends Phaser.Scene {
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
         let howToPlayGraphic = this.add.image(20, 20, "helpScreen");
-        howToPlayGraphic.setOrigin(0.1, 0.1);
-        howToPlayGraphic.scale = 0.85;
+        howToPlayGraphic.setOrigin(0, 0);
+        howToPlayGraphic.scale = 1.0;
         let button = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
