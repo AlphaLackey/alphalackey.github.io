@@ -751,8 +751,8 @@ class GameScene extends Phaser.Scene {
                     if (this._dealerPayout == 0) {
                         this.addCommentaryField("Dealer wager pushes");
                     }
-                    else if (this._dealerPayout == 2) {
-                        this.addCommentaryField("Dealer wager pays 2:1");
+                    else if (this._dealerPayout == 1) {
+                        this.addCommentaryField("Dealer wager pays 1:1");
                     }
                     else if (this._dealerPayout == -1) {
                         this.addCommentaryField("Dealer wager loses");
@@ -1328,7 +1328,7 @@ class HelpScene extends Phaser.Scene {
         feltGraphic.setOrigin(0, 0);
         let howToPlayGraphic = this.add.image(20, 20, "helpScreen");
         howToPlayGraphic.setOrigin(0, 0);
-        howToPlayGraphic.scale = 1.0;
+        howToPlayGraphic.scale = 0.8;
         let button = new Button({
             scene: this,
             style: AssetNames.BlueSmall,
