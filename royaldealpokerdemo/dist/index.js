@@ -81,6 +81,13 @@ Config.gameOptions = {
         fontColor: "#FFFFFF",
         fontStyle: "bold",
         align: "left"
+    },
+    bannerFormat: {
+        fontFamily: "Arial",
+        fontSize: "80px",
+        fontColor: "#FFFFFF",
+        fontStyle: "bold",
+        align: "left"
     }
 };
 window.onload = () => {
@@ -123,6 +130,7 @@ class GameScene extends Phaser.Scene {
         // Add the game felt.
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
+        let bannertext = this.add.text(110, 225, "ROYAL DEAL POKER", Config.gameOptions.bannerFormat);
         let codes = General.cardStringToVector("2H 3H 4H 5H 7H");
         this.m_DefaultFlush = FiveCardEvaluator.CardVectorToHandResult(codes, 5)[0];
         // Creates the shoe object
