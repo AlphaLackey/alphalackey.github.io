@@ -136,7 +136,7 @@ class GameScene extends Phaser.Scene {
         // Creates the shoe object
         let cardRanks = new Array(53);
         for (let rank = 0; rank < 53; rank += 1)
-            cardRanks[rank] = (rank < 36 ? 0 : 1);
+            cardRanks[rank] = (rank < 32 ? 0 : 1);
         this.m_Deck = new QuantumShoe(cardRanks, 2);
         // Turn on listening to input events
         this.input.on('gameobjectup', function (_, gameObject) {
