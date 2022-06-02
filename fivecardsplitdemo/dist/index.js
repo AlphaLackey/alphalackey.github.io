@@ -11,7 +11,7 @@ class Config {
             type: Phaser.AUTO,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene],
+            scene: [LoaderScene, GameScene, HelpScene],
             scale: {
                 parent: 'game-div',
                 mode: Phaser.Scale.FIT,
@@ -46,24 +46,37 @@ Config.gameOptions = {
         color: "#000000",
         align: "center"
     },
+    helpScreenFormat: {
+        fontFamily: "Arial",
+        fontSize: "22px",
+        color: "#FFFFFF",
+        align: "left"
+    },
     feltFormat: {
         fontFamily: "Arial",
         fontSize: "12px",
-        fontColor: "#FFFFFF",
+        color: "#FFFFFF",
+        align: "center"
+    },
+    centerTextFormat: {
+        fontFamily: "Arial",
+        fontSize: "18px",
+        fontStyle: "bold",
+        color: "#FFDDBB",
         align: "center"
     },
     commentaryFormat: {
         fontFamily: "Arial",
         fontSize: "20px",
-        fontColor: "#FFFFFF",
         fontStyle: "bold",
+        color: "#FFFFFF",
         align: "left"
     },
     bannerFormat: {
         fontFamily: "Arial",
         fontSize: "80px",
-        fontColor: "#FFFFFF",
         fontStyle: "bold",
+        color: "#FFFFFF",
         align: "left"
     }
 };
@@ -78,13 +91,13 @@ class GameScene extends Phaser.Scene {
         super("GameScene");
         // #region Constants
         this.TargetFontInstructionSize = 22;
-        this.CommentaryAnchor = new Point(10, 10);
+        this.CommentaryAnchor = new Point(10, 330);
         this.CommentarySpacing = 30;
         this.TwoCardOffset = new Point(-34, -37);
         this.ThreeCardOffset = new Point(-34, -37);
         this.FiveCardOffset = new Point(-34, -37);
         this.CardSpread = 100;
-        this.PlayerHandAnchor = new Point(413, 435);
+        this.PlayerHandAnchor = new Point(413, 415);
         this.DealerHandAnchor = new Point(360, 75);
         // #endregion
         // #region Hand information
@@ -103,13 +116,15 @@ class GameScene extends Phaser.Scene {
         this.m_PayoutList = new Array(0);
         // #endregion
         // #region Test hands
-        this.m_TestPlayerHand = []; //General.CardStringToVector("9S KS");
+        this.m_TestPlayerHand = []; //General.cardStringToVector("9S KS QC JD 9D");
         this.m_TestDealerHand = []; //General.cardStringToVector("2C 5H JD JH QD QS");
     }
     create() {
         // Add the game felt.
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
+        let gameLogo = this.add.image(25, 25, "gameLogo");
+        gameLogo.setOrigin(0, 0);
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -144,6 +159,14 @@ class GameScene extends Phaser.Scene {
         this._helpField.setWordWrapWidth(569);
         graphics.lineStyle(6, 0xffffff, 1);
         graphics.strokeRoundedRect(440, 695, 569, 50, 5);
+        // Now, add the central banner text.
+        this._centerTextField = this.add.text(100, 240, [""]);
+        this._centerTextField.setFixedSize(824, 0);
+        this._centerTextField.setPadding(0, 3, 0, 0);
+        this._centerTextField.setStyle(Config.gameOptions.centerTextFormat);
+        this._centerTextField.text = "WINS PAY 1 TO 1 * PLAYER MAY PULL BACK HIGH OR LOW HAND BET * DEALER WINS TIE";
+        graphics.lineStyle(6, 0xf01a23, 1);
+        graphics.strokeRoundedRect(100, 230, 824, 50, 15);
         let chipDenominations = [1, 5, 25, 100];
         for (let index = 0; index < chipDenominations.length; index += 1) {
             let chipButton = new Chip({
@@ -218,6 +241,17 @@ class GameScene extends Phaser.Scene {
         ];
         // #endregion
         // #region Play Option panel
+        this.m_HintButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "HINT",
+            clickEvent: Emissions.ShowHint,
+            x: 227,
+            y: 645,
+            visible: false
+        });
+        this.add.existing(this.m_HintButton);
+        Config.emitter.on(Emissions.ShowHint, this.showHint, this);
         this.m_PullBackTwoButton = new Button({
             scene: this,
             style: AssetNames.RedSmall,
@@ -252,42 +286,39 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this.m_PlayAllButton);
         Config.emitter.on(Emissions.PlayAll, this.playAllBets, this);
         this.m_PlayOptionPanel = [
+            this.m_HintButton,
             this.m_PullBackTwoButton,
             this.m_PullBackThreeButton,
             this.m_PlayAllButton
         ];
         // #endregion
+        // #region Other buttons
+        this.m_HelpButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "HOW TO PLAY",
+            clickEvent: Emissions.ShowHelp,
+            x: 952,
+            y: 665,
+            visible: true
+        });
+        this.add.existing(this.m_HelpButton);
+        Config.emitter.on(Emissions.ShowHelp, this.showHelp, this);
+        // #endregion
         // #endregion
         // #region Betting spots
         let spotAnchor;
         graphics.lineStyle(5, 0xffffff, 1);
-        // #region TwoCardSpot spot
         spotAnchor = new Point(438, 580);
-        graphics.lineStyle(5, 0xffffff, 1);
-        graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
-        let twoLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "TWO");
-        twoLabel.setFixedSize(80, 22);
-        twoLabel.setStyle(Config.gameOptions.feltFormat);
-        this.m_TwoCardSpot = new BettingSpot({
-            scene: this,
-            x: spotAnchor.x,
-            y: spotAnchor.y,
-            amount: 0,
-            isOptional: false,
-            isLocked: false,
-            isPlayerSpot: true,
-            minimumBet: 5,
-            maximumBet: 100,
-            payoffOffset: this.TwoCardOffset
-        });
-        // #endregion
         // #region Three Card spot
-        spotAnchor.x += 100;
         graphics.lineStyle(5, 0xffffff, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
         let threeLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "THREE");
         threeLabel.setFixedSize(80, 32);
         threeLabel.setStyle(Config.gameOptions.feltFormat);
+        let highLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y - 90, "HIGH");
+        highLabel.setFixedSize(80, 32);
+        highLabel.setStyle(Config.gameOptions.feltFormat);
         this.m_ThreeCardSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
@@ -301,8 +332,8 @@ class GameScene extends Phaser.Scene {
             payoffOffset: this.ThreeCardOffset
         });
         // #endregion
-        // #region Five Card spot
         spotAnchor.x += 100;
+        // #region Five Card spot
         graphics.lineStyle(5, 0xffffff, 1);
         graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
         let fiveLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "FIVE");
@@ -319,6 +350,29 @@ class GameScene extends Phaser.Scene {
             minimumBet: 5,
             maximumBet: 100,
             payoffOffset: this.FiveCardOffset
+        });
+        // #endregion
+        spotAnchor.x += 100;
+        // #region TwoCardSpot spot
+        graphics.lineStyle(5, 0xffffff, 1);
+        graphics.strokeCircle(spotAnchor.x - 28, spotAnchor.y - 26, 40);
+        let twoLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y + 25, "TWO");
+        twoLabel.setFixedSize(80, 22);
+        twoLabel.setStyle(Config.gameOptions.feltFormat);
+        let lowLabel = this.add.text(spotAnchor.x - 68, spotAnchor.y - 90, "LOW");
+        lowLabel.setFixedSize(80, 32);
+        lowLabel.setStyle(Config.gameOptions.feltFormat);
+        this.m_TwoCardSpot = new BettingSpot({
+            scene: this,
+            x: spotAnchor.x,
+            y: spotAnchor.y,
+            amount: 0,
+            isOptional: false,
+            isLocked: false,
+            isPlayerSpot: true,
+            minimumBet: 5,
+            maximumBet: 100,
+            payoffOffset: this.TwoCardOffset
         });
         // #endregion
         this.m_BettingSpots = [
@@ -871,6 +925,7 @@ class GameScene extends Phaser.Scene {
                     thisButton.visible = true;
                     thisButton.lock();
                 }
+                this.m_HintButton.unlock();
                 this.Instructions = StringTable.PlayInstructions;
                 for (let card of this.m_PlayerCards) {
                     card.setInteractive({ useHandCursor: true });
@@ -947,9 +1002,9 @@ class GameScene extends Phaser.Scene {
         this.m_AnimationList.push(Animations.SortDealerHand);
         this.m_AnimationList.push(Animations.SetDealerFiveCardHand);
         this.m_AnimationList.push(Animations.SetDealerTwoAndThree);
-        this.m_AnimationList.push(Animations.ResolveTwoCard);
         this.m_AnimationList.push(Animations.ResolveThreeCard);
         this.m_AnimationList.push(Animations.ResolveFiveCard);
+        this.m_AnimationList.push(Animations.ResolveTwoCard);
         this.m_AnimationList.push(Animations.ChangeStateGameOver);
         this.doAnimation();
     }
@@ -988,6 +1043,7 @@ class GameScene extends Phaser.Scene {
                 thisButton.lock();
             }
         }
+        this.m_HintButton.unlock();
         if (selectedCount != 2) {
             this.Instructions = StringTable.PlayInstructions;
         }
@@ -1002,48 +1058,62 @@ class GameScene extends Phaser.Scene {
         this.playChipClick();
         this.selectCursorValue(target.Value);
     }
-    // standOnHand() {
-    // 	this.playButtonClick();
-    // 	this.Instructions = "";
-    // 	for (let button of this.m_TradeStandButtonPanel) button.visible = false;
-    // 	for (let card of this.m_PlayerCards) {
-    // 		card.disableInteractive();
-    // 		if (card.IsSelected) {
-    // 			card.y += 55;
-    // 			card.IsSelected = false;				
-    // 		}
-    // 	}
-    // 	this.m_AnimationList.push(Animations.DeliverRuleCards);
-    // 	this.m_AnimationList.push(Animations.ChangeStateRevealRuleCard);
-    // 	this.doAnimation();
-    // 	// TO COME:
-    // 	// TODO: flip card
-    // 	// TODO: hide cards
-    // 	// TODO: Change state: flip second card
-    // 	// et cetera, et cetera.
-    // }
-    // tradeCardFromHand() {
-    // 	this.playButtonClick();
-    // 	this.Instructions = "";
-    // 	for (let button of this.m_TradeStandButtonPanel) button.visible = false;
-    // 	let targetCard!: PlayingCard;
-    // 	for (let x = 0; x < 3; x += 1) {
-    // 		this.m_PlayerCards[x].disableInteractive();
-    // 		if (this.m_PlayerCards[x].IsSelected) {
-    // 			this.m_PlayerCardToTrade = x;
-    // 			targetCard = this.m_PlayerCards[x];
-    // 		}
-    // 	}
-    // 	targetCard.IsSelected = false;
-    // 	this.m_AnimationList.push(Animations.RemoveOldCard);
-    // 	this.m_AnimationList.push(Animations.ReplaceNewCard);
-    // 	this.m_AnimationList.push(Animations.RemoveJokers);
-    // 	this.m_AnimationList.push(Animations.DeliverRuleCards);
-    // 	this.m_AnimationList.push(Animations.ChangeStateRevealRuleCard);
-    // 	this.doAnimation();
-    // }
-    // // #endregion
-    // // #region Event handlers
+    showHelp() {
+        this.sound.play("buttonClick");
+        this.scene.switch("HelpScene");
+    }
+    showHint() {
+        this.sound.play("buttonClick");
+        let optimalSet = [-1, -1];
+        let optimalEV = -99.99;
+        let optimalInstructions = "Play both split bets.";
+        for (let low0 = 0; low0 < 4; low0 += 1) {
+            for (let low1 = low0 + 1; low1 < 5; low1 += 1) {
+                let twoCardHand = new Array(0);
+                let threeCardHand = new Array(0);
+                for (let x = 0; x < 5; x += 1) {
+                    let thisCard = this.m_PlayerCards[x];
+                    if (low0 == x || low1 == x) {
+                        twoCardHand.push(thisCard.CardNumber);
+                    }
+                    else {
+                        threeCardHand.push(thisCard.CardNumber);
+                    }
+                }
+                let playerTwo = TwoCardEvaluator.CardNumbersToHandNumber(twoCardHand);
+                let playerThree = ThreeCardEvaluator.cardVectorToHandNumber(threeCardHand, false);
+                if (playerThree >= Constants.TwoToThreeMap.get(playerTwo)) {
+                    let twoEV = 2 * (Constants.TwoCardPerc.get(playerTwo)) - 1.0;
+                    let threeEV = 2 * (Constants.ThreeCardPerc.get(playerThree)) - 1.0;
+                    let playBothEV = twoEV + threeEV;
+                    if (twoEV > optimalEV) {
+                        // Two only, so pull three
+                        optimalSet = [low0, low1];
+                        optimalEV = twoEV;
+                        optimalInstructions = "Pull three card split bet.";
+                    }
+                    if (threeEV > optimalEV) {
+                        // Three only, so pull two
+                        optimalSet = [low0, low1];
+                        optimalEV = threeEV;
+                        optimalInstructions = "Pull two card split bet.";
+                    }
+                    if (playBothEV > optimalEV) {
+                        // Play both
+                        // Two only, so pull three
+                        optimalSet = [low0, low1];
+                        optimalEV = playBothEV;
+                        optimalInstructions = "Play BOTH split bets.";
+                    }
+                }
+            }
+        }
+        this.selectCard(this.m_PlayerCards[optimalSet[0]]);
+        this.selectCard(this.m_PlayerCards[optimalSet[1]]);
+        this.Instructions = optimalInstructions;
+    }
+    // #endregion
+    // #region Event handlers
     predealInitialization() {
         this.m_AnimationList = [];
         this.m_Deck.shuffle();
@@ -1108,6 +1178,49 @@ class GameScene extends Phaser.Scene {
         (_a = this._scoreField) === null || _a === void 0 ? void 0 : _a.setText(descriptors);
     }
 }
+class HelpScene extends Phaser.Scene {
+    constructor() {
+        super("HelpScene");
+    }
+    create() {
+        let HelpText = [
+            "FIVE CARD SPLIT(tm) is a poker variation that's similar to Pai Gow Poker but uses fewer cards and has triple the bets.  Played with a regular deck of 52 cards, the rules are:",
+            "",
+            " * Initially, equal bets are made on three hands: a three-card high hand, a two-card low hand, and a five-card base hand.",
+            " * Hand rankings are based on conventional poker rankings for the high and base hands; the low hand is either a pair or no pair, after which the individual cards determine the hand value.",
+            " * The player receives five cards and the dealer receives six, keeping five to make the best possible base hand.",
+            " * The player and the dealer separate their five cards into the high and low hands, called the split hands.  The base hand is the combination of the cards in the split hands.",
+            " * In setting their hands, the dealer follows fixed 'split hand rules' and the player is bound only by the single rule that the high hand must outrank the low hand.",
+            " * The player has the option to pull back one, but not both, of their split hand bets.",
+            " * Winning player bets pay even money and ties lose.",
+            "",
+            "Other key differences with regular Pai Gow are: there is no commission on wins, the 'wheel' (3, 2, A) is the lowest-ranked straight, and there is no player banking."
+        ];
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.ReturnToGame,
+            x: 952,
+            y: 665 + 64,
+            visible: true
+        });
+        this.add.existing(button);
+        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+        let helpText = this.add.text(50, 50, HelpText);
+        helpText.setWordWrapWidth(910);
+        helpText.setStyle(Config.gameOptions.helpScreenFormat);
+    }
+    returnToGame() {
+        this.sound.play("buttonClick");
+        this.scene.switch("GameScene");
+    }
+}
 class LoaderScene extends Phaser.Scene {
     constructor() {
         super("LoaderScene");
@@ -1133,6 +1246,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
+        this.load.image("gameLogo", "assets/images/Game Logo.png");
         this.load.spritesheet("card", "assets/images/Cards 85x131.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -1389,6 +1503,842 @@ Constants.FiveCardPokerHandNames = [
     "Royal flush",
     "Five of a kind"
 ];
+Constants.ThreeCardPerc = new Map([
+    [100520, 0],
+    [100533, 0],
+    [100689, 0],
+    [100702, 0],
+    [100703, 0],
+    [100715, 0],
+    [100716, 0],
+    [100858, 0],
+    [100871, 0],
+    [100872, 0],
+    [100884, 0],
+    [100885, 0],
+    [100886, 0],
+    [100897, 0],
+    [100898, 0],
+    [100899, 0],
+    [101027, 0],
+    [101040, 0],
+    [101041, 0],
+    [101053, 0],
+    [101054, 0],
+    [101055, 0],
+    [101066, 0],
+    [101067, 0],
+    [101068, 0],
+    [101069, 0],
+    [101079, 0],
+    [101080, 0],
+    [101081, 0],
+    [101082, 0],
+    [101196, 0],
+    [101209, 0],
+    [101210, 0.0002],
+    [101222, 0.0002],
+    [101223, 0.0004],
+    [101224, 0.0004],
+    [101235, 0.0004],
+    [101236, 0.0004],
+    [101237, 0.0004],
+    [101238, 0.0004],
+    [101248, 0.0004],
+    [101249, 0.0004],
+    [101250, 0.0004],
+    [101251, 0.0004],
+    [101252, 0.0004],
+    [101261, 0.0004],
+    [101262, 0.0004],
+    [101263, 0.0004],
+    [101264, 0.0004],
+    [101265, 0.0004],
+    [101365, 0.0004],
+    [101378, 0.0004],
+    [101379, 0.0009],
+    [101391, 0.0009],
+    [101392, 0.0014],
+    [101393, 0.0019],
+    [101404, 0.0019],
+    [101405, 0.002],
+    [101406, 0.0022],
+    [101407, 0.0022],
+    [101417, 0.0022],
+    [101418, 0.0022],
+    [101419, 0.0022],
+    [101420, 0.0022],
+    [101421, 0.0022],
+    [101430, 0.0022],
+    [101431, 0.0022],
+    [101432, 0.0022],
+    [101433, 0.0022],
+    [101434, 0.0022],
+    [101435, 0.0022],
+    [101443, 0.0022],
+    [101444, 0.0022],
+    [101445, 0.0022],
+    [101446, 0.0022],
+    [101447, 0.0022],
+    [101448, 0.0022],
+    [101534, 0.0022],
+    [101547, 0.0022],
+    [101548, 0.0033],
+    [101560, 0.0033],
+    [101561, 0.0042],
+    [101562, 0.0054],
+    [101573, 0.0054],
+    [101574, 0.0059],
+    [101575, 0.0068],
+    [101576, 0.0075],
+    [101586, 0.0075],
+    [101587, 0.0077],
+    [101588, 0.0079],
+    [101589, 0.0082],
+    [101590, 0.0082],
+    [101599, 0.0082],
+    [101600, 0.0082],
+    [101601, 0.0082],
+    [101602, 0.0082],
+    [101603, 0.0082],
+    [101604, 0.0082],
+    [101612, 0.0082],
+    [101613, 0.0082],
+    [101614, 0.0082],
+    [101615, 0.0082],
+    [101616, 0.0082],
+    [101617, 0.0082],
+    [101618, 0.0082],
+    [101625, 0.0082],
+    [101626, 0.0082],
+    [101627, 0.0082],
+    [101628, 0.0082],
+    [101629, 0.0082],
+    [101630, 0.0082],
+    [101631, 0.0082],
+    [101703, 0.0082],
+    [101716, 0.0082],
+    [101717, 0.0099],
+    [101729, 0.0099],
+    [101730, 0.0114],
+    [101731, 0.0135],
+    [101742, 0.0135],
+    [101743, 0.0145],
+    [101744, 0.0164],
+    [101745, 0.0181],
+    [101755, 0.0181],
+    [101756, 0.0186],
+    [101757, 0.0196],
+    [101758, 0.021],
+    [101759, 0.0219],
+    [101768, 0.0219],
+    [101769, 0.022],
+    [101770, 0.0223],
+    [101771, 0.0226],
+    [101772, 0.0231],
+    [101773, 0.0231],
+    [101781, 0.0231],
+    [101782, 0.0231],
+    [101783, 0.0231],
+    [101784, 0.0231],
+    [101785, 0.0231],
+    [101786, 0.0231],
+    [101787, 0.0231],
+    [101794, 0.0231],
+    [101795, 0.0231],
+    [101796, 0.0231],
+    [101797, 0.0231],
+    [101798, 0.0231],
+    [101799, 0.0231],
+    [101800, 0.0231],
+    [101801, 0.0231],
+    [101807, 0.0231],
+    [101808, 0.0231],
+    [101809, 0.0231],
+    [101810, 0.0231],
+    [101811, 0.0231],
+    [101812, 0.0231],
+    [101813, 0.0231],
+    [101814, 0.0231],
+    [101872, 0.0231],
+    [101885, 0.0231],
+    [101886, 0.0254],
+    [101898, 0.0254],
+    [101899, 0.0277],
+    [101900, 0.031],
+    [101911, 0.031],
+    [101912, 0.0325],
+    [101913, 0.0356],
+    [101914, 0.0388],
+    [101924, 0.0388],
+    [101925, 0.0397],
+    [101926, 0.0416],
+    [101927, 0.0444],
+    [101928, 0.0468],
+    [101937, 0.0468],
+    [101938, 0.0473],
+    [101939, 0.0482],
+    [101940, 0.0496],
+    [101941, 0.0515],
+    [101942, 0.0527],
+    [101950, 0.0527],
+    [101951, 0.0528],
+    [101952, 0.053],
+    [101953, 0.0534],
+    [101954, 0.0539],
+    [101955, 0.0544],
+    [101956, 0.0544],
+    [101963, 0.0544],
+    [101964, 0.0544],
+    [101965, 0.0544],
+    [101966, 0.0544],
+    [101967, 0.0544],
+    [101968, 0.0544],
+    [101969, 0.0544],
+    [101970, 0.0544],
+    [101976, 0.0544],
+    [101977, 0.0544],
+    [101978, 0.0544],
+    [101979, 0.0544],
+    [101980, 0.0544],
+    [101981, 0.0544],
+    [101982, 0.0544],
+    [101983, 0.0544],
+    [101984, 0.0544],
+    [101989, 0.0544],
+    [101990, 0.0544],
+    [101991, 0.0544],
+    [101992, 0.0544],
+    [101993, 0.0544],
+    [101994, 0.0544],
+    [101995, 0.0544],
+    [101996, 0.0544],
+    [101997, 0.0544],
+    [102054, 0.0544],
+    [102055, 0.0576],
+    [102067, 0.0576],
+    [102068, 0.0607],
+    [102069, 0.0654],
+    [102080, 0.0654],
+    [102081, 0.0676],
+    [102082, 0.0721],
+    [102083, 0.0771],
+    [102093, 0.0771],
+    [102094, 0.0786],
+    [102095, 0.0817],
+    [102096, 0.0863],
+    [102097, 0.0905],
+    [102106, 0.0905],
+    [102107, 0.0914],
+    [102108, 0.0933],
+    [102109, 0.0962],
+    [102110, 0.0999],
+    [102111, 0.1029],
+    [102119, 0.1029],
+    [102120, 0.1033],
+    [102121, 0.1043],
+    [102122, 0.1057],
+    [102123, 0.1076],
+    [102124, 0.1099],
+    [102125, 0.1113],
+    [102132, 0.1113],
+    [102133, 0.1115],
+    [102134, 0.1117],
+    [102135, 0.1121],
+    [102136, 0.1125],
+    [102137, 0.1131],
+    [102138, 0.1138],
+    [102139, 0.1138],
+    [102145, 0.1138],
+    [102146, 0.1138],
+    [102147, 0.1138],
+    [102148, 0.1138],
+    [102149, 0.1138],
+    [102150, 0.1138],
+    [102151, 0.1138],
+    [102152, 0.1138],
+    [102153, 0.1138],
+    [102158, 0.1138],
+    [102159, 0.1138],
+    [102160, 0.1138],
+    [102161, 0.1138],
+    [102162, 0.1138],
+    [102163, 0.1138],
+    [102164, 0.1138],
+    [102165, 0.1138],
+    [102166, 0.1138],
+    [102167, 0.1138],
+    [102171, 0.1138],
+    [102172, 0.1138],
+    [102173, 0.1138],
+    [102174, 0.1138],
+    [102175, 0.1138],
+    [102176, 0.1138],
+    [102177, 0.1138],
+    [102178, 0.1138],
+    [102179, 0.1138],
+    [102180, 0.1138],
+    [200001, 0.1138],
+    [200002, 0.116],
+    [200003, 0.1194],
+    [200004, 0.1234],
+    [200005, 0.1274],
+    [200006, 0.1309],
+    [200007, 0.1336],
+    [200008, 0.1353],
+    [200009, 0.1361],
+    [200010, 0.1361],
+    [200011, 0.1361],
+    [200012, 0.1361],
+    [200182, 0.1361],
+    [200184, 0.1379],
+    [200185, 0.1414],
+    [200186, 0.1455],
+    [200187, 0.1495],
+    [200188, 0.1531],
+    [200189, 0.1559],
+    [200190, 0.1578],
+    [200191, 0.1588],
+    [200192, 0.1591],
+    [200193, 0.1593],
+    [200194, 0.1596],
+    [200364, 0.1596],
+    [200365, 0.1614],
+    [200367, 0.1642],
+    [200368, 0.1684],
+    [200369, 0.1725],
+    [200370, 0.1762],
+    [200371, 0.1792],
+    [200372, 0.1812],
+    [200373, 0.1824],
+    [200374, 0.1829],
+    [200375, 0.1834],
+    [200376, 0.184],
+    [200546, 0.184],
+    [200547, 0.1858],
+    [200548, 0.1886],
+    [200550, 0.1919],
+    [200551, 0.1961],
+    [200552, 0.1999],
+    [200553, 0.203],
+    [200554, 0.2053],
+    [200555, 0.2067],
+    [200556, 0.2074],
+    [200557, 0.2081],
+    [200558, 0.209],
+    [200728, 0.209],
+    [200729, 0.2112],
+    [200730, 0.214],
+    [200731, 0.2173],
+    [200733, 0.2206],
+    [200734, 0.2245],
+    [200735, 0.2278],
+    [200736, 0.2302],
+    [200737, 0.2318],
+    [200738, 0.2327],
+    [200739, 0.2337],
+    [200740, 0.2349],
+    [200910, 0.2349],
+    [200911, 0.237],
+    [200912, 0.2405],
+    [200913, 0.2437],
+    [200914, 0.2471],
+    [200916, 0.2501],
+    [200917, 0.2535],
+    [200918, 0.2561],
+    [200919, 0.2579],
+    [200920, 0.259],
+    [200921, 0.2603],
+    [200922, 0.2617],
+    [201092, 0.2618],
+    [201093, 0.264],
+    [201094, 0.2674],
+    [201095, 0.2715],
+    [201096, 0.2747],
+    [201097, 0.2778],
+    [201099, 0.2804],
+    [201100, 0.2832],
+    [201101, 0.2851],
+    [201102, 0.2865],
+    [201103, 0.288],
+    [201104, 0.2897],
+    [201274, 0.2898],
+    [201275, 0.292],
+    [201276, 0.2955],
+    [201277, 0.2996],
+    [201278, 0.3037],
+    [201279, 0.3067],
+    [201280, 0.3093],
+    [201282, 0.3115],
+    [201283, 0.3137],
+    [201284, 0.3153],
+    [201285, 0.3171],
+    [201286, 0.3191],
+    [201456, 0.3192],
+    [201457, 0.3214],
+    [201458, 0.325],
+    [201459, 0.3291],
+    [201460, 0.3332],
+    [201461, 0.337],
+    [201462, 0.3396],
+    [201463, 0.3418],
+    [201465, 0.3438],
+    [201466, 0.3456],
+    [201467, 0.3477],
+    [201468, 0.3499],
+    [201638, 0.35],
+    [201639, 0.3523],
+    [201640, 0.356],
+    [201641, 0.3602],
+    [201642, 0.3644],
+    [201643, 0.3681],
+    [201644, 0.3714],
+    [201645, 0.3735],
+    [201646, 0.3755],
+    [201648, 0.3776],
+    [201649, 0.3799],
+    [201650, 0.3824],
+    [201820, 0.3825],
+    [201821, 0.3849],
+    [201822, 0.3886],
+    [201823, 0.3929],
+    [201824, 0.3972],
+    [201825, 0.4011],
+    [201826, 0.4043],
+    [201827, 0.407],
+    [201828, 0.4088],
+    [201829, 0.4108],
+    [201831, 0.4134],
+    [201832, 0.4162],
+    [202002, 0.4163],
+    [202003, 0.4188],
+    [202004, 0.4226],
+    [202005, 0.4272],
+    [202006, 0.4318],
+    [202007, 0.4361],
+    [202008, 0.4398],
+    [202009, 0.4426],
+    [202010, 0.4451],
+    [202011, 0.4474],
+    [202012, 0.45],
+    [202014, 0.4531],
+    [202184, 0.4532],
+    [202185, 0.4557],
+    [202186, 0.4598],
+    [202187, 0.4646],
+    [202188, 0.4695],
+    [202189, 0.4742],
+    [202190, 0.4784],
+    [202191, 0.4818],
+    [202192, 0.4845],
+    [202193, 0.4871],
+    [202194, 0.4899],
+    [202195, 0.493],
+    [300520, 0.4933],
+    [300533, 0.4936],
+    [300689, 0.4939],
+    [300702, 0.4941],
+    [300703, 0.4949],
+    [300715, 0.4952],
+    [300716, 0.496],
+    [300858, 0.4961],
+    [300871, 0.4963],
+    [300872, 0.497],
+    [300884, 0.4973],
+    [300885, 0.498],
+    [300886, 0.499],
+    [300897, 0.4993],
+    [300898, 0.5001],
+    [300899, 0.5012],
+    [301027, 0.5013],
+    [301040, 0.5015],
+    [301041, 0.5021],
+    [301053, 0.5023],
+    [301054, 0.503],
+    [301055, 0.5039],
+    [301066, 0.5042],
+    [301067, 0.505],
+    [301068, 0.506],
+    [301069, 0.5072],
+    [301079, 0.5075],
+    [301080, 0.5083],
+    [301081, 0.5095],
+    [301082, 0.5108],
+    [301196, 0.5109],
+    [301209, 0.511],
+    [301210, 0.5116],
+    [301222, 0.5118],
+    [301223, 0.5124],
+    [301224, 0.5133],
+    [301235, 0.5135],
+    [301236, 0.5142],
+    [301237, 0.5152],
+    [301238, 0.5164],
+    [301248, 0.5166],
+    [301249, 0.5174],
+    [301250, 0.5185],
+    [301251, 0.5198],
+    [301252, 0.5211],
+    [301261, 0.5214],
+    [301262, 0.5221],
+    [301263, 0.5233],
+    [301264, 0.5248],
+    [301265, 0.5263],
+    [301365, 0.5263],
+    [301378, 0.5264],
+    [301379, 0.527],
+    [301391, 0.5271],
+    [301392, 0.5277],
+    [301393, 0.5285],
+    [301404, 0.5287],
+    [301405, 0.5294],
+    [301406, 0.5303],
+    [301407, 0.5314],
+    [301417, 0.5317],
+    [301418, 0.5324],
+    [301419, 0.5335],
+    [301420, 0.5347],
+    [301421, 0.536],
+    [301430, 0.5362],
+    [301431, 0.537],
+    [301432, 0.5381],
+    [301433, 0.5395],
+    [301434, 0.5409],
+    [301435, 0.5423],
+    [301443, 0.5426],
+    [301444, 0.5433],
+    [301445, 0.5444],
+    [301446, 0.5458],
+    [301447, 0.5475],
+    [301448, 0.5491],
+    [301534, 0.5492],
+    [301547, 0.5492],
+    [301548, 0.5497],
+    [301560, 0.5499],
+    [301561, 0.5504],
+    [301562, 0.5512],
+    [301573, 0.5513],
+    [301574, 0.552],
+    [301575, 0.5529],
+    [301576, 0.5539],
+    [301586, 0.5541],
+    [301587, 0.5548],
+    [301588, 0.5559],
+    [301589, 0.557],
+    [301590, 0.5582],
+    [301599, 0.5585],
+    [301600, 0.5592],
+    [301601, 0.5603],
+    [301602, 0.5617],
+    [301603, 0.5631],
+    [301604, 0.5644],
+    [301612, 0.5647],
+    [301613, 0.5654],
+    [301614, 0.5665],
+    [301615, 0.5678],
+    [301616, 0.5694],
+    [301617, 0.571],
+    [301618, 0.5724],
+    [301625, 0.5726],
+    [301626, 0.5733],
+    [301627, 0.5744],
+    [301628, 0.5758],
+    [301629, 0.5774],
+    [301630, 0.5792],
+    [301631, 0.5808],
+    [301703, 0.5808],
+    [301716, 0.5809],
+    [301717, 0.5814],
+    [301729, 0.5815],
+    [301730, 0.582],
+    [301731, 0.5827],
+    [301742, 0.5829],
+    [301743, 0.5835],
+    [301744, 0.5844],
+    [301745, 0.5853],
+    [301755, 0.5855],
+    [301756, 0.5862],
+    [301757, 0.5872],
+    [301758, 0.5883],
+    [301759, 0.5895],
+    [301768, 0.5897],
+    [301769, 0.5904],
+    [301770, 0.5915],
+    [301771, 0.5928],
+    [301772, 0.5941],
+    [301773, 0.5954],
+    [301781, 0.5957],
+    [301782, 0.5964],
+    [301783, 0.5975],
+    [301784, 0.5988],
+    [301785, 0.6004],
+    [301786, 0.6018],
+    [301787, 0.6032],
+    [301794, 0.6035],
+    [301795, 0.6042],
+    [301796, 0.6052],
+    [301797, 0.6066],
+    [301798, 0.6081],
+    [301799, 0.6098],
+    [301800, 0.6114],
+    [301801, 0.6129],
+    [301807, 0.6131],
+    [301808, 0.6138],
+    [301809, 0.6148],
+    [301810, 0.6161],
+    [301811, 0.6176],
+    [301812, 0.6193],
+    [301813, 0.6212],
+    [301814, 0.6229],
+    [301872, 0.6229],
+    [301885, 0.6229],
+    [301886, 0.6234],
+    [301898, 0.6235],
+    [301899, 0.624],
+    [301900, 0.6247],
+    [301911, 0.6248],
+    [301912, 0.6254],
+    [301913, 0.6262],
+    [301914, 0.6272],
+    [301924, 0.6274],
+    [301925, 0.628],
+    [301926, 0.629],
+    [301927, 0.6301],
+    [301928, 0.6312],
+    [301937, 0.6314],
+    [301938, 0.6321],
+    [301939, 0.6331],
+    [301940, 0.6344],
+    [301941, 0.6356],
+    [301942, 0.6369],
+    [301950, 0.6372],
+    [301951, 0.6379],
+    [301952, 0.6389],
+    [301953, 0.6402],
+    [301954, 0.6417],
+    [301955, 0.6431],
+    [301956, 0.6444],
+    [301963, 0.6447],
+    [301964, 0.6455],
+    [301965, 0.6465],
+    [301966, 0.6478],
+    [301967, 0.6493],
+    [301968, 0.651],
+    [301969, 0.6526],
+    [301970, 0.6539],
+    [301976, 0.6542],
+    [301977, 0.6549],
+    [301978, 0.6559],
+    [301979, 0.6572],
+    [301980, 0.6587],
+    [301981, 0.6604],
+    [301982, 0.6622],
+    [301983, 0.6638],
+    [301984, 0.6652],
+    [301989, 0.6654],
+    [301990, 0.6661],
+    [301991, 0.6671],
+    [301992, 0.6683],
+    [301993, 0.6698],
+    [301994, 0.6714],
+    [301995, 0.6732],
+    [301996, 0.6751],
+    [301997, 0.6767],
+    [302054, 0.6768],
+    [302055, 0.6772],
+    [302067, 0.6773],
+    [302068, 0.6778],
+    [302069, 0.6784],
+    [302080, 0.6786],
+    [302081, 0.6792],
+    [302082, 0.68],
+    [302083, 0.6809],
+    [302093, 0.6811],
+    [302094, 0.6817],
+    [302095, 0.6827],
+    [302096, 0.6837],
+    [302097, 0.6848],
+    [302106, 0.685],
+    [302107, 0.6857],
+    [302108, 0.6867],
+    [302109, 0.6879],
+    [302110, 0.6891],
+    [302111, 0.6903],
+    [302119, 0.6906],
+    [302120, 0.6913],
+    [302121, 0.6923],
+    [302122, 0.6936],
+    [302123, 0.695],
+    [302124, 0.6964],
+    [302125, 0.6977],
+    [302132, 0.698],
+    [302133, 0.6987],
+    [302134, 0.6997],
+    [302135, 0.701],
+    [302136, 0.7025],
+    [302137, 0.7041],
+    [302138, 0.7056],
+    [302139, 0.7069],
+    [302145, 0.7073],
+    [302146, 0.708],
+    [302147, 0.7091],
+    [302148, 0.7103],
+    [302149, 0.7118],
+    [302150, 0.7134],
+    [302151, 0.7152],
+    [302152, 0.7168],
+    [302153, 0.7181],
+    [302158, 0.7184],
+    [302159, 0.7191],
+    [302160, 0.7201],
+    [302161, 0.7214],
+    [302162, 0.7228],
+    [302163, 0.7244],
+    [302164, 0.7261],
+    [302165, 0.728],
+    [302166, 0.7296],
+    [302167, 0.731],
+    [302171, 0.7312],
+    [302172, 0.7319],
+    [302173, 0.7329],
+    [302174, 0.7342],
+    [302175, 0.7357],
+    [302176, 0.7373],
+    [302177, 0.7391],
+    [302178, 0.7409],
+    [302179, 0.7429],
+    [302180, 0.7446],
+    [400000, 0.7446],
+    [400351, 0.7479],
+    [400534, 0.7553],
+    [400717, 0.7699],
+    [400900, 0.7886],
+    [401083, 0.8101],
+    [401266, 0.8332],
+    [401449, 0.857],
+    [401632, 0.8808],
+    [401815, 0.9042],
+    [401998, 0.9262],
+    [402181, 0.948],
+    [500000, 0.9509],
+    [500183, 0.9538],
+    [500366, 0.9566],
+    [500549, 0.9594],
+    [500732, 0.9622],
+    [500915, 0.965],
+    [501098, 0.9677],
+    [501281, 0.9704],
+    [501464, 0.9731],
+    [501647, 0.9757],
+    [501830, 0.9783],
+    [502013, 0.981],
+    [502196, 0.9837],
+    [600000, 0.9837],
+    [600351, 0.9843],
+    [600534, 0.9851],
+    [600717, 0.9863],
+    [600900, 0.9877],
+    [601083, 0.9894],
+    [601266, 0.9911],
+    [601449, 0.9929],
+    [601632, 0.9947],
+    [601815, 0.9965],
+    [601998, 0.9982],
+    [702181, 1],
+]);
+Constants.TwoCardPerc = new Map([
+    [13, 0],
+    [26, 0.0001],
+    [27, 0.0011],
+    [39, 0.0013],
+    [40, 0.0023],
+    [41, 0.004],
+    [52, 0.0044],
+    [53, 0.0056],
+    [54, 0.0078],
+    [55, 0.0107],
+    [65, 0.0111],
+    [66, 0.0124],
+    [67, 0.0148],
+    [68, 0.0181],
+    [69, 0.0223],
+    [78, 0.0228],
+    [79, 0.0242],
+    [80, 0.0267],
+    [81, 0.0303],
+    [82, 0.0355],
+    [83, 0.0416],
+    [91, 0.0422],
+    [92, 0.0436],
+    [93, 0.0461],
+    [94, 0.0498],
+    [95, 0.0553],
+    [96, 0.0632],
+    [97, 0.0722],
+    [104, 0.0728],
+    [105, 0.0743],
+    [106, 0.0768],
+    [107, 0.0805],
+    [108, 0.086],
+    [109, 0.0943],
+    [110, 0.106],
+    [111, 0.1189],
+    [117, 0.1195],
+    [118, 0.1208],
+    [119, 0.1229],
+    [120, 0.126],
+    [121, 0.1306],
+    [122, 0.1377],
+    [123, 0.1484],
+    [124, 0.1636],
+    [125, 0.1801],
+    [130, 0.1806],
+    [131, 0.1819],
+    [132, 0.1841],
+    [133, 0.1874],
+    [134, 0.1923],
+    [135, 0.1998],
+    [136, 0.211],
+    [137, 0.2273],
+    [138, 0.2498],
+    [139, 0.2732],
+    [143, 0.2736],
+    [144, 0.275],
+    [145, 0.2773],
+    [146, 0.2806],
+    [147, 0.2857],
+    [148, 0.2934],
+    [149, 0.3047],
+    [150, 0.3212],
+    [151, 0.3444],
+    [152, 0.3748],
+    [153, 0.3771],
+    [156, 0.3793],
+    [157, 0.3877],
+    [158, 0.4016],
+    [159, 0.4239],
+    [160, 0.4473],
+    [161, 0.4756],
+    [162, 0.5095],
+    [163, 0.5498],
+    [164, 0.5971],
+    [165, 0.6516],
+    [166, 0.7144],
+    [167, 0.7838],
+    [256, 0.8016],
+    [270, 0.8189],
+    [284, 0.8357],
+    [298, 0.852],
+    [312, 0.8678],
+    [326, 0.8831],
+    [340, 0.8979],
+    [354, 0.9122],
+    [368, 0.9259],
+    [382, 0.9391],
+    [396, 0.9509],
+    [410, 0.9624],
+    [424, 1]
+]);
 Constants.TwoToThreeMap = new Map([
     [13, 100520],
     [26, 100520],
@@ -1549,15 +2499,16 @@ Constants.StraightCodes = [
 ];
 class Emissions {
 }
-// public static readonly ChangeCursorValue = "Change cursor value";
 Emissions.ClearBettingSpots = "Clear betting spots";
-// public static readonly AddCursorValue = "Add cursor value";
 Emissions.BeginDeal = "Begin deal";
 Emissions.NewGame = "New game";
 Emissions.RebetBets = "Rebet bets";
 Emissions.PullTwo = "Pull Back Two Card";
 Emissions.PullThree = "Pull Back Three Card";
 Emissions.PlayAll = "Play all";
+Emissions.ShowHelp = "Show Help";
+Emissions.ShowHint = "Show Hint";
+Emissions.ReturnToGame = "Return to game";
 class FiveCardEvaluator {
     //#endregion
     static OrdinalToHandNumber(handOrdinal) {
