@@ -59,8 +59,8 @@ class GameScene extends Phaser.Scene {
         super("GameScene");
         //#region Constants
         this.PlayerHandAnchor = new Point(645, 560);
-        this.BoardOneAnchor = new Point(660, 100);
-        this.BoardTwoAnchor = new Point(660, 240);
+        this.BoardOneAnchor = new Point(660, 95);
+        this.BoardTwoAnchor = new Point(660, 285);
         this.AntePayoffOffset = new Point(-34, -37);
         this.PlayPayoffOffset = new Point(-34, -37);
         this.BonusPayoffOffset = new Point(-34, -37);
@@ -75,12 +75,12 @@ class GameScene extends Phaser.Scene {
             -1,
             -1,
             -1,
-            2,
+            1,
             3,
             5,
-            15,
             30,
-            50
+            70,
+            150
         ];
         this.MainHandPaytable = [
             -999,
@@ -324,6 +324,17 @@ class GameScene extends Phaser.Scene {
             this._bonusSpot
         ];
         this._lastWagerAmounts = new Array(this._bettingSpots.length);
+        // Draw the board panels
+        let boardOneLabel = this.add.text(620, 170, "BOARD ONE");
+        boardOneLabel.setFixedSize(268, 22);
+        boardOneLabel.setStyle(Config.gameOptions.commentaryFormat);
+        boardOneLabel.setAlign("center");
+        graphics.strokeRect(615, 165, 278, 32);
+        let boardTwoLabel = this.add.text(620, 360, "BOARD TWO");
+        boardTwoLabel.setFixedSize(268, 22);
+        boardTwoLabel.setStyle(Config.gameOptions.commentaryFormat);
+        boardTwoLabel.setAlign("center");
+        graphics.strokeRect(615, 355, 278, 32);
         this.Score = 10000;
         this.CurrentState = GameState.Predeal;
     }
@@ -402,8 +413,10 @@ class GameScene extends Phaser.Scene {
             case Steps.ResolvePocketPairBonus: {
                 let firstRank = Math.floor(this._playerHand[0].CardNumber / 4);
                 let secondRank = Math.floor(this._playerHand[1].CardNumber / 4);
-                if (firstRank == secondRank) {
-                    let payout = (secondRank >= 8 ? 4 : 3);
+                let payout = -1;
+                if (firstRank == secondRank && secondRank >= 7)
+                    payout = 8;
+                if (payout > 0) {
                     this.addCommentaryField("Pocket pair bonus pays " + payout.toString() + ":1, for a total of " + General.amountToDollarString(payout * this._anteSpot.Amount) + ".");
                     this._anteSpot.PayoffOffset = this.PocketPairPayoffOffset;
                     this.resolvePayout(this._anteSpot, payout, true, false);
