@@ -6,7 +6,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene]
+            scene: [LoaderScene, GameScene, HelpScene, PaytableScene]
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
@@ -59,8 +59,8 @@ class GameScene extends Phaser.Scene {
         super("GameScene");
         //#region Constants
         this.PlayerHandAnchor = new Point(645, 560);
-        this.BoardOneAnchor = new Point(660, 95);
-        this.BoardTwoAnchor = new Point(660, 285);
+        this.BoardOneAnchor = new Point(645, 95);
+        this.BoardTwoAnchor = new Point(645, 285);
         this.AntePayoffOffset = new Point(-34, -37);
         this.PlayPayoffOffset = new Point(-34, -37);
         this.BonusPayoffOffset = new Point(-34, -37);
@@ -254,6 +254,29 @@ class GameScene extends Phaser.Scene {
             this._foldButton
         ];
         //#endregion
+        // Help button
+        this._helpButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "RULES",
+            clickEvent: Emissions.HelpScreen,
+            x: 952,
+            y: 30,
+            visible: true
+        });
+        this.add.existing(this._helpButton);
+        Config.emitter.on(Emissions.HelpScreen, this.helpScreen, this);
+        this._paytablesButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "PAYTABLES",
+            clickEvent: Emissions.PaytableScreen,
+            x: 952,
+            y: 75,
+            visible: true
+        });
+        this.add.existing(this._paytablesButton);
+        Config.emitter.on(Emissions.PaytableScreen, this.paytablesScreen, this);
         let spotAnchor;
         graphics.lineStyle(5, 0xffffff, 1);
         //#region Ante spot
@@ -324,17 +347,22 @@ class GameScene extends Phaser.Scene {
             this._bonusSpot
         ];
         this._lastWagerAmounts = new Array(this._bettingSpots.length);
-        // Draw the board panels
-        let boardOneLabel = this.add.text(620, 170, "BOARD ONE");
+        // Remaining graphics
+        let boardOneLabel = this.add.text(605, 170, "BOARD ONE");
         boardOneLabel.setFixedSize(268, 22);
         boardOneLabel.setStyle(Config.gameOptions.commentaryFormat);
         boardOneLabel.setAlign("center");
-        graphics.strokeRect(615, 165, 278, 32);
-        let boardTwoLabel = this.add.text(620, 360, "BOARD TWO");
+        graphics.strokeRect(600, 165, 278, 32);
+        let boardTwoLabel = this.add.text(605, 360, "BOARD TWO");
         boardTwoLabel.setFixedSize(268, 22);
         boardTwoLabel.setStyle(Config.gameOptions.commentaryFormat);
         boardTwoLabel.setAlign("center");
-        graphics.strokeRect(615, 355, 278, 32);
+        graphics.strokeRect(600, 355, 278, 32);
+        // Add the game logo
+        let logoGraphic = this.add.image(50, 375, "logo");
+        logoGraphic.setOrigin(0, 0);
+        logoGraphic.setScale(0.5, 0.5);
+        graphics.strokeRect(47, 372, 235, 265);
         this.Score = 10000;
         this.CurrentState = GameState.Predeal;
     }
@@ -846,9 +874,17 @@ class GameScene extends Phaser.Scene {
         }
         this.playClick();
     }
+    helpScreen() {
+        this.playClick();
+        this.scene.switch("HelpScene");
+    }
     newBets() {
         this.playClick();
         this.CurrentState = GameState.Predeal;
+    }
+    paytablesScreen() {
+        this.playClick();
+        this.scene.switch("PaytableScene");
     }
     rebetBets() {
         this.playClick();
@@ -915,6 +951,51 @@ class GameScene extends Phaser.Scene {
         (_a = this._scoreField) === null || _a === void 0 ? void 0 : _a.setText(descriptors);
     }
 }
+class HelpScene extends Phaser.Scene {
+    constructor() {
+        super("HelpScene");
+    }
+    create() {
+        let HelpText = [
+            "GETTING STARTED",
+            " * 'Dakota Duel Draw Poker' is a Texas Hold'em Style game, where the player will try and make at least a pair of nines using their two hole cards and each of two unique three-card boards; in addition, a bonus wager can be made based on the best five card hand from all eight cards.",
+            "",
+            "HOW TO PLAY",
+            " * Make a Play 2 wager between $5 and $100.  You may also place an optional 'Big 8 bonus' wager between $5 and $100.",
+            " * You will then receive 2 hole cards.  Based on your hole cards, you may either fold, forfeiting your 'Play 2' wager, or call, and make a 'Play 1' wager equal to your 'Play 2' wager.",
+            " * If you call, the dealer will reveal both three card community boards, and your hand will be evaluated against the paytable, and be paid or collected as appropriate.",
+            " * If you made a 'Big 8' wager and choose to fold, the community boards will be revealed and the 'Big 8' wager will have action.",
+            "",
+            "WINNING AND LOSING",
+            "",
+            " * The 'Play 1' and 'Play 2' wagers will pay if the combination of that board and the hole cards make at least a pair of nines; otherwise, the wagers lose.",
+            " * The 'Big 8' wager will pay if the best five out of eight cards make at least a straight; otherwise, it loses."
+        ];
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.ReturnToGame,
+            x: 726 + 226,
+            y: 665 + 64,
+            visible: true
+        });
+        this.add.existing(button);
+        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+        let helpText = this.add.text(50, 50, HelpText);
+        helpText.setWordWrapWidth(910);
+        helpText.setStyle(Config.gameOptions.commentaryFormat);
+    }
+    returnToGame() {
+        this.sound.play("chipClick");
+        this.scene.switch("GameScene");
+    }
+}
 class LoaderScene extends Phaser.Scene {
     constructor() {
         super("LoaderScene");
@@ -932,6 +1013,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
+        this.load.image("logo", "assets/images/Logo.jpg");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -956,6 +1038,70 @@ class LoaderScene extends Phaser.Scene {
     }
     create() {
         this.scene.start("GameScene");
+    }
+}
+class PaytableScene extends Phaser.Scene {
+    constructor() {
+        super("PaytableScene");
+    }
+    create() {
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.BackFromPT,
+            x: 726 + 226,
+            y: 665 + 64,
+            visible: true
+        });
+        this.add.existing(button);
+        Config.emitter.on(Emissions.BackFromPT, this.returnToGame, this);
+        /*
+        2, // One pair, must be 99+
+2,
+3,
+4,
+6,
+8,
+30,
+50,
+100
+*/
+        let HelpText = [
+            "PLAY 1 and PLAY 2 wagers",
+            " * One pair, 9s or better -- 2:1",
+            " * Two pair -- 2:1",
+            " * Trips -- 3:1",
+            " * Straight -- 4:1",
+            " * Flush -- 6:1",
+            " * Full House -- 8:1",
+            " * Quads -- 30:1",
+            " * Straight Flush -- 50:1",
+            " * Royal Flush -- 100:1",
+            "",
+            "POCKET BONUS",
+            " * Hole cards are a pair of 9s or better -- 8:1 bonus",
+            "",
+            "BIG 8 wager",
+            " * Straight -- 1:1",
+            " * Flush -- 3:1",
+            " * Full House -- 5:1",
+            " * Quads -- 30:1",
+            " * Straight Flush -- 70:1",
+            " * Royal Flush -- 150:1"
+        ];
+        let helpText = this.add.text(50, 50, HelpText);
+        helpText.setWordWrapWidth(910);
+        helpText.setStyle(Config.gameOptions.commentaryFormat);
+    }
+    returnToGame() {
+        this.sound.play("chipClick");
+        this.scene.switch("GameScene");
     }
 }
 class AssetNames {
@@ -1269,6 +1415,10 @@ Emissions.NewGame = "New game";
 Emissions.RebetBets = "Rebet bets";
 Emissions.MakePlayWager = "Make Play Wager";
 Emissions.FoldHand = "Fold Hand";
+Emissions.HelpScreen = "Help Screen";
+Emissions.PaytableScreen = "Paytable Screen";
+Emissions.ReturnToGame = "Return to game";
+Emissions.BackFromPT = "Back from paytables";
 class FiveCardEvaluator {
     //#endregion
     static OrdinalToHandNumber(handOrdinal) {
