@@ -128,6 +128,7 @@ class GameScene extends Phaser.Scene {
         this._handCount = 0;
         this._autojackIsResolved = false;
         this._mainIsResolved = false;
+        this._handPriorityList = new Array(0);
         this._chipButtons = new Array(0);
         this._score = 0;
         // #endregion
@@ -153,7 +154,7 @@ class GameScene extends Phaser.Scene {
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         // Add felt notations
-        this.addFeltField("Point N Suit paytable:\nOne Match -- 5:1\nTwo Matches -- 15:1\nThree Matches -- 25:1\nFour Matches -- 500:1\n\nMatch Dealer's Up Card\nBy Point-Value And Suit\nTo Win", 715, 250);
+        this.addFeltField("Point N Suit paytable:\nOne Match -- 5:1\nTwo Matches -- 15:1\nThree Matches -- 100:1\nFour Matches -- 500:1\n\nMatch Dealer's Up Card\nBy Point-Value And Suit\nTo Win", 715, 250);
         this.addFeltField("Autojack Hand\nReceives Automatic Hits\nAnd Can't Bust With Play", 715, 525);
         // Turn on listening to input events
         this.input.on('gameobjectup', function (_, gameObject) {
@@ -527,9 +528,9 @@ class GameScene extends Phaser.Scene {
         this._lastWagerAmounts.length = this._bettingSpots.length;
         //#endregion
         // Add the game logo
-        let logoGraphic = this.add.image(718, 50, "logo");
+        let logoGraphic = this.add.image(685, -5, "logo");
         logoGraphic.setOrigin(0, 0);
-        logoGraphic.setScale(0.2, 0.2);
+        // logoGraphic.setScale(0.2, 0.2);
         // graphics.strokeRect(715, 47, 262, 211);
         this.Score = 10000;
         this.CurrentState = GameState.Predeal;
@@ -741,7 +742,7 @@ class GameScene extends Phaser.Scene {
             }
             case Steps.AnnotateDealerAutoblackjack: {
                 if (this._autojackPlaySpot.Amount + this._breakUnder17Spot.Amount > 0) {
-                    var dealerScoreField = this.add.text(390, 170, "For autojack, dealer has " + this._dealerAutojackTotal.toString());
+                    var dealerScoreField = this.add.text(390, 170, "For autojack, dealer has " + Math.abs(this._dealerAutojackTotal).toString());
                     dealerScoreField.setOrigin(0, 0);
                     // dealerScoreField.setFixedSize(550, 25);
                     dealerScoreField.setStyle(Config.gameOptions.commentaryFormat);
