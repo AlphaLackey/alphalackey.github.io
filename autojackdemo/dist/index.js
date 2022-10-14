@@ -41,6 +41,12 @@ Config.gameOptions = {
         fontColor: "#FFFFFF",
         align: "center"
     },
+    layoutHelpFormat: {
+        fontFamily: "Arial",
+        fontSize: "24px",
+        fontColor: "#FFFFFF",
+        align: "center"
+    },
     commentaryFormat: {
         fontFamily: "Arial",
         fontSize: "20px",
@@ -141,11 +147,14 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         // If desired, initialize test hands by uncommenting.
-        // this._testDealerHand = General.cardStringToVector("4C AC KS");
-        // this._testPlayerHand = General.cardStringToVector("AH KH 6H 6H 5C 9S 4C AS 3C KS KC KD");
-        // this._testAutojackHand = General.cardStringToVector("3C KC KC 2C KS KD");
+        // this._testDealerHand = General.cardStringToVector("4C QC AS AC QD");
+        // this._testPlayerHand = General.cardStringToVector("AH AH 8C 8C");
+        // this._testAutojackHand = General.cardStringToVector("4C KC 2C 2C KS KD");
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
+        // Add felt notations
+        this.addFeltField("Point N Suit paytable:\nOne Match -- 5:1\nTwo Matches -- 15:1\nThree Matches -- 25:1\nFour Matches -- 500:1\n\nMatch Dealer's Up Card\nBy Point-Value And Suit\nTo Win", 715, 250);
+        this.addFeltField("Autojack Hand\nReceives Automatic Hits\nAnd Can't Bust With Play", 715, 525);
         // Turn on listening to input events
         this.input.on('gameobjectup', function (_, gameObject) {
             gameObject.emit('clicked', gameObject);
@@ -521,7 +530,7 @@ class GameScene extends Phaser.Scene {
         let logoGraphic = this.add.image(718, 50, "logo");
         logoGraphic.setOrigin(0, 0);
         logoGraphic.setScale(0.2, 0.2);
-        graphics.strokeRect(715, 47, 262, 211);
+        // graphics.strokeRect(715, 47, 262, 211);
         this.Score = 10000;
         this.CurrentState = GameState.Predeal;
     }
@@ -529,7 +538,9 @@ class GameScene extends Phaser.Scene {
     addCommentaryField(fieldText) {
         let newCommentary = this.add.text(this.CommentaryAnchor.x, (this._commentaryList.length * this.CommentarySpacing) + this.CommentaryAnchor.y, fieldText, Config.gameOptions.commentaryFormat);
         this._commentaryList.push(newCommentary);
-        console.debug(this._commentaryList.length);
+    }
+    addFeltField(fieldText, x, y) {
+        let newCommentary = this.add.text(x, y, fieldText, Config.gameOptions.layoutHelpFormat);
     }
     checkAndFlipHoleCard() {
         let tweenDurations = [300, 300, 200];
@@ -668,52 +679,6 @@ class GameScene extends Phaser.Scene {
     doAnimation() {
         let thisAction = this._stepList.shift();
         switch (thisAction) {
-            case Steps.PopPlayerBustCard: {
-                let lastCard = this._autojackHand.pop();
-                this._playerAutojackTotal = 0;
-                for (let card of this._autojackHand) {
-                    this._playerAutojackTotal = Blackjack.addCardNumberToHandValue(card.CardNumber, this._playerAutojackTotal);
-                }
-                this._playerAutojackTotal = Math.abs(this._playerAutojackTotal);
-                let handLen = this._autojackHand.length;
-                this.tweens.add({
-                    targets: lastCard,
-                    delay: 750,
-                    duration: 800,
-                    x: 0,
-                    y: 0,
-                    alpha: 0,
-                    onComplete: this.doAnimation,
-                    onCompleteScope: this
-                });
-                break;
-            }
-            case Steps.AnnotateAutoblackjack: {
-                let playerScoreField = this.add.text(this.AutojackCommentary.x, this.AutojackCommentary.y, Math.abs(this._playerAutojackTotal).toString());
-                playerScoreField.setStyle(Config.gameOptions.commentaryFormat);
-                playerScoreField.setOrigin(0, 0);
-                this._annotationList.push(playerScoreField);
-                this.doAnimation();
-                break;
-            }
-            case Steps.FillAutojackHand: {
-                let absAutojack = Math.abs(this._playerAutojackTotal);
-                if (absAutojack == 21) {
-                    this._stepList.push(Steps.AnnotateAutoblackjack);
-                    this._stepList.push(Steps.ChangeStateMainInput);
-                }
-                else if (absAutojack > 21) {
-                    this._stepList.push(Steps.PopPlayerBustCard);
-                    this._stepList.push(Steps.AnnotateAutoblackjack);
-                    this._stepList.push(Steps.ChangeStateMainInput);
-                }
-                else {
-                    this._stepList.push(Steps.CardToAutojack);
-                    this._stepList.push(Steps.FillAutojackHand);
-                }
-                this.doAnimation();
-                break;
-            }
             case Steps.SplitPair: {
                 let splitOffCard = this._playerHands[this._currentHand].pop();
                 this._playerHands[this._handCount].push(splitOffCard);
@@ -733,55 +698,27 @@ class GameScene extends Phaser.Scene {
                 this._handCount += 1;
                 break;
             }
-            case Steps.PostDoubleControl: {
-                if (this._playerTotals[this._currentHand] > 21) {
-                    this._stepList.push(Steps.ResolveBust);
-                }
-                else if ((this._currentHand + 1) >= this._handCount) {
-                    // The game is over
-                    this._stepList.push(Steps.FlipHoleCard);
-                    this._stepList.push(Steps.PlayDealerHand);
-                    this._stepList.push(Steps.AnnotateDealer);
-                    this._stepList.push(Steps.ResolvePlayer0);
-                    this._stepList.push(Steps.ResolvePlayer1);
-                    this._stepList.push(Steps.ResolvePlayer2);
-                    this._stepList.push(Steps.ResolvePlayer3);
-                    this._stepList.push(Steps.RemoveDealerBust);
-                    this._stepList.push(Steps.AnnotateDealerAutoblackjack);
-                    this._stepList.push(Steps.ResolveAutojackHand);
-                    this._stepList.push(Steps.ResolveAutojackPlay);
-                    this._stepList.push(Steps.ResolveBreakUnder17);
-                    this._stepList.push(Steps.ChangeStateGameOver);
-                }
-                else {
-                    this._currentHand += 1;
-                    this._stepList.push(Steps.ChangeStateMainInput);
-                }
+            case Steps.ForceNextHand: {
+                this._currentHand += 1;
                 this.doAnimation();
                 break;
             }
-            case Steps.ResolveBust: {
+            case Steps.PostPlayerControl: {
                 if ((this._currentHand + 1) >= this._handCount) {
-                    // the game is over
-                    this._stepList.push(Steps.FlipHoleCard);
-                    this._stepList.push(Steps.PlayDealerHand);
-                    this._stepList.push(Steps.AnnotateDealer);
-                    this._stepList.push(Steps.ResolvePlayer0);
-                    this._stepList.push(Steps.ResolvePlayer1);
-                    this._stepList.push(Steps.ResolvePlayer2);
-                    this._stepList.push(Steps.ResolvePlayer3);
-                    this._stepList.push(Steps.RemoveDealerBust);
-                    this._stepList.push(Steps.AnnotateDealerAutoblackjack);
-                    this._stepList.push(Steps.ResolveAutojackHand);
-                    this._stepList.push(Steps.ResolveAutojackPlay);
-                    this._stepList.push(Steps.ResolveBreakUnder17);
-                    this._stepList.push(Steps.ChangeStateGameOver);
+                    // The game is over
+                    this._stepList.push(Steps.FillAutojackHand);
                 }
                 else {
-                    this._stepList.push(Steps.ChangeStateMainInput); // for the next hand
+                    // Still more hands available, go to the next one
+                    this._stepList.push(Steps.ForceNextHand);
+                    this._stepList.push(Steps.ChangeStateMainInput);
                 }
-                this.resolvePayout(this._playerBettingSpots[this._currentHand], -1, false);
-                this._currentHand += 1;
+                if (this._playerTotals[this._currentHand] > 21) {
+                    this.resolvePayout(this._playerBettingSpots[this._currentHand], -1, false);
+                }
+                else {
+                    this.doAnimation();
+                }
                 break;
             }
             case Steps.ResolveAutojackHand: {
@@ -803,16 +740,18 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case Steps.AnnotateDealerAutoblackjack: {
-                var dealerScoreField = this.add.text(390, 170, "For autojack, dealer has " + this._dealerAutojackTotal.toString());
-                dealerScoreField.setOrigin(0, 0);
-                // dealerScoreField.setFixedSize(550, 25);
-                dealerScoreField.setStyle(Config.gameOptions.commentaryFormat);
-                this._annotationList.push(dealerScoreField);
+                if (this._autojackPlaySpot.Amount + this._breakUnder17Spot.Amount > 0) {
+                    var dealerScoreField = this.add.text(390, 170, "For autojack, dealer has " + this._dealerAutojackTotal.toString());
+                    dealerScoreField.setOrigin(0, 0);
+                    // dealerScoreField.setFixedSize(550, 25);
+                    dealerScoreField.setStyle(Config.gameOptions.commentaryFormat);
+                    this._annotationList.push(dealerScoreField);
+                }
                 this.doAnimation();
                 break;
             }
             case Steps.RemoveDealerBust: {
-                if (this._autojackIsResolved && this._breakUnder17Spot.Amount == 0) {
+                if (this._autojackPlaySpot.Amount + this._breakUnder17Spot.Amount == 0) {
                     // no need to do it because both things that use it are dead.
                     this.doAnimation();
                 }
@@ -841,48 +780,88 @@ class GameScene extends Phaser.Scene {
                 }
                 break;
             }
+            case Steps.FinishGame: {
+                this._stepList.push(Steps.AnnotateDealer);
+                this._stepList.push(Steps.ResolvePlayer0);
+                this._stepList.push(Steps.ResolvePlayer1);
+                this._stepList.push(Steps.ResolvePlayer2);
+                this._stepList.push(Steps.ResolvePlayer3);
+                this._stepList.push(Steps.RemoveDealerBust);
+                this._stepList.push(Steps.AnnotateDealerAutoblackjack);
+                this._stepList.push(Steps.ResolveAutojackHand);
+                this._stepList.push(Steps.ResolveAutojackPlay);
+                this._stepList.push(Steps.ResolveBreakUnder17);
+                this._stepList.push(Steps.ChangeStateGameOver);
+                this.doAnimation();
+                break;
+            }
+            case Steps.FlipHoleCard: {
+                this.flipHoleCard();
+                break;
+            }
             case Steps.DealerDrawCard: {
                 this.deliverCard(CardTarget.Dealer);
-                if (this._dealerTotal < 17 && this._dealerTotal >= -17) {
-                    this._stepList.unshift(Steps.DealerDrawCard);
-                }
-                else {
-                    this._stepList.push(Steps.AnnotateDealer);
-                    this._stepList.push(Steps.ResolvePlayer0);
-                    this._stepList.push(Steps.ResolvePlayer1);
-                    this._stepList.push(Steps.ResolvePlayer2);
-                    this._stepList.push(Steps.ResolvePlayer3);
-                    this._stepList.push(Steps.RemoveDealerBust);
-                    this._stepList.push(Steps.AnnotateDealerAutoblackjack);
-                    this._stepList.push(Steps.ResolveAutojackHand);
-                    this._stepList.push(Steps.ResolveAutojackPlay);
-                    this._stepList.push(Steps.ResolveBreakUnder17);
-                    this._stepList.push(Steps.ChangeStateGameOver);
-                }
                 break;
             }
             case Steps.PlayDealerHand: {
-                let dealerMustPlay = true;
-                if (dealerMustPlay) {
-                    if (this._dealerTotal < 17 && this._dealerTotal >= -17) {
-                        this._stepList.unshift(Steps.DealerDrawCard);
-                    }
-                    else {
-                        this._stepList.push(Steps.AnnotateDealer);
-                        this._stepList.push(Steps.ResolvePlayer0);
-                        this._stepList.push(Steps.ResolvePlayer1);
-                        this._stepList.push(Steps.ResolvePlayer2);
-                        this._stepList.push(Steps.ResolvePlayer3);
-                        this._stepList.push(Steps.RemoveDealerBust);
-                        this._stepList.push(Steps.AnnotateDealerAutoblackjack);
-                        this._stepList.push(Steps.ResolveAutojackHand);
-                        this._stepList.push(Steps.ResolveAutojackPlay);
-                        this._stepList.push(Steps.ResolveBreakUnder17);
-                        this._stepList.push(Steps.ChangeStateGameOver);
-                    }
+                if (this._dealerTotal < 17 && this._dealerTotal >= -17) {
+                    this._stepList.push(Steps.DealerDrawCard);
+                    this._stepList.push(Steps.PlayDealerHand);
                 }
                 else {
-                    this._stepList.push(Steps.ChangeStateGameOver);
+                    this._stepList.push(Steps.FinishGame);
+                }
+                this.doAnimation();
+                break;
+            }
+            case Steps.AnnotateAutoblackjack: {
+                let playerScoreField = this.add.text(this.AutojackCommentary.x, this.AutojackCommentary.y, Math.abs(this._playerAutojackTotal).toString());
+                playerScoreField.setStyle(Config.gameOptions.commentaryFormat);
+                playerScoreField.setOrigin(0, 0);
+                this._annotationList.push(playerScoreField);
+                this.doAnimation();
+                break;
+            }
+            case Steps.PopPlayerBustCard: {
+                let lastCard = this._autojackHand.pop();
+                this._playerAutojackTotal = 0;
+                for (let card of this._autojackHand) {
+                    this._playerAutojackTotal = Blackjack.addCardNumberToHandValue(card.CardNumber, this._playerAutojackTotal);
+                }
+                this._playerAutojackTotal = Math.abs(this._playerAutojackTotal);
+                let handLen = this._autojackHand.length;
+                this.tweens.add({
+                    targets: lastCard,
+                    delay: 750,
+                    duration: 800,
+                    x: 0,
+                    y: 0,
+                    alpha: 0,
+                    onComplete: this.doAnimation,
+                    onCompleteScope: this
+                });
+                break;
+            }
+            case Steps.FillAutojackHand: {
+                let absAutojack = Math.abs(this._playerAutojackTotal);
+                if (this._autojackPlaySpot.Amount + this._breakUnder17Spot.Amount == 0) {
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else if (absAutojack > 21) {
+                    this._stepList.push(Steps.PopPlayerBustCard);
+                    this._stepList.push(Steps.AnnotateAutoblackjack);
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else if (absAutojack == 21) {
+                    this._stepList.push(Steps.AnnotateAutoblackjack);
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                }
+                else {
+                    this._stepList.push(Steps.CardToAutojack);
+                    this._stepList.push(Steps.FillAutojackHand);
                 }
                 this.doAnimation();
                 break;
@@ -908,6 +887,10 @@ class GameScene extends Phaser.Scene {
                 }
                 break;
             }
+            case Steps.ChangeStateGameOver: {
+                this.CurrentState = GameState.GameOver;
+                break;
+            }
             case Steps.ResolveBreakUnder17: {
                 if (this._breakUnder17Spot.Amount > 0) {
                     let commentary = "Break Under 17 wager loses.";
@@ -922,10 +905,6 @@ class GameScene extends Phaser.Scene {
                 else {
                     this.doAnimation();
                 }
-                break;
-            }
-            case Steps.ChangeStateGameOver: {
-                this.CurrentState = GameState.GameOver;
                 break;
             }
             case Steps.ResolveAutojackNatural: {
@@ -978,7 +957,7 @@ class GameScene extends Phaser.Scene {
                     dealerScoreString = "blackjack";
                 }
                 else {
-                    dealerScoreString = dealerScore.toString();
+                    dealerScoreString = Math.abs(dealerScore).toString();
                 }
                 var dealerScoreField = this.add.text(390, 140, "Dealer has " + dealerScoreString);
                 dealerScoreField.setOrigin(0, 0);
@@ -991,7 +970,7 @@ class GameScene extends Phaser.Scene {
             case Steps.ResolveInsurance: {
                 if (this._insuranceBettingSpot.Amount > 0) {
                     let insurancePayout = (this._dealerTotal == -21 ? 2 : -1);
-                    let commentary = (insurancePayout == -1 ? "Insurance wager loses" : `Insurance wager wins ${General.amountToDollarString(this._playerBettingSpots[0].Amount)}`);
+                    let commentary = (insurancePayout == -1 ? "Insurance wager loses" : `Insurance wager wins ${General.amountToDollarString(this._insuranceBettingSpot.Amount * 2)}`);
                     this.addCommentaryField(commentary);
                     this.resolvePayout(this._insuranceBettingSpot, insurancePayout, true);
                 }
@@ -1000,30 +979,82 @@ class GameScene extends Phaser.Scene {
                 }
                 break;
             }
-            case Steps.ForceNextHand: {
-                this._currentHand += 1;
-                this.doAnimation();
-                break;
-            }
-            case Steps.CheckAndReturnHoleCard: {
-                break;
-            }
             case Steps.CheckAndFlipHoleCard: {
                 this.checkAndFlipHoleCard();
                 break;
             }
-            case Steps.FlipHoleCard: {
-                this.flipHoleCard();
+            case Steps.CheckForNaturals: {
+                let playerNatural = (this._playerTotals[0] == -21);
+                let dealerNatural = (this._dealerTotal == -21);
+                let autojackNatural = (this._playerAutojackTotal == -21);
+                if (dealerNatural) {
+                    // Dealer has a natural, so the following happens:
+                    // Check and flip hole card
+                    // Resolve insurance, if taken
+                    // If player has natural blackjack, it's a push; otherwise, it loses
+                    // If Autojack has natural blackjack, it's a push; otherwise, it loses
+                    // Game is over
+                    this._stepList.push(Steps.CheckAndFlipHoleCard);
+                    this._stepList.push(Steps.ResolveInsurance);
+                    this._stepList.push(Steps.AnnotateDealer);
+                    this._stepList.push(Steps.ResolvePlayer0);
+                    this._stepList.push(Steps.ResolveAutojackNatural);
+                    this._stepList.push(Steps.ResolveBreakUnder17);
+                    this._stepList.push(Steps.ChangeStateGameOver);
+                }
+                else if (playerNatural && autojackNatural) {
+                    // Player has two naturals
+                    if (this._dealerHand[1].CardNumber >= 32)
+                        this._stepList.push(Steps.CheckAndFlipHoleCard);
+                    this._stepList.push(Steps.ResolveInsurance);
+                    this._stepList.push(Steps.AnnotateDealer);
+                    this._stepList.push(Steps.ResolvePlayerNatural);
+                    this._stepList.push(Steps.ResolveAutojackNatural);
+                    this._stepList.push(Steps.ResolveBreakUnder17);
+                    this._stepList.push(Steps.ChangeStateGameOver);
+                }
+                else if (playerNatural) {
+                    // Player natural only -- pay it off, then go to play / surrender mode
+                    this._mainIsResolved = true;
+                    if (this._dealerHand[1].CardNumber >= 32)
+                        this._stepList.push(Steps.CheckAndReturnHoleCard);
+                    this._stepList.push(Steps.ResolveInsurance);
+                    this._stepList.push(Steps.ResolvePlayerNatural);
+                    this._stepList.push(Steps.ChangeStatePlayOrFoldAutojack);
+                }
+                else if (autojackNatural) {
+                    // Autojack natural only -- play it off, end the Autojack phase, then go to main blackjack
+                    this._autojackIsResolved = true;
+                    if (this._dealerHand[1].CardNumber >= 32)
+                        this._stepList.push(Steps.CheckAndReturnHoleCard);
+                    this._stepList.push(Steps.ResolveInsurance);
+                    this._stepList.push(Steps.ResolveAutojackNatural);
+                    this._stepList.push(Steps.ResolveBreakUnder17);
+                    this._stepList.push(Steps.ChangeStateMainInput);
+                }
+                else {
+                    // No dealer natural, time to set up for the show
+                    if (this._dealerHand[1].CardNumber >= 32)
+                        this._stepList.push(Steps.CheckAndReturnHoleCard);
+                    this._stepList.push(Steps.ResolveInsurance);
+                    this._stepList.push(Steps.ChangeStatePlayOrFoldAutojack);
+                }
+                this.doAnimation();
+                break;
+            }
+            case Steps.ChangeStateInsuranceInput: {
+                this.CurrentState = GameState.InsuranceInput;
                 break;
             }
             case Steps.CheckForInsurance: {
                 let upcardRank = Math.floor(this._dealerHand[1].CardNumber / 4);
                 if (upcardRank == 12) {
-                    this.CurrentState = GameState.InsuranceInput;
+                    this._stepList.push(Steps.ChangeStateInsuranceInput);
                 }
                 else {
-                    this.resolveDealerNatural();
+                    this._stepList.push(Steps.CheckForNaturals);
                 }
+                this.doAnimation();
                 break;
             }
             case Steps.ResolvePointAndSuitWager: {
@@ -1159,67 +1190,6 @@ class GameScene extends Phaser.Scene {
         else {
             this.doAnimation();
         }
-    }
-    resolveDealerNatural() {
-        this.Instructions = "";
-        for (let thisButton of this._yesNoPanel)
-            thisButton.visible = false;
-        let playerNatural = (this._playerTotals[0] == -21);
-        let dealerNatural = (this._dealerTotal == -21);
-        let autojackNatural = (this._playerAutojackTotal == -21);
-        if (dealerNatural) {
-            // Dealer has a natural, so the following happens:
-            // Check and flip hole card
-            // Resolve insurance, if taken
-            // If player has natural blackjack, it's a push; otherwise, it loses
-            // If Autojack has natural blackjack, it's a push; otherwise, it loses
-            // Game is over
-            this._stepList.push(Steps.CheckAndFlipHoleCard);
-            this._stepList.push(Steps.ResolveInsurance);
-            this._stepList.push(Steps.AnnotateDealer);
-            this._stepList.push(Steps.ResolvePlayer0);
-            this._stepList.push(Steps.ResolveAutojackNatural);
-            this._stepList.push(Steps.ResolveBreakUnder17);
-            this._stepList.push(Steps.ChangeStateGameOver);
-        }
-        else if (playerNatural && autojackNatural) {
-            // Player has two naturals
-            if (this._dealerHand[1].CardNumber >= 32)
-                this._stepList.push(Steps.FlipHoleCard);
-            this._stepList.push(Steps.ResolveInsurance);
-            this._stepList.push(Steps.AnnotateDealer);
-            this._stepList.push(Steps.ResolvePlayerNatural);
-            this._stepList.push(Steps.ResolveAutojackNatural);
-            this._stepList.push(Steps.ResolveBreakUnder17);
-            this._stepList.push(Steps.ChangeStateGameOver);
-        }
-        else if (playerNatural) {
-            // Player natural only -- pay it off, then go to play / surrender mode
-            this._mainIsResolved = true;
-            if (this._dealerHand[1].CardNumber >= 32)
-                this._stepList.push(Steps.CheckAndReturnHoleCard);
-            this._stepList.push(Steps.ResolveInsurance);
-            this._stepList.push(Steps.ResolvePlayerNatural);
-            this._stepList.push(Steps.ChangeStatePlayOrFoldAutojack);
-        }
-        else if (autojackNatural) {
-            // Autojack natural only -- play it off, end the Autojack phase, then go to main blackjack
-            this._autojackIsResolved = true;
-            if (this._dealerHand[1].CardNumber >= 32)
-                this._stepList.push(Steps.CheckAndReturnHoleCard);
-            this._stepList.push(Steps.ResolveInsurance);
-            this._stepList.push(Steps.ResolveAutojackNatural);
-            this._stepList.push(Steps.ResolveBreakUnder17);
-            this._stepList.push(Steps.ChangeStateMainInput);
-        }
-        else {
-            // No dealer natural, time to set up for the show
-            if (this._dealerHand[1].CardNumber >= 32)
-                this._stepList.push(Steps.CheckAndReturnHoleCard);
-            this._stepList.push(Steps.ResolveInsurance);
-            this._stepList.push(Steps.ChangeStatePlayOrFoldAutojack);
-        }
-        this.doAnimation();
     }
     resolvePayout(wager, multiple, elevateOldBet, continueAnimation = true) {
         if (wager.Amount != 0) {
@@ -1362,22 +1332,22 @@ class GameScene extends Phaser.Scene {
     }
     clickNo() {
         this.playClick();
-        if (this._currentState == GameState.InsuranceInput) {
-            this.resolveDealerNatural();
-        }
-        else {
-            console.debug("Current state " + this._currentState + " not resolved in clickNo();");
-        }
+        for (let thisButton of this._yesNoPanel)
+            thisButton.visible = false;
+        this.Instructions = "";
+        this._stepList.push(Steps.CheckForNaturals);
+        this.doAnimation();
     }
     clickYes() {
         this.playClick();
-        if (this._currentState == GameState.InsuranceInput) {
-            this._insuranceBettingSpot.Amount = this._playerBettingSpots[0].Amount / 2;
-            this.resolveDealerNatural();
-        }
-        else {
-            console.debug("Current state " + this._currentState + " not resolved in clickYes();");
-        }
+        for (let thisButton of this._yesNoPanel)
+            thisButton.visible = false;
+        this.Instructions = "";
+        this._insuranceBettingSpot.Amount = (this._playerBettingSpots[0].Amount +
+            this._breakUnder17Spot.Amount +
+            this._autojackAnteSpot.Amount) / 2;
+        this._stepList.push(Steps.CheckForNaturals);
+        this.doAnimation();
     }
     doubleDown() {
         this.playClick();
@@ -1388,7 +1358,7 @@ class GameScene extends Phaser.Scene {
         let thisSpot = this._playerBettingSpots[this._currentHand];
         let newAmount = Math.min(thisSpot.Amount * 2, thisSpot.Amount + thisSpot.MaximumBet);
         thisSpot.Amount = newAmount;
-        this._stepList.push(Steps.PostDoubleControl);
+        this._stepList.push(Steps.PostPlayerControl);
         this.deliverCard(CardTarget.Player, this._currentHand);
     }
     giveHint() {
@@ -1401,8 +1371,8 @@ class GameScene extends Phaser.Scene {
         this._hintButton.visible = false;
         this.Instructions = "";
         this.deliverCard(CardTarget.Player, this._currentHand);
-        if (this._playerTotals[this._currentHand] > 21) {
-            this._stepList.push(Steps.ResolveBust);
+        if (this._playerTotals[this._currentHand] >= 21) {
+            this._stepList.push(Steps.PostPlayerControl);
         }
         else {
             // Player still has choices, go back to main panel
@@ -1422,7 +1392,7 @@ class GameScene extends Phaser.Scene {
             thisButton.visible = false;
         this.Instructions = "";
         this._autojackPlaySpot.Amount = this._autojackAnteSpot.Amount;
-        this._stepList.push(Steps.FillAutojackHand);
+        this._stepList.push(Steps.ChangeStateMainInput);
         this.doAnimation();
     }
     rebetBets() {
@@ -1456,24 +1426,11 @@ class GameScene extends Phaser.Scene {
         this.Instructions = "";
         let thisRank = Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4);
         if (thisRank == 12) {
-            // split aces
             this._stepList.push(Steps.SplitPair);
             this._stepList.push(Steps.CardToPlayer);
             this._stepList.push(Steps.ForceNextHand);
             this._stepList.push(Steps.CardToPlayer);
-            this._stepList.push(Steps.FlipHoleCard);
-            this._stepList.push(Steps.PlayDealerHand);
-            this._stepList.push(Steps.AnnotateDealer);
-            this._stepList.push(Steps.ResolvePlayer0);
-            this._stepList.push(Steps.ResolvePlayer1);
-            this._stepList.push(Steps.ResolvePlayer2);
-            this._stepList.push(Steps.ResolvePlayer3);
-            this._stepList.push(Steps.RemoveDealerBust);
-            this._stepList.push(Steps.AnnotateDealerAutoblackjack);
-            this._stepList.push(Steps.ResolveAutojackHand);
-            this._stepList.push(Steps.ResolveAutojackPlay);
-            this._stepList.push(Steps.ResolveBreakUnder17);
-            this._stepList.push(Steps.ChangeStateGameOver);
+            this._stepList.push(Steps.PostPlayerControl);
         }
         else {
             this._stepList.push(Steps.SplitPair);
@@ -1493,8 +1450,7 @@ class GameScene extends Phaser.Scene {
         }
         else {
             if ((this._currentHand + 1) >= this._handCount) {
-                this._stepList.push(Steps.FlipHoleCard);
-                this._stepList.push(Steps.PlayDealerHand);
+                this._stepList.push(Steps.FillAutojackHand);
             }
             else {
                 this._stepList.push(Steps.ChangeStateMainInput);
@@ -1509,8 +1465,7 @@ class GameScene extends Phaser.Scene {
             thisButton.visible = false;
         this.Instructions = "";
         this._autojackIsResolved = true;
-        this._stepList.push(Steps.FillAutojackHand);
-        // this._stepList.push(Steps.ChangeStateMainInput);
+        this._stepList.push(Steps.ChangeStateMainInput);
         this.resolvePayout(this._autojackAnteSpot, -0.5, false, true);
     }
     //#endregion
@@ -1575,45 +1530,11 @@ class GameScene extends Phaser.Scene {
             thisButton.setInteractive();
     }
     updateControls() {
-        // TODO: PUT BACK
         switch (this.CurrentState) {
-            case GameState.MainInput: {
-                if (this._mainIsResolved) {
-                    this._stepList.push(Steps.FlipHoleCard);
-                    this._stepList.push(Steps.PlayDealerHand);
-                    this.doAnimation();
-                }
-                else if (this._playerHands[this._currentHand].length < 2) {
-                    this._stepList.push(Steps.CardToPlayer);
-                    this._stepList.push(Steps.ChangeStateMainInput);
-                    this.doAnimation();
-                }
-                else {
-                    for (let thisButton of this._mainPanel)
-                        thisButton.visible = true;
-                    // While you can always hit, double or stand, surrender and split are limited
-                    if (this._playerHands[this._currentHand].length == 2 && this._handCount < 4 &&
-                        Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4) ==
-                            Math.floor(this._playerHands[this._currentHand][1].CardNumber / 4)) {
-                        this._splitButton.unlock();
-                    }
-                    else {
-                        this._splitButton.lock();
-                    }
-                    if (this._playerHands[this._currentHand].length == 2) {
-                        this._doubleButton.unlock();
-                    }
-                    else {
-                        this._doubleButton.lock();
-                    }
-                    this.Instructions = "Hand #" + (this._currentHand + 1) + " of " + this._handCount + ": " + Blackjack.handTotalToHandString(this._playerTotals[this._currentHand]);
-                }
-                break;
-            }
-            case GameState.PlayOrFoldAutojack: {
-                for (let thisButton of this._playSurrenderPanel)
+            case GameState.GameOver: {
+                for (let thisButton of this._newRebetButtonPanel)
                     thisButton.visible = true;
-                this.Instructions = StringTable.PlayOrFoldAutojackInstructions;
+                this.Instructions = StringTable.GameOver;
                 break;
             }
             case GameState.Predeal: {
@@ -1654,16 +1575,49 @@ class GameScene extends Phaser.Scene {
                 this.doAnimation();
                 break;
             }
-            case GameState.GameOver: {
-                for (let thisButton of this._newRebetButtonPanel)
-                    thisButton.visible = true;
-                this.Instructions = StringTable.GameOver;
-                break;
-            }
             case GameState.InsuranceInput: {
                 for (let thisButton of this._yesNoPanel)
                     thisButton.visible = true;
                 this.Instructions = StringTable.Insurance;
+                break;
+            }
+            case GameState.PlayOrFoldAutojack: {
+                for (let thisButton of this._playSurrenderPanel)
+                    thisButton.visible = true;
+                this.Instructions = StringTable.PlayOrFoldAutojackInstructions;
+                break;
+            }
+            case GameState.MainInput: {
+                if (this._mainIsResolved) {
+                    this._stepList.push(Steps.FlipHoleCard);
+                    this._stepList.push(Steps.PlayDealerHand);
+                    this.doAnimation();
+                }
+                else if (this._playerHands[this._currentHand].length < 2) {
+                    this._stepList.push(Steps.CardToPlayer);
+                    this._stepList.push(Steps.ChangeStateMainInput);
+                    this.doAnimation();
+                }
+                else {
+                    for (let thisButton of this._mainPanel)
+                        thisButton.visible = true;
+                    // While you can always hit, double or stand, surrender and split are limited
+                    if (this._playerHands[this._currentHand].length == 2 && this._handCount < 4 &&
+                        Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4) ==
+                            Math.floor(this._playerHands[this._currentHand][1].CardNumber / 4)) {
+                        this._splitButton.unlock();
+                    }
+                    else {
+                        this._splitButton.lock();
+                    }
+                    if (this._playerHands[this._currentHand].length == 2) {
+                        this._doubleButton.unlock();
+                    }
+                    else {
+                        this._doubleButton.lock();
+                    }
+                    this.Instructions = "Hand #" + (this._currentHand + 1) + " of " + this._handCount + ": " + Blackjack.handTotalToHandString(this._playerTotals[this._currentHand]);
+                }
                 break;
             }
             default: {
@@ -1691,10 +1645,10 @@ class GameScene extends Phaser.Scene {
     set Instructions(value) {
         let targetFontSize = this.TargetFontInstructionSize;
         this._helpField.text = value;
-        while (this._helpField.height > 50) {
+        do {
             targetFontSize -= 1;
             this._helpField.setFontSize(targetFontSize - 1);
-        }
+        } while (this._helpField.height > 50);
     }
     get Score() { return this._score; }
     set Score(value) {
@@ -1724,7 +1678,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
-        this.load.image("logo", "assets/images/Logo.jpg");
+        this.load.image("logo", "assets/images/Logo.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -2341,6 +2295,7 @@ class Steps {
 // State control steps
 Steps.ChangeStateMainInput = "CHANGE STATE: Main input";
 Steps.ChangeStateGameOver = "CHANGE STATE: Game Over";
+Steps.ChangeStateInsuranceInput = "CHANGE STATE: Insurance Input";
 // Dealing steps
 Steps.CardToPlayer = "Card to player";
 Steps.CardToDealer = "Card to dealer";
@@ -2357,8 +2312,10 @@ Steps.PopPlayerBustCard = "Pop off player bust card";
 Steps.AnnotateAutoblackjack = "Annotate Autoblackjack hand";
 Steps.AnnotateDealerAutoblackjack = "Annotate Dealer Autoblackjack hand";
 Steps.ResolveAutojackPlay = "Resolve Autojack Play";
+Steps.FinishGame = "Finish Game";
 // Blackjack steps
 Steps.AnnotateDealer = "Annotate Dealer hand";
+Steps.CheckForNaturals = "Check For Naturals";
 Steps.CheckForInsurance = "Check for insurance";
 Steps.CheckAndReturnHoleCard = "Check and returnhole card";
 Steps.CheckAndFlipHoleCard = "Check and flip hole card";
@@ -2366,7 +2323,7 @@ Steps.DealerDrawCard = "Dealer Draw Card";
 Steps.FlipHoleCard = "Flip hole card";
 Steps.ForceNextHand = "Force next hand";
 Steps.PlayDealerHand = "Play Dealer Hand";
-Steps.PostDoubleControl = "Post Double Control";
+Steps.PostPlayerControl = "Post Double Control";
 Steps.ResolveBust = "Resolve Bust";
 Steps.ResolveInsurance = "Resolve Insurance";
 Steps.ResolvePlayer0 = "Resolve Player Hand 0";
@@ -2378,7 +2335,7 @@ Steps.SplitPair = "Split Pair";
 class StringTable {
 }
 // Basic strings
-StringTable.PredealInstructions = "Click on chip to select denomination, click on PLAY 2 and/or BIG 8 betting spots to add chips, click DEAL to begin.";
+StringTable.PredealInstructions = "Click on chip to select denomination, click on any of the BLACKJACK, BREAK UNDER 17, POINT N SUIT and AUTOJACK ANTE wagers to add chips, click DEAL to begin.";
 StringTable.Instructions = "Either make an equal wager to PLAY, or FOLD";
 StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
 // Blackjack strings
