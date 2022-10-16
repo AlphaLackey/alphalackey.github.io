@@ -148,9 +148,9 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         // If desired, initialize test hands by uncommenting.
-        // this._testDealerHand = General.cardStringToVector("4C QC AS AC QD");
-        // this._testPlayerHand = General.cardStringToVector("AH AH 8C 8C");
-        // this._testAutojackHand = General.cardStringToVector("4C KC 2C 2C KS KD");
+        // this._testDealerHand = General.cardStringToVector("3D AS AS AC QD");
+        // this._testPlayerHand = General.cardStringToVector("TC AH 6C 8C 8C 8C 8C 8C 8C 8C 8C 8C 8C 8C 8C 8C 8C 8C");
+        // this._testAutojackHand = General.cardStringToVector("9D 6D 2C 2C KS KD");
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         // Add felt notations
@@ -805,7 +805,20 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case Steps.PlayDealerHand: {
-                if (this._dealerTotal < 17 && this._dealerTotal >= -17) {
+                let mustDealerPlay = false;
+                if (this._autojackPlaySpot.Amount > 0)
+                    mustDealerPlay = true;
+                if (this._breakUnder17Spot.Amount > 0)
+                    mustDealerPlay = true;
+                if (!(this._handCount == 1 && this._playerTotals[0] == -21 && this._playerHands[0].length == 2)) {
+                    // Not a player natural, so look for any unbusted hand.
+                    for (let x = 0; x < this._handCount; x += 1) {
+                        if (this._playerTotals[x] < 22) {
+                            mustDealerPlay = true;
+                        }
+                    }
+                }
+                if (this._dealerTotal < 17 && this._dealerTotal >= -17 && mustDealerPlay) {
                     this._stepList.push(Steps.DealerDrawCard);
                     this._stepList.push(Steps.PlayDealerHand);
                 }
@@ -1372,7 +1385,7 @@ class GameScene extends Phaser.Scene {
         this._hintButton.visible = false;
         this.Instructions = "";
         this.deliverCard(CardTarget.Player, this._currentHand);
-        if (this._playerTotals[this._currentHand] >= 21) {
+        if (Math.abs(this._playerTotals[this._currentHand]) >= 21) {
             this._stepList.push(Steps.PostPlayerControl);
         }
         else {
@@ -1393,7 +1406,13 @@ class GameScene extends Phaser.Scene {
             thisButton.visible = false;
         this.Instructions = "";
         this._autojackPlaySpot.Amount = this._autojackAnteSpot.Amount;
-        this._stepList.push(Steps.ChangeStateMainInput);
+        if (this._playerTotals[0] == -21) {
+            // Player natural, so nothing to play
+            this._stepList.push(Steps.PostPlayerControl);
+        }
+        else {
+            this._stepList.push(Steps.ChangeStateMainInput);
+        }
         this.doAnimation();
     }
     rebetBets() {
@@ -1466,7 +1485,13 @@ class GameScene extends Phaser.Scene {
             thisButton.visible = false;
         this.Instructions = "";
         this._autojackIsResolved = true;
-        this._stepList.push(Steps.ChangeStateMainInput);
+        if (this._playerTotals[0] == -21) {
+            // Player natural, so nothing to play
+            this._stepList.push(Steps.PostPlayerControl);
+        }
+        else {
+            this._stepList.push(Steps.ChangeStateMainInput);
+        }
         this.resolvePayout(this._autojackAnteSpot, -0.5, false, true);
     }
     //#endregion
