@@ -154,7 +154,7 @@ class GameScene extends Phaser.Scene {
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         // Add felt notations
-        this.addFeltField("Point N Suit paytable:\nOne Match -- 5:1\nTwo Matches -- 15:1\nThree Matches -- 100:1\nFour Matches -- 500:1\n\nMatch Dealer's Up Card\nBy Point-Value And Suit\nTo Win", 715, 250);
+        this.addFeltField("Point N Suit Paytable:\nOne Match -- 5:1\nTwo Matches -- 15:1\nThree Matches -- 100:1\nFour Matches -- 500:1\n\nMatch Dealer's Up Card\nBy Point-Value And Suit\nTo Win", 715, 250);
         this.addFeltField("Autojack Hand\nReceives Automatic Hits\nAnd Can't Bust With Play", 715, 525);
         // Turn on listening to input events
         this.input.on('gameobjectup', function (_, gameObject) {
@@ -1629,8 +1629,8 @@ class GameScene extends Phaser.Scene {
                         thisButton.visible = true;
                     // While you can always hit, double or stand, surrender and split are limited
                     if (this._playerHands[this._currentHand].length == 2 && this._handCount < 4 &&
-                        Math.floor(this._playerHands[this._currentHand][0].CardNumber / 4) ==
-                            Math.floor(this._playerHands[this._currentHand][1].CardNumber / 4)) {
+                        Blackjack.cardNumberToBlackjackRank(this._playerHands[this._currentHand][0].CardNumber) ==
+                            Blackjack.cardNumberToBlackjackRank(this._playerHands[this._currentHand][1].CardNumber)) {
                         this._splitButton.unlock();
                     }
                     else {
