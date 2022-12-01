@@ -126,7 +126,7 @@ class GameScene extends Phaser.Scene {
     }
     create() {
         // If desired, initialize test hands by uncommenting.
-        // this._testDealerHand = General.cardStringToVector("4C 2S");
+        this._testDealerHand = General.cardStringToVector("AC TS");
         // this._testPlayerHand = General.cardStringToVector("AC 2D 2H 2S KC KD 2H 2S 2C 2D 2H 2S 2C 2D 2H 2S 2C 2D 2H 2S");
         // Add the game felt.
         this._gameFelt = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
@@ -645,6 +645,11 @@ class GameScene extends Phaser.Scene {
                 let upcardRank = Math.floor(this._dealerHand[1].CardNumber / 4);
                 if (upcardRank == 12) {
                     this._stepList.push(Steps.ChangeStateInsuranceInput);
+                }
+                else if (this._dealerTotal == -21) {
+                    this._stepList.push(Steps.CheckHoleCard);
+                    this._stepList.push(Steps.ResolvePlayerHands);
+                    this._stepList.push(Steps.ChangeStateGameOver);
                 }
                 else {
                     this._stepList.push(Steps.CheckHoleCard);
