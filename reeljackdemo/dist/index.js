@@ -724,6 +724,7 @@ class GameScene extends Phaser.Scene {
                     isLocked: true
                 });
                 this._payoutList.push(winningPayoutSpot);
+                this.Score += (wager.Amount * multiple);
                 this.add.existing(winningPayoutSpot);
                 if (elevateOldBet)
                     this.children.bringToTop(wager);
