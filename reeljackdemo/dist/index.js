@@ -6,7 +6,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene]
+            scene: [LoaderScene, GameScene, HelpScene]
         };
         this.gameReference = new Phaser.Game(gameConfig);
     }
@@ -50,10 +50,16 @@ Config.gameOptions = {
     commentaryFormat: {
         fontFamily: "Arial",
         fontSize: "20px",
-        fontColor: "#FFFFFF",
         fontStyle: "bold",
-        align: "center"
-    }
+        color: "#FFFFFF",
+        align: "left"
+    },
+    helpScreenFormat: {
+        fontFamily: "Arial",
+        fontSize: "22px",
+        color: "#FFFFFF",
+        align: "left"
+    },
 };
 window.onload = () => {
     Config.initGame();
@@ -74,8 +80,10 @@ class GameScene extends Phaser.Scene {
             new Point(280, 335),
             new Point(280, 465),
             new Point(280, 595),
+            new Point(280, 725),
         ];
         this.PlayerHandOffsets = [
+            new Point(34, -37),
             new Point(34, -37),
             new Point(34, -37),
             new Point(34, -37),
@@ -88,14 +96,6 @@ class GameScene extends Phaser.Scene {
             new Point(200, 360),
             new Point(200, 490),
             new Point(200, 620),
-        ];
-        this.TwentyOneMultipliers = [
-            1,
-            1,
-            2,
-            3,
-            5,
-            10
         ];
         //#endregion
         //#region Betting spots
@@ -138,7 +138,7 @@ class GameScene extends Phaser.Scene {
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
             cardRanks[rank] = 1;
-        this._shoe = new QuantumShoe(cardRanks, 8);
+        this._shoe = new QuantumShoe(cardRanks, 1);
         //#region Bumper panel graphics
         // create handler to graphics object
         let graphics = this.add.graphics();
@@ -208,6 +208,19 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._dealButton);
         Config.emitter.on(Emissions.BeginDeal, this.beginDeal, this);
         this._clearDealPanel = [this._clearButton, this._dealButton];
+        //#endregion
+        //#region Rules Button
+        this._rulesButton = new Button({
+            scene: this,
+            style: AssetNames.RedSmall,
+            caption: "RULES",
+            clickEvent: Emissions.ShowRules,
+            x: 82,
+            y: 665,
+            visible: true
+        });
+        this.add.existing(this._rulesButton);
+        Config.emitter.on(Emissions.ShowRules, this.showRules, this);
         //#endregion
         //#region New | Rebet panel
         this._newButton = new Button({
@@ -408,7 +421,7 @@ class GameScene extends Phaser.Scene {
                 this.add.existing(nextCard);
                 this._playerHands[row].push(nextCard);
                 this._playerTotals[row] = Blackjack.addCardNumberToHandValue(nextCard.CardNumber, this._playerTotals[row]);
-                if (this._playerTotals[row] >= 17 || this._playerTotals[row] <= -19 || this._playerHands[row].length == 5) {
+                if (this._playerTotals[row] >= 17 || this._playerTotals[row] <= -19 || this._playerHands[row].length == 6) {
                     let outcome = "";
                     if (this._playerTotals[row] > 21) {
                         outcome = "BUST\n" + this._playerTotals[row].toString();
@@ -416,8 +429,8 @@ class GameScene extends Phaser.Scene {
                     else if (this._playerHands[row].length == 2 && Math.abs(this._playerTotals[row]) == 21) {
                         outcome = "BJ\n21";
                     }
-                    else if (this._playerHands[row].length == 5 && Math.abs(this._playerTotals[row]) != 21) {
-                        outcome = "5 CARD\nCHARLIE";
+                    else if (this._playerHands[row].length == 6 && Math.abs(this._playerTotals[row]) != 21) {
+                        outcome = "6 CARD\nCHARLIE";
                     }
                     else if (this._playerTotals[row] >= 17) {
                         outcome = "HARD\n" + this._playerTotals[row].toString();
@@ -451,7 +464,7 @@ class GameScene extends Phaser.Scene {
             targets: this._dealerHand[0],
             delay: tweenDelays[0],
             duration: tweenDurations[0],
-            y: "-=120",
+            y: "-=110",
         });
         this.add.tween({
             targets: this._dealerHand[0],
@@ -480,7 +493,7 @@ class GameScene extends Phaser.Scene {
             targets: this._dealerHand[0],
             delay: tweenDelays[0],
             duration: tweenDurations[0],
-            y: "-=120",
+            y: "-=110",
         });
         this.add.tween({
             targets: this._dealerHand[0],
@@ -509,13 +522,13 @@ class GameScene extends Phaser.Scene {
             targets: this._dealerHand[0],
             delay: tweenDelays[0],
             duration: tweenDurations[0],
-            y: "-=120",
+            y: "-=110",
         });
         this.add.tween({
             targets: this._dealerHand[0],
             delay: tweenDelays[1],
             duration: tweenDurations[1],
-            y: "+=120",
+            y: "+=110",
             onComplete: this.doAnimation,
             onCompleteScope: this
         });
@@ -523,6 +536,22 @@ class GameScene extends Phaser.Scene {
     doAnimation() {
         let thisAction = this._stepList.shift();
         switch (thisAction) {
+            case Steps.AnnotateShortHands: {
+                for (let row = 0; row < 5; row += 1) {
+                    if (this._playerTotals[row] < 17 && this._playerTotals[row] > -19) {
+                        let outcome = "";
+                        if (this._playerTotals[row] >= 0) {
+                            outcome = "HARD\n" + this._playerTotals[row].toString();
+                        }
+                        else {
+                            outcome = "SOFT\n" + Math.abs(this._playerTotals[row]).toString();
+                        }
+                        this.addCommentaryField(this.PlayerSpotLocations[row].x - 165, this.PlayerSpotLocations[row].y - 50, outcome);
+                    }
+                }
+                this.doAnimation();
+                break;
+            }
             case Steps.FlipHoleCard: {
                 this.flipHoleCard();
                 break;
@@ -564,7 +593,7 @@ class GameScene extends Phaser.Scene {
                     let playerScore = Math.abs(this._playerTotals[row]);
                     let playerTwentyOne = playerScore == 21;
                     let playerNatural = (playerTwentyOne && this._playerHands[row].length == 2);
-                    let fiveCardCharlie = (playerScore < 21 && this._playerHands[row].length == 5);
+                    let sixCardCharlie = (playerScore < 21 && this._playerHands[row].length == 6);
                     let payMultiple = 0;
                     if (playerScore > 21) {
                         payMultiple = -1;
@@ -581,7 +610,7 @@ class GameScene extends Phaser.Scene {
                     else if (dealerScore > 21) {
                         payMultiple = 1;
                     }
-                    else if (fiveCardCharlie) {
+                    else if (sixCardCharlie) {
                         payMultiple = 1;
                     }
                     else if (playerScore > dealerScore) {
@@ -592,9 +621,6 @@ class GameScene extends Phaser.Scene {
                     }
                     else {
                         payMultiple = 0;
-                    }
-                    if (payMultiple == 1) {
-                        payMultiple *= this.TwentyOneMultipliers[playerTwentyOneCount];
                     }
                     this.resolvePayout(this._playerBettingSpots[row], payMultiple, true, row == 4);
                 }
@@ -806,7 +832,7 @@ class GameScene extends Phaser.Scene {
                 // First, see if all hands are done
                 let doneYet = true;
                 for (let row = 0; row < 5; row += 1) {
-                    if (this._playerHands[row].length < 5 && this._playerTotals[row] < 17 && this._playerTotals[row] > -19) {
+                    if (this._playerHands[row].length < 6 && this._playerTotals[row] < 17 && this._playerTotals[row] > -19) {
                         doneYet = false;
                     }
                 }
@@ -894,6 +920,7 @@ class GameScene extends Phaser.Scene {
             thisSpot.Amount *= 2.0;
         }
         this._stepList.push(Steps.DoublePlayerHands);
+        this._stepList.push(Steps.AnnotateShortHands);
         this._stepList.push(Steps.FlipHoleCard);
         this._stepList.push(Steps.PlayDealerHand);
         this.doAnimation();
@@ -923,11 +950,16 @@ class GameScene extends Phaser.Scene {
         this.playClick();
         this.selectCursorValue(target.Value);
     }
+    showRules() {
+        this.playClick();
+        this.scene.switch("HelpScene");
+    }
     standOnHand() {
         this.playClick();
         for (let thisButton of this._mainPanel)
             thisButton.visible = false;
         this.Instructions = "";
+        this._stepList.push(Steps.AnnotateShortHands);
         this._stepList.push(Steps.FlipHoleCard);
         this._stepList.push(Steps.PlayDealerHand);
         this.doAnimation();
@@ -1010,6 +1042,62 @@ class GameScene extends Phaser.Scene {
         this._score = value;
         let descriptors = ["BANKROLL", General.amountToDollarString(value)];
         (_a = this._scoreField) === null || _a === void 0 ? void 0 : _a.setText(descriptors);
+    }
+}
+class HelpScene extends Phaser.Scene {
+    constructor() {
+        super("HelpScene");
+    }
+    create() {
+        let HelpText = [
+            "REEL JACK (working title) is a blackjack game in which the player plays five hands at once, but must select one strategy play to apply to all hands.",
+            "",
+            "RULES: ",
+            " * Reel Jack uses one single deck of cards, shuffled between rounds.",
+            " * Players will receive five hands, and the dealer will receive one hand as normal.  If the dealer does not have a blackjack, the game will then LOCK any player hand that is at least hard 17 or at least soft 19.",
+            " * The player will then decide whether to hit, stand, or double down.",
+            " * If the player stands, the dealer will play their hand and hand totals will be compared as per standard blackjack.",
+            " * If the player hits, ALL UNLOCKED hands will receive an extra card, and any hands now at the locking threshold will be locked.  If the player still has unlocked hands, they will choose again between hitting and standing.",
+            " * If the player doubles, ALL wagers will be doubled, and in addition, any UNLOCKED hands will receive one additional card.  The dealer will then play out their hand as above, with the dealer hitting on a soft 17",
+            "",
+            "SIX CARD CHARLIE:",
+            " * If any player hand hits to six cards without busting, that hand will automatically beat any dealer total.",
+            " * Six Card Charlies will be paid based on a random multiplier between 2x and 20x [these limits and weights currently under development - Charles]"
+            // "FIVE CARD SPLIT(tm) is a poker variation that's similar to Pai Gow Poker but uses fewer cards and has triple the bets.  Played with a regular deck of 52 cards, the rules are:",
+            // "",
+            // " * Initially, equal bets are made on three hands: a three-card high hand, a two-card low hand, and a five-card base hand.",
+            // " * Hand rankings are based on conventional poker rankings for the high and base hands; the low hand is either a pair or no pair, after which the individual cards determine the hand value.",
+            // " * The player receives five cards and the dealer receives six, keeping five to make the best possible base hand.",
+            // " * The player and the dealer separate their five cards into the high and low hands, called the split hands.  The base hand is the combination of the cards in the split hands.",
+            // " * In setting their hands, the dealer follows fixed 'split hand rules' and the player is bound only by the single rule that the high hand must outrank the low hand.",
+            // " * The player has the option to pull back one, but not both, of their split hand bets.",
+            // " * Winning player bets pay even money and ties lose.",
+            // "",
+            // "Other key differences with regular Pai Gow are: there is no commission on wins, the 'wheel' (3, 2, A) is the lowest-ranked straight, and there is no player banking."
+        ];
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "gameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.ReturnToGame,
+            x: 952,
+            y: 665 + 64,
+            visible: true
+        });
+        this.add.existing(button);
+        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+        let helpText = this.add.text(50, 50, HelpText);
+        helpText.setWordWrapWidth(910);
+        helpText.setStyle(Config.gameOptions.helpScreenFormat);
+    }
+    returnToGame() {
+        this.sound.play("chipClick");
+        this.scene.switch("GameScene");
     }
 }
 class LoaderScene extends Phaser.Scene {
@@ -1454,6 +1542,8 @@ Emissions.RebetBets = "Rebet bets";
 Emissions.HintPlease = "Hint, please";
 Emissions.Yes = "Yes";
 Emissions.No = "Nah";
+Emissions.ShowRules = "Show Rules";
+Emissions.ReturnToGame = "Return To Game";
 // Ante-Play-Fold emissions
 Emissions.Play = "Play";
 Emissions.FoldHand = "Fold Hand";
@@ -1652,6 +1742,7 @@ Steps.DoublePlayerHands = "Double player hands";
 Steps.CardToDealer = "Card to dealer";
 // Blackjack steps
 Steps.AnnotateDealer = "Annotate Dealer hand";
+Steps.AnnotateShortHands = "Annonate Short player hands";
 Steps.CheckForNaturals = "Check For Naturals";
 Steps.CheckForInsurance = "Check for insurance";
 Steps.CheckHoleCard = "Check Hole Card";
