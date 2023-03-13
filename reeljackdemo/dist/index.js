@@ -562,6 +562,7 @@ class GameScene extends Phaser.Scene {
                     this._stepList.push(Steps.PlayDealerHand);
                 }
                 else {
+                    this._stepList.push(Steps.AnnotateDealer);
                     this._stepList.push(Steps.ResolvePlayerHands);
                     this._stepList.push(Steps.ChangeStateGameOver);
                 }
