@@ -79,8 +79,7 @@ class GameScene extends Phaser.Scene {
             new Point(280, 205),
             new Point(280, 335),
             new Point(280, 465),
-            new Point(280, 595),
-            new Point(280, 725),
+            new Point(280, 595)
         ];
         this.PlayerHandOffsets = [
             new Point(34, -37),
@@ -96,6 +95,23 @@ class GameScene extends Phaser.Scene {
             new Point(200, 360),
             new Point(200, 490),
             new Point(200, 620),
+        ];
+        this.CharliePayouts = [
+            2,
+            2,
+            2,
+            2,
+            3,
+            3,
+            3,
+            4,
+            4,
+            5,
+            10,
+            15,
+            20,
+            50,
+            100
         ];
         //#endregion
         //#region Betting spots
@@ -119,6 +135,7 @@ class GameScene extends Phaser.Scene {
         //#endregion
         //#region Other member variables
         this._currentState = -1;
+        this._charlieMultipliers = new Array(5);
         //#endregion
         //#region Test hands
         this._testDealerHand = new Array(0);
@@ -365,6 +382,7 @@ class GameScene extends Phaser.Scene {
     addCommentaryField(xLoc, yLoc, fieldText) {
         let newCommentary = this.add.text(xLoc, yLoc, fieldText, Config.gameOptions.commentaryFormat);
         this._commentaryList.push(newCommentary);
+        return newCommentary;
     }
     cardToDealer() {
         let nextCardNumber;
@@ -536,6 +554,9 @@ class GameScene extends Phaser.Scene {
     doAnimation() {
         let thisAction = this._stepList.shift();
         switch (thisAction) {
+            case Steps.SpinCharliePayout:
+                this.mountCharliePayout(0);
+                break;
             case Steps.AnnotateShortHands: {
                 for (let row = 0; row < 5; row += 1) {
                     if (this._playerTotals[row] < 17 && this._playerTotals[row] > -19) {
@@ -594,7 +615,7 @@ class GameScene extends Phaser.Scene {
                     let playerScore = Math.abs(this._playerTotals[row]);
                     let playerTwentyOne = playerScore == 21;
                     let playerNatural = (playerTwentyOne && this._playerHands[row].length == 2);
-                    let sixCardCharlie = (playerScore < 21 && this._playerHands[row].length == 6);
+                    let sixCardCharlie = (playerScore <= 21 && this._playerHands[row].length == 6);
                     let payMultiple = 0;
                     if (playerScore > 21) {
                         payMultiple = -1;
@@ -608,10 +629,10 @@ class GameScene extends Phaser.Scene {
                     else if (playerNatural && dealerNatural) {
                         payMultiple = 0;
                     }
-                    else if (dealerScore > 21) {
-                        payMultiple = 1;
-                    }
                     else if (sixCardCharlie) {
+                        payMultiple = this._charlieMultipliers[row];
+                    }
+                    else if (dealerScore > 21) {
                         payMultiple = 1;
                     }
                     else if (playerScore > dealerScore) {
@@ -786,6 +807,35 @@ class GameScene extends Phaser.Scene {
             }
         }
     }
+    mountCharliePayout(stage) {
+        if (stage == 5) {
+            this.doAnimation();
+        }
+        else if (this._playerHands[stage].length < 6 || this._playerTotals[stage] > 21) {
+            this.mountCharliePayout(stage + 1);
+        }
+        else {
+            // TODO: Create a text field, then tween a bunch of calls to reroll and modify
+            let multX = 795;
+            let multY = this.PlayerHandAnchors[stage].y - 20;
+            let message = "BONUS!\n" + this._charlieMultipliers[stage].toString() + ":1";
+            let thisField = this.addCommentaryField(multX, multY, message);
+            let delayTime = 15;
+            let repeatTicks = 40;
+            this.time.addEvent({
+                delay: delayTime,
+                repeat: repeatTicks,
+                callback: () => {
+                    let thisRoll = Math.floor(Math.random() * this.CharliePayouts.length);
+                    this._charlieMultipliers[stage] = this.CharliePayouts[thisRoll];
+                    thisField.text = "BONUS!\n" + this._charlieMultipliers[stage].toString() + ":1";
+                }
+            });
+            this.time.delayedCall(delayTime * (repeatTicks + 5), this.mountCharliePayout, [stage + 1], this);
+        }
+    }
+    spinCharliePayout(handNumber, field) {
+    }
     updateControls() {
         switch (this.CurrentState) {
             case GameState.Predeal: {
@@ -838,6 +888,7 @@ class GameScene extends Phaser.Scene {
                     }
                 }
                 if (doneYet) {
+                    this._stepList.push(Steps.SpinCharliePayout);
                     this._stepList.push(Steps.FlipHoleCard);
                     this._stepList.push(Steps.PlayDealerHand);
                     this.doAnimation();
@@ -977,6 +1028,8 @@ class GameScene extends Phaser.Scene {
         this._shoe.shuffle();
         for (let index = 0; index < 5; index += 1) {
             this._playerTotals[index] = 0;
+            let thisRoll = Math.floor(Math.random() * this.CharliePayouts.length);
+            this._charlieMultipliers[index] = this.CharliePayouts[thisRoll];
             this._playerAnchors[index].x = this.PlayerHandAnchors[index].x;
             this._playerAnchors[index].y = this.PlayerHandAnchors[index].y;
             this.clearGameObjectArray(this._playerHands[index]);
@@ -1063,7 +1116,7 @@ class HelpScene extends Phaser.Scene {
             "",
             "SIX CARD CHARLIE:",
             " * If any player hand hits to six cards without busting, that hand will automatically beat any dealer total.",
-            " * Six Card Charlies will be paid based on a random multiplier between 2x and 20x [these limits and weights currently under development - Charles]"
+            " * Six Card Charlies will be paid based on a random multiplier between 2x and 100x [these limits and weights currently under development - Charles]"
             // "FIVE CARD SPLIT(tm) is a poker variation that's similar to Pai Gow Poker but uses fewer cards and has triple the bets.  Played with a regular deck of 52 cards, the rules are:",
             // "",
             // " * Initially, equal bets are made on three hands: a three-card high hand, a two-card low hand, and a five-card base hand.",
@@ -1756,6 +1809,7 @@ Steps.ResolveBust = "Resolve Bust";
 Steps.ResolveInsurance = "Resolve Insurance";
 Steps.ResolvePlayerHands = "Resolve Player Hands";
 Steps.SplitPair = "Split Pair";
+Steps.SpinCharliePayout = "Spin Charlie payout";
 class StringTable {
 }
 // Basic strings
