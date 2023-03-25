@@ -86,8 +86,8 @@ class GameScene extends Phaser.Scene {
         this.FourCardBonusCategories = [
             "4 Card bonus: AAKK double suited pays 500:1",
             "4 Card bonus: AAKK pays 100:1",
-            "4 Card bonus: Aces double suited pays 50:1",
-            "4 Card bonus: Two pair double suited pays 30:1",
+            "4 Card bonus: Two pair double suited pays 40:1",
+            "4 Card bonus: Aces double suited pays 30:1",
             "4 Card bonus: Two pair pays 15:1",
             "4 Card bonus: Four card straight pays 10:1",
             "4 Card bonus: Any two aces pays 5:1",
@@ -149,7 +149,7 @@ class GameScene extends Phaser.Scene {
         this.FourCardPaytable = [
             500.0,
             100.0,
-            50.0,
+            40.0,
             30.0,
             15.0,
             10.0,
@@ -573,10 +573,10 @@ class GameScene extends Phaser.Scene {
             return (isDoubleSuited ? 0 : 1);
         }
         if (suitlessCards[2] >= 48 && isDoubleSuited) {
-            return 2; // at least two aces + double suited can only be AAxxDS
+            return 3; // at least two aces + double suited can only be AAxxDS
         }
         if (baseHandRank == FourCardPokerRank.TwoPair) {
-            return (isDoubleSuited ? 3 : 4);
+            return (isDoubleSuited ? 2 : 4);
         }
         if (baseHandRank == FourCardPokerRank.Straight) {
             return 5;
@@ -635,7 +635,6 @@ class GameScene extends Phaser.Scene {
     //#endregion
     //#region Amination Methods
     doAnimation() {
-        console.debug(this._stepList);
         let thisAction = this._stepList.shift();
         switch (thisAction) {
             case Steps.CardToDealer: {
@@ -1302,7 +1301,7 @@ class HelpScene extends Phaser.Scene {
     create() {
         let HelpText = [
             "GETTING STARTED",
-            " * '4 Card Omaha Poker' is an Omaha Hold'em style poker game, played with a standard 52 card deck.  The object of the game is to make your best 5-card poker hand, using 2 of 4 hole cards, plus 3 of 5 community cards, to beat the dealer's hand, using the same rules",
+            " * 'Ultimate Omaha Poker' is an Omaha Hold'em style poker game, played with a standard 52 card deck.  The object of the game is to make your best 5-card poker hand, using 2 of 4 hole cards, plus 3 of 5 community cards, to beat the dealer's hand, using the same rules",
             "",
             "HOW TO PLAY",
             " * Place 'Ante' and 'Blind' wagers of equal amounts.  You may also place optional 'Flush Bonus' and/or '4 Card Bonus' wagers.",
@@ -1325,8 +1324,6 @@ class HelpScene extends Phaser.Scene {
         }, this);
         let feltGraphic = this.add.image(0, 0, "gameFelt");
         feltGraphic.setOrigin(0, 0);
-        // let howToPlayGraphic = this.add.image(0, 0, "helpScreen");
-        // howToPlayGraphic.setOrigin(0, 0);
         let button = new Button({
             scene: this,
             style: AssetNames.GreenSmall,
@@ -1341,7 +1338,7 @@ class HelpScene extends Phaser.Scene {
         let helpText = this.add.text(50, 50, HelpText);
         helpText.setWordWrapWidth(910);
         helpText.setStyle(Config.gameOptions.helpScreenFormat);
-        let patPendText = this.add.text(0, 685, "PATENT PENDING, ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
+        let patPendText = this.add.text(0, 685, "U.S. PATENT NUMBER: 11,600,142 B1; ALL RIGHTS RESERVED\nFRANK MARIO RICCOBON, FMR GAMING VENTURES LLC\nFor inquiries, contact: FMRGAMINGVENTURES@GMAIL.COM");
         patPendText.setFixedSize(1024, 260);
         patPendText.setStyle(Config.gameOptions.helpScreenFormat);
         patPendText.setAlign("center");
@@ -1377,7 +1374,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
         this.load.image("helpScreen", "assets/images/How To Play.png");
-        this.load.image("logo", "assets/images/Logo No Background.png");
+        this.load.image("logo", "assets/images/UOP Logo.png");
         this.load.image("fourCardBonus", "assets/images/Four Card Bonus Paytable.png");
         this.load.image("callBet", "assets/images/Call Bet.png");
         this.load.image("flushBet", "assets/images/Flush Bonus.png");
