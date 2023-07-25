@@ -189,6 +189,21 @@ class GameScene extends Phaser.Scene {
         }
         this.selectCursorValue(5);
         //#endregion
+        //#region Felt boxes
+        graphics.lineStyle(6, 0xffffff, 1);
+        let gap = 5;
+        graphics.strokeRoundedRect(355 - gap, 236 - gap, 288 + 2 * gap, 131 + 2 * gap, 10);
+        graphics.strokeRoundedRect(355 - gap, 36 - gap, 288 + 2 * gap, 131 + 2 * gap, 10);
+        let offset = new Point(-30, -10);
+        let peakLabel = this.add.text(255 - offset.x, 277 - offset.y, "PEAK");
+        peakLabel.setFixedSize(0, 0);
+        peakLabel.setPadding(3, 3, 3, 3);
+        peakLabel.setStyle(Config.gameOptions.commentaryFormat);
+        let newLabel = this.add.text(263 - offset.x, 77 - offset.y, "NEW");
+        newLabel.setFixedSize(0, 0);
+        newLabel.setPadding(3, 3, 3, 3);
+        newLabel.setStyle(Config.gameOptions.commentaryFormat);
+        //#endregion
         //#region Button panels
         //#region Clear | Deal panel
         this._clearButton = new Button({
@@ -258,7 +273,7 @@ class GameScene extends Phaser.Scene {
         this._passButton = new Button({
             scene: this,
             style: AssetNames.RedSmall,
-            caption: "PASS",
+            caption: "CHECK",
             clickEvent: Emissions.PassHand,
             x: 522,
             y: 665,
@@ -548,7 +563,7 @@ class GameScene extends Phaser.Scene {
         for (let i = 0; i < size; i += 1) {
             cardNumbersPreSort[i] = cardTargets[i].CardNumber;
         }
-        cardNumbersPreSort.sort((a, b) => a - b);
+        // cardNumbersPreSort.sort((a, b) => a - b);
         let sortedCards = new Array(size);
         for (let i = 0; i < size; i += 1) {
             sortedCards[i] = this.FindCardByNumber(cardTargets, cardNumbersPreSort[i]);
@@ -560,6 +575,7 @@ class GameScene extends Phaser.Scene {
             let lastCard = (stage == cardTargets.length - 1);
             let nextCard = cardTargets[stage];
             nextCard.setDepth(stage + 1);
+            nextCard.IsFaceUp = false;
             this.tweens.add({
                 targets: nextCard,
                 duration: 200,
@@ -567,7 +583,7 @@ class GameScene extends Phaser.Scene {
                 // scaleX: 1.2,
                 // scaleY: 1.2,
                 x: discardTarget.x,
-                y: discardTarget.y + (stage * 26),
+                y: discardTarget.y + (stage * 1),
                 onComplete: (lastCard ? this.doAnimation : null),
                 onCompleteScope: (lastCard ? this : null)
             });
@@ -666,7 +682,7 @@ class GameScene extends Phaser.Scene {
                     if (winningRank > 0) {
                         payoutAmount = this.TandemPaytable[winningRank];
                         this._currentCommentaryTarget.y = 215;
-                        this.postCommentary("\n\nTandem wager will pay " + payoutAmount.toFixed(0).toString() + ":1");
+                        this.postCommentary("\n\n\nTandem wager will pay " + payoutAmount.toFixed(0).toString() + ":1");
                         this._tandemBonusSpotPayout = this.resolvePayout(this._tandemBonusSpot, payoutAmount, true, true);
                     }
                     else {
@@ -725,10 +741,17 @@ class GameScene extends Phaser.Scene {
                     }
                     else {
                         this.postCommentary("Dealer wins with less than trips");
-                        this.postCommentary("Blind wager loses");
-                        blindPayout = -1;
+                        this.postCommentary("Blind wager pays 1:1");
+                        blindPayout = 1;
                     }
                     this.resolvePayout(this._blindSpot, blindPayout, true, true);
+                }
+                else if (this._playSpot.Amount == 0) {
+                    this.postCommentary("No winning Play wager");
+                    this.postCommentary("Blind wager loses");
+                    this.resolvePayout(this._blindSpot, -1, true, true);
+                    // Player did not play AND dealer spot is not best
+                    // So, blind loses
                 }
                 else {
                     this.postCommentary("Peak hand wins");
@@ -829,13 +852,22 @@ class GameScene extends Phaser.Scene {
                     // First round, so it's always the peak hand, AND the player always has an ante bet,
                     // So no need to check for a 'pass' round.
                     this._peakHandNumber = ThreeCardEvaluator.cardVectorToHandNumber(this._peakHand.map(a => a.CardNumber), false);
-                    let handCommentary = "First peak hand:\n" + ThreeCardDescriptors[this._peakHandNumber];
+                    let handsRemaining = 7 - this._gameRound;
+                    let handCommentary = handsRemaining.toString() + " rounds remaining.\n\n";
+                    handCommentary += "First peak hand:\n" + ThreeCardDescriptors[this._peakHandNumber];
                     this.postCommentary(handCommentary);
                     this._stepList.push(Steps.ChangeStateMainInput);
                     this.doAnimation();
                 }
                 else if (this._gameRound >= 2 && this._gameRound <= 6) {
-                    let handCommentary = "Current peak hand:\n" + ThreeCardDescriptors[this._peakHandNumber];
+                    let handCommentary = "";
+                    if (this._gameRound == 6) {
+                        handCommentary = "Last round!\n\n";
+                    }
+                    else {
+                        handCommentary = (7 - this._gameRound).toString() + " rounds remaining.\n\n";
+                    }
+                    handCommentary += "Current peak hand:\n" + ThreeCardDescriptors[this._peakHandNumber];
                     this._nextHandNumber = ThreeCardEvaluator.cardVectorToHandNumber(this._nextHand.map(a => a.CardNumber), false);
                     handCommentary += "\n\nNext hand:\n" + ThreeCardDescriptors[this._nextHandNumber];
                     // Possible game paths:
@@ -1036,7 +1068,18 @@ class GameScene extends Phaser.Scene {
             case GameState.GameOver: {
                 for (let thisButton of this._newRebetButtonPanel)
                     thisButton.visible = true;
-                this.Instructions = StringTable.GameOver;
+                let winResult = "";
+                let delta = this.Score - this._roundStartBankroll;
+                if (delta > 0) {
+                    winResult = "Net result: WIN $" + delta.toFixed(2).toString();
+                }
+                else if (delta < 0) {
+                    winResult = "Net result: loss of $" + (-1 * delta).toFixed(2).toString();
+                }
+                else {
+                    winResult = "Net result: push";
+                }
+                this.Instructions = winResult + "\n" + StringTable.GameOver;
                 break;
             }
             default: {
@@ -1080,6 +1123,7 @@ class GameScene extends Phaser.Scene {
         // For now, we'll just swap cards to hand objects and move / sort cards as needed
         // Reset game state
         this._gameRound = 0;
+        this._roundStartBankroll = this.Score;
         // Reset Ante wager anchor
         this._anteSpot.x = this.AnteSpotAnchor.x;
         this._anteSpot.y = this.AnteSpotAnchor.y;
@@ -1252,7 +1296,8 @@ class GameScene extends Phaser.Scene {
         else {
             let minHand = this.MinPlayHandsByRound[this._gameRound];
             let hintString = "Minimum hand on round " + this._gameRound.toString() + ": " + ThreeCardDescriptors[minHand];
-            if (this._peakHandNumber >= minHand) {
+            let keyHandNumber = (this._gameRound == 1 ? this._peakHandNumber : this._nextHandNumber);
+            if (keyHandNumber >= minHand) {
                 hintString += "\n(PLAY this hand)";
             }
             else {
@@ -1291,6 +1336,7 @@ class GameScene extends Phaser.Scene {
         var _a;
         while (value < 0) {
             value += 50000;
+            this._roundStartBankroll += 50000;
             // TODO: play chip sound
         }
         this._score = value;
@@ -1902,7 +1948,7 @@ class StringTable {
 // Basic strings
 StringTable.PredealInstructions = "Click on chip to select denomination, click on ANTE/BLIND spots or side wager spots to add chips, click DEAL to begin.";
 StringTable.Instructions = "PEAK POKER INSTRUCTIONS GO HERE";
-StringTable.GameOver = "Game over.  Click 'REBET' to play again with same wagers, or click 'NEW' to set new wagers.";
+StringTable.GameOver = "Game over.  Click 'REBET' to make same wagers or 'NEW' to make new wagers.";
 StringTable.MainInputInstructions = "Click PLAY to move the Ante wager to the 'PLAY' spot and end your decisions.  Otherwise, click PASS to move on to the next round.";
 class ThreeCardEvaluator {
     static cardVectorToHandNumber(cardVector, isJokerFullyWild, isWheelSecondBest = false) {
