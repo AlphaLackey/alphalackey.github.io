@@ -58,6 +58,7 @@ class GameScene extends Phaser.Scene {
     constructor() {
         super("GameScene");
         //#region Constants
+        this.PlayerSpotRise = 100;
         this.PlayerHandAnchor = new Point(240, 602);
         this.AntePayoffOffset = new Point(-34, -37);
         this.PlayPayoffOffset = new Point(-34, -37);
@@ -104,9 +105,11 @@ class GameScene extends Phaser.Scene {
         this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
         let playerArea = this.add.image(417, 383, "bettingArea");
         playerArea.setOrigin(0, 0);
-        playerArea.scale = 0.23;
-        let ribbon = this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 4, "ribbon");
-        ribbon.scale = 0.23;
+        playerArea.y -= this.PlayerSpotRise;
+        this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 6, "ribbon");
+        this.add.image(Config.gameOptions.gameWidth / 2, 117 * Config.gameOptions.gameHeight / 1000, "logo");
+        let payTop = this.add.image(800 * Config.gameOptions.gameWidth / 1000, 500 * Config.gameOptions.gameHeight / 1000, "paytableTop");
+        let payBottom = this.add.image(800 * Config.gameOptions.gameWidth / 1000, 780 * Config.gameOptions.gameHeight / 1000, "paytableBottom");
         // Creates the shoe object
         let cardRanks = new Array(52);
         for (let rank = 0; rank < 52; rank += 1)
@@ -131,13 +134,13 @@ class GameScene extends Phaser.Scene {
         this._scoreField.setStyle(Config.gameOptions.scoreFormat);
         this.Score = 5000;
         // Now, add the help field
-        let helpBitmap = this.add.image(440, 695, "grayTextLarge");
+        let helpBitmap = this.add.image(440, 695, "blueText");
         helpBitmap.setOrigin(0, 0);
         helpBitmap.setDisplaySize(569, 50);
         this._helpField = this.add.text(440, 695, [""]);
         this._helpField.setFixedSize(569, 0);
         this._helpField.setPadding(0, 3, 0, 0);
-        this._helpField.setStyle(Config.gameOptions.helpFormat);
+        this._helpField.setStyle(Config.gameOptions.scoreFormat);
         this._helpField.setWordWrapWidth(569);
         graphics.lineStyle(6, 0xffffff, 1);
         graphics.strokeRoundedRect(440, 695, 569, 50, 5);
@@ -164,7 +167,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "CLEAR",
             clickEvent: Emissions.ClearBettingSpots,
-            x: 379,
+            x: 379 + 62,
             y: 665,
             visible: false
         });
@@ -175,7 +178,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "DEAL",
             clickEvent: Emissions.BeginDeal,
-            x: 522,
+            x: 522 + 62,
             y: 665,
             visible: false
         });
@@ -192,7 +195,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "NEW",
             clickEvent: Emissions.NewGame,
-            x: 379,
+            x: 379 + 62,
             y: 665,
             visible: false
         });
@@ -203,7 +206,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "REBET",
             clickEvent: Emissions.RebetBets,
-            x: 522,
+            x: 522 + 62,
             y: 665,
             visible: false
         });
@@ -217,7 +220,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.GreenSmall,
             caption: "PLAY",
             clickEvent: Emissions.MakePlayWager,
-            x: 379,
+            x: 379 + 62,
             y: 665,
             visible: false
         });
@@ -228,7 +231,7 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.RedSmall,
             caption: "FOLD",
             clickEvent: Emissions.FoldHand,
-            x: 522,
+            x: 522 + 62,
             y: 665,
             visible: false
         });
@@ -258,7 +261,7 @@ class GameScene extends Phaser.Scene {
         this._anteSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
-            y: spotAnchor.y,
+            y: spotAnchor.y -= this.PlayerSpotRise,
             amount: 0,
             isOptional: false,
             isLocked: false,
@@ -275,7 +278,7 @@ class GameScene extends Phaser.Scene {
         this._playSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
-            y: spotAnchor.y,
+            y: spotAnchor.y -= this.PlayerSpotRise,
             amount: 0,
             isOptional: true,
             isLocked: true,
@@ -291,7 +294,7 @@ class GameScene extends Phaser.Scene {
         this._pokerBonusSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
-            y: spotAnchor.y,
+            y: spotAnchor.y -= this.PlayerSpotRise,
             amount: 0,
             isOptional: true,
             isLocked: false,
@@ -308,7 +311,7 @@ class GameScene extends Phaser.Scene {
         this._oddEvenBonusSpot = new BettingSpot({
             scene: this,
             x: spotAnchor.x,
-            y: spotAnchor.y,
+            y: spotAnchor.y -= this.PlayerSpotRise,
             amount: 0,
             isOptional: true,
             isLocked: false,
@@ -437,8 +440,8 @@ class GameScene extends Phaser.Scene {
         let discardAnchor;
         if (target == CardTarget.Player) {
             keyHand = this._playerHand;
-            keepAnchor = new Point(60, 575);
-            discardAnchor = new Point(680, 575);
+            keepAnchor = new Point(60, 575 - this.PlayerSpotRise);
+            discardAnchor = new Point(680, 575 - this.PlayerSpotRise);
         }
         else if (target == CardTarget.Dealer) {
             keyHand = this._dealerHand;
@@ -537,11 +540,11 @@ class GameScene extends Phaser.Scene {
             // Now, test winning hand, which will always have at least four cards
             if (winningHand.length == 4) {
                 let fourCardWinnerRank = Math.floor(FourCardEvaluator.cardVectorToHandNumber(winningHand) / 100000);
-                if (fourCardWinnerRank == FiveCardPokerRank.TwoPairs)
+                if (fourCardWinnerRank == FourCardPokerRank.TwoPair)
                     hasTwoPair = true;
-                if (fourCardWinnerRank == FiveCardPokerRank.Trips)
+                if (fourCardWinnerRank == FourCardPokerRank.Trips)
                     hasTrips = true;
-                if (fourCardWinnerRank == FiveCardPokerRank.Quads)
+                if (fourCardWinnerRank == FourCardPokerRank.Quads)
                     hasQuads = true;
             }
             else {
@@ -1009,6 +1012,9 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
         this.load.image("bettingArea", "assets/images/Betting Area.png");
         this.load.image("ribbon", "assets/images/Ribbon.png");
+        this.load.image("logo", "assets/images/Game Logo.png");
+        this.load.image("paytableTop", "assets/images/Paytable Top.png");
+        this.load.image("paytableBottom", "assets/images/Paytable Bottom.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -1101,7 +1107,7 @@ class BettingSpot extends Phaser.GameObjects.Container {
                 dummyChip.setOrigin(1, 1);
                 this.add(dummyChip);
                 dummyChip.setTint(0xFFFFFF);
-                dummyChip.setAlpha(0.25);
+                dummyChip.setAlpha(0);
                 let width = Config.gameOptions.chipWidth;
                 let height = Config.gameOptions.chipHeight;
                 this._hitZone.setDisplaySize(width, height);
