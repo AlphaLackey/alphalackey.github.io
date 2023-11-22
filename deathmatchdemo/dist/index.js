@@ -6,7 +6,7 @@ class Config {
             height: this.gameOptions.gameHeight,
             backgroundColor: 0x000000,
             parent: 'game-div',
-            scene: [LoaderScene, GameScene],
+            scene: [LoaderScene, GameScene, HelpScene],
             scale: {
                 parent: 'game-div',
                 mode: Phaser.Scale.FIT,
@@ -53,6 +53,12 @@ Config.gameOptions = {
         fontColor: "#FFFFFF",
         fontStyle: "bold",
         align: "left"
+    },
+    helpScreenFormat: {
+        fontFamily: "Arial",
+        fontSize: "22px",
+        color: "#FFFFFF",
+        align: "left"
     }
 };
 window.onload = () => {
@@ -74,11 +80,11 @@ class GameScene extends Phaser.Scene {
         this.CardDelay = 200;
         this.CardSpeed = 500;
         this.LeftScoreboardAnchor = new Point(150, 455);
-        this.RightScoreboardAnchor = new Point(1680, 425);
+        this.RightScoreboardAnchor = new Point(1640, 425);
         this.ScoreboardSize = 12;
-        this.DotImageScale = 40.0 / 1500.0;
+        this.DotImageScale = 80.0 / 1500.0;
         this.DotScoreboardGap = 40;
-        this.TotalScoreboardGap = 40;
+        this.TotalScoreboardGap = 225;
         this.CardPositions = [
             new Point(450, 200),
             new Point(750, 200),
@@ -116,8 +122,6 @@ class GameScene extends Phaser.Scene {
         leftScoreboard.setOrigin(0, 0);
         let rightScoreboard = this.add.image(1552, 0, "scoreboard");
         rightScoreboard.setOrigin(0, 0);
-        let gameLogo = this.add.image(Config.gameOptions.gameWidth / 2, 150 * Config.gameOptions.gameHeight / 1000, "logo");
-        gameLogo.scale = 0.2;
         this._leftImage = this.add.image(623, 780, "left spot");
         this._leftImage.scale = 0.3;
         this._rightImage = this.add.image(1310, 780, "right spot");
@@ -167,7 +171,6 @@ class GameScene extends Phaser.Scene {
         this._helpField.setWordWrapWidth(710);
         graphics.lineStyle(10, 0xffffff, 1);
         graphics.strokeRoundedRect(990, 965, 700, 100, 5);
-        graphics.strokeLineShape(new Phaser.Geom.Line(Config.gameOptions.gameWidth / 2, 300, Config.gameOptions.gameWidth / 2, 920));
         let chipDenominations = [1, 5, 25, 100];
         for (let index = 0; index < chipDenominations.length; index += 1) {
             let chipButton = new Chip({
@@ -287,6 +290,19 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._continueButton);
         Config.emitter.on(Emissions.Continue, this.continueButton, this);
         //#endregion
+        //#region How To Play Button
+        this._howToPlayButton = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "HOW TO PLAY",
+            clickEvent: Emissions.HowToPlay,
+            x: 1790,
+            y: 50,
+            visible: true
+        });
+        this._howToPlayButton.scale = this.ButtonScale;
+        this.add.existing(this._howToPlayButton);
+        Config.emitter.on(Emissions.HowToPlay, this.showHelpScreen, this);
         //#endregion
         //#region Betting Spots
         //#region LeftSpot
@@ -335,6 +351,23 @@ class GameScene extends Phaser.Scene {
         this.CurrentState = GameState.Predeal;
     }
     //#region Animation Methods
+    updateScore(target) {
+        if (target == CardTarget.Player) {
+            this.clearGameObjectArray(this._totalScoreboard);
+            let playerScore = (this._playerIsLeft ? this._leftScore : this._rightScore);
+            let rightScoreboardString = "MY\nOVERALL\nPOWER\nRANKING\n" + playerScore.toString();
+            let rightTextField = this.add.text(this.RightScoreboardAnchor.x, this.RightScoreboardAnchor.y, rightScoreboardString, Config.gameOptions.scoreFormat);
+            rightTextField.scale = 1.0;
+            this._totalScoreboard.push(rightTextField);
+        }
+        else {
+            let dealerScore = (!this._playerIsLeft ? this._leftScore : this._rightScore);
+            let rightScoreboardString = "RIVAL'S\nOVERALL\nPOWER\nRANKING\n" + dealerScore.toString();
+            let rightTextField = this.add.text(this.RightScoreboardAnchor.x, this.RightScoreboardAnchor.y + this.TotalScoreboardGap, rightScoreboardString, Config.gameOptions.scoreFormat);
+            rightTextField.scale = 1.0;
+            this._totalScoreboard.push(rightTextField);
+        }
+    }
     deliverThirdCard(target) {
         let cardLocations;
         let handToAddCardTo;
@@ -415,6 +448,7 @@ class GameScene extends Phaser.Scene {
         }
         for (let stage = 0; stage < 2; stage += 1) {
             let newCardNumber = shoeToDrawFrom.drawCard();
+            newCardNumber = 4;
             if (deliverToLeft) {
                 this._leftScore += Blackjack.cardNumberToBlackjackRank(newCardNumber);
                 this._leftScore = this._leftScore % 10;
@@ -450,6 +484,16 @@ class GameScene extends Phaser.Scene {
     doAnimation() {
         let thisAction = this._stepList.shift();
         switch (thisAction) {
+            case Steps.UpdatePlayerScore: {
+                this.updateScore(CardTarget.Player);
+                this.doAnimation();
+                break;
+            }
+            case Steps.UpdateDealerScore: {
+                this.updateScore(CardTarget.Dealer);
+                this.doAnimation();
+                break;
+            }
             case Steps.ClearCards: {
                 let cardsToClear = [];
                 for (let card of this._leftHand)
@@ -476,6 +520,7 @@ class GameScene extends Phaser.Scene {
             case Steps.ClearHands: {
                 this.clearGameObjectArray(this._leftHand);
                 this.clearGameObjectArray(this._rightHand);
+                this.clearGameObjectArray(this._totalScoreboard);
                 this._leftScore = 0;
                 this._rightScore = 0;
                 this.doAnimation();
@@ -522,6 +567,7 @@ class GameScene extends Phaser.Scene {
                 if (dealerTakesThird) {
                     this._stepList.push(Steps.ThirdToDealer);
                 }
+                this._stepList.push(Steps.UpdateDealerScore);
                 this._stepList.push(Steps.CheckForTie);
                 this.doAnimation();
                 break;
@@ -530,16 +576,17 @@ class GameScene extends Phaser.Scene {
                 let playerScore = (this._playerIsLeft ? this._leftScore : this._rightScore);
                 let dealerScore = (this._playerIsLeft ? this._rightScore : this._leftScore);
                 if (playerScore == dealerScore) {
-                    this._isLegendaryConquest = (playerScore == 9);
+                    this._isLegendaryConquest = (this._isLegendaryConquest || playerScore == 9);
                     this._stepList.push(Steps.ChangeStateContinue);
                     this._stepList.push(Steps.ClearCards);
                     this._stepList.push(Steps.ClearHands);
                     this._stepList.push(Steps.ThirdToPlayer);
+                    this._stepList.push(Steps.UpdatePlayerScore);
                     this._stepList.push(Steps.ThirdToDealer);
+                    this._stepList.push(Steps.UpdateDealerScore);
                     this._stepList.push(Steps.CheckForTie);
                 }
                 else {
-                    this._isLegendaryConquest = false;
                     this._stepList.push(Steps.ResolvePlayerWager);
                     this._stepList.push(Steps.ChangeStateGameOver);
                 }
@@ -555,7 +602,7 @@ class GameScene extends Phaser.Scene {
                     playerPayout = this._isLegendaryConquest ? 2 : 1;
                 }
                 else if (playerScore < dealerScore) {
-                    playerPayout = -1;
+                    playerPayout = this._isLegendaryConquest ? 0 : -1;
                 }
                 else {
                     console.debug("Should never be here with a tied hand");
@@ -638,11 +685,13 @@ class GameScene extends Phaser.Scene {
         this._leftShoe.shuffle();
         this._rightShoe.shuffle();
         // TODO: AND THE REST
+        this._isLegendaryConquest = false;
         // Clear arrays
         this.clearGameObjectArray(this._leftHand);
         this.clearGameObjectArray(this._rightHand);
         this.clearGameObjectArray(this._payoutList);
         this.clearGameObjectArray(this._commentaryList);
+        this.clearGameObjectArray(this._totalScoreboard);
         // Reset hand values
         this._leftScore = 0;
         this._rightScore = 0;
@@ -709,6 +758,7 @@ class GameScene extends Phaser.Scene {
                 }
                 // TODO: load up game starting animations, ending with change to first decision.
                 this._stepList.push(Steps.DeliverToPlayer);
+                this._stepList.push(Steps.UpdatePlayerScore);
                 this._stepList.push(Steps.ChangeStateFirstInput);
                 // and now, if you please, we'll proceed
                 this.doAnimation();
@@ -717,7 +767,7 @@ class GameScene extends Phaser.Scene {
             case GameState.FirstInput: {
                 for (let thisButton of this._mainPanel)
                     thisButton.visible = true;
-                this.Instructions = "Current player total: " + (this._playerIsLeft ? this._leftScore : this._rightScore).toString() + "; hit or stand?";
+                this.Instructions = "The stars indicate how strong (9) or weak (0) the monster is. The team’s overall score is added together. You can stay or add one more monster.";
                 break;
             }
             case GameState.GameOver: {
@@ -728,7 +778,6 @@ class GameScene extends Phaser.Scene {
                     this._scoreboardData.shift();
                 }
                 this.clearGameObjectArray(this._dotScoreboard);
-                this.clearGameObjectArray(this._totalScoreboard);
                 for (let x = 0; x < this._scoreboardData.length; x += 1) {
                     let thisData = this._scoreboardData[x];
                     if (thisData[0] > thisData[1]) {
@@ -743,19 +792,16 @@ class GameScene extends Phaser.Scene {
                         thisDot.scale = this.DotImageScale;
                         this._dotScoreboard.push(thisDot);
                     }
-                    let rightScoreboardString = thisData[0].toString() + " - " + thisData[1].toString();
-                    let rightTextField = this.add.text(this.RightScoreboardAnchor.x, this.RightScoreboardAnchor.y + (x * this.TotalScoreboardGap), rightScoreboardString, Config.gameOptions.scoreFormat);
-                    rightTextField.scale = 1.3;
-                    this._totalScoreboard.push(rightTextField);
                 }
                 break;
             }
             case GameState.Continue: {
                 if (this._leftScore == 9) {
-                    this.Instructions = "Legendary Conquest Tie!  Each side will get one card for their hand.  Click CONTINUE to continue";
+                    this.Instructions = "There is a 9-9 tie! A Legendary Conquest has been initiated. Just like a Showdown, but you either get a 2:1 bonus or you push.";
                 }
                 else {
-                    this.Instructions = "Tied hand.  Each side will get one card for their hand.  Click CONTINUE to continue";
+                    let scoreStr = this._leftScore.toString();
+                    this.Instructions = "There is a " + scoreStr + "-" + scoreStr + " tie! A Showdown has been activated. Both teams will wipe their slate clean and draw one gladiator. The highest ranking card wins.";
                 }
                 this._continueButton.visible = true;
                 break;
@@ -825,12 +871,17 @@ class GameScene extends Phaser.Scene {
         this.Instructions = "";
         this.doAnimation();
     }
+    showHelpScreen() {
+        this.playClick();
+        this.scene.switch("HelpScene");
+    }
     hitPlayerHand() {
         this.playClick();
         this.Instructions = "";
         for (let thisButton of this._mainPanel)
             thisButton.visible = false;
         this._stepList.push(Steps.ThirdToPlayer);
+        this._stepList.push(Steps.UpdatePlayerScore);
         this._stepList.push(Steps.DeliverToDealer);
         this._stepList.push(Steps.CheckForDealerThird);
         this.doAnimation();
@@ -870,6 +921,76 @@ class GameScene extends Phaser.Scene {
         (_a = this._scoreField) === null || _a === void 0 ? void 0 : _a.setText(descriptors);
     }
 }
+class HelpScene extends Phaser.Scene {
+    constructor() {
+        super("HelpScene");
+        this._pageNumber = 1;
+    }
+    create() {
+        this.input.on('gameobjectup', function (_, gameObject) {
+            gameObject.emit('clicked', gameObject);
+        }, this);
+        let feltGraphic = this.add.image(0, 0, "blankGameFelt");
+        feltGraphic.setOrigin(0, 0);
+        let button = new Button({
+            scene: this,
+            style: AssetNames.BlueSmall,
+            caption: "GO BACK",
+            clickEvent: Emissions.ReturnToGame,
+            x: 1790,
+            y: 1030,
+            visible: true
+        });
+        button.scale = 1.8;
+        this.add.existing(button);
+        Config.emitter.on(Emissions.ReturnToGame, this.returnToGame, this);
+        this._helpText = this.add.text(50, 50, "");
+        this._helpText.setWordWrapWidth(1870);
+        this._helpText.setStyle(Config.gameOptions.helpScreenFormat);
+        this.updateTextWithPage(1);
+    }
+    updateTextWithPage(pageNumber) {
+        switch (pageNumber) {
+            case 1: {
+                let helpText = " * Introduction\n";
+                helpText += "Get ready for the fight of the century! Witness an epic struggle between your favorite monsters as they battle to the death. If your team wins the Legendary Conquest, you’ll snag a sweet bonus! With a house edge of only 2.04%, your odds of success are hauntingly hopeful.\n";
+                helpText += "\n";
+                helpText += " * How to Play the Game\n";
+                helpText += "The player will place their initial mandatory wager on the team they think is going to win, whether that is the Evil Empire or the Vile Vanguard. The player will be dealt 2 cards. Each card will have a monster on it with their power ranking. The number of stars the monster has indicates how strong or weak it is, with 0 being the weakest and 9 being the strongest. Predictably, these high-ranked villains brought their low-ranked minions with them.\n";
+                helpText += "\n";
+                helpText += "Some teams work well together and produce an overall high-power ranking. While other teams are stepping on each other’s toes and getting in the way, therefore producing an overall low-power ranking. To find out the overall ranking of a team, add the power ranking of each monster together and then drop the 10’s place value. For example, if one monster has 8 stars and the other monster has 7 stars:  8 + 7 = 15. Drop the 10’s place value and the overall power ranking for that team is 5. The team with the highest overall power ranking wins, with 9 being the highest and 0 being the lowest.\n";
+                helpText += "\n";
+                helpText += "After the player looks at their initial 2 cards, they will decide if they want to hit another card and add a 3rd monster to their team or if they want to stay with the 2 monsters they have.\n";
+                helpText += "\n";
+                helpText += " * Optimal Player Strategy\n";
+                helpText += "Here are the suggested guidelines for optimal play:\n";
+                helpText += ">> If your overall power ranking is 0-5, hit and take a third card.\n";
+                helpText += ">> If your overall power ranking is 6-9, stay with your original two cards.\n";
+                helpText += "\n";
+                helpText += " * How to Win\n";
+                helpText += "After the player has finished making their decision, the opposing team will be dealt 2 cards. If the overall power ranking of the first 2 cards is higher than the players, they will stay and win the round. The player will lose, and their wager taken. If the opposing team’s overall power ranking is lower, they will hit a 3rd card. If the player’s team has the higher overall power ranking, they will win even money or 1:1. Then a new round will begin.\n";
+                helpText += "\n";
+                helpText += " * Ties\n";
+                helpText += "After the opposing team draws two cards, if the total score is tied at 4 or less, the opposing team will take a 3rd card. The team with the higher score wins. If the score is tied at 5 or higher, the opposing team will stay and keep their current cards. At this point, if the score is still tied, a Showdown is activated.\n";
+                helpText += "\n";
+                helpText += " * Showdown\n";
+                helpText += "Once a Showdown has been initiated, discard the original cards, allowing both teams to wipe their slate clean. Each team draws one card, and the highest-ranked card wins. If there is a tie, repeat this process.\n";
+                helpText += "\n";
+                helpText += " * Legendary Conquest\n";
+                helpText += "When two monsters tie with a power ranking of 9, this sparks a Legendary Conquest. Just like in a Showdown, all cards are discarded, and each team draws one card. The higher card wins. The difference is, if the player wins, they will receive a 2:1 bonus. If the player loses, their wager will push..\n";
+                this._helpText.text = helpText;
+                break;
+            }
+            default: {
+                this._helpText.text = "Page #" + pageNumber.toString() + " not handled in help screen.";
+            }
+        }
+    }
+    returnToGame() {
+        this.sound.play("chipClick");
+        this.scene.switch("GameScene");
+    }
+}
 class LoaderScene extends Phaser.Scene {
     constructor() {
         super("LoaderScene");
@@ -882,12 +1003,12 @@ class LoaderScene extends Phaser.Scene {
         ]);
         //#endregion
         //#region Load graphics
-        this.load.image("gameFelt", "assets/images/Blank Game Felt 1920x1080.png");
+        this.load.image("gameFelt", "assets/images/Game Felt 1920x1080.png");
+        this.load.image("blankGameFelt", "assets/images/Blank Game Felt 1920x1080.png");
         this.load.image("blueText", "assets/images/Blue Text 130x50.png");
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
-        this.load.image("logo", "assets/images/Game Logo.png");
         this.load.image("left spot", "assets/images/Left Bet.png");
         this.load.image("right spot", "assets/images/Right Bet.png");
         this.load.image("scoreboard", "assets/images/Scoreboard.png");
@@ -1317,6 +1438,7 @@ Emissions.BeginDeal = "Begin deal";
 Emissions.NewGame = "New game";
 Emissions.RebetBets = "Rebet bets";
 Emissions.HintPlease = "Hint, please";
+Emissions.HowToPlay = "How To Play";
 Emissions.ShowPaytables = "Show Paytables";
 Emissions.ReturnToGame = "Return to game";
 Emissions.Yes = "Yes";
@@ -1521,10 +1643,12 @@ Steps.ChangeStateContinue = "CHANGE STATE: Continue";
 Steps.ClearCards = "Clear Cards";
 Steps.ClearHands = "Clear Hands";
 Steps.DeliverSingleCards = "Deliver Single Cards";
+Steps.UpdatePlayerScore = "Update Player Score";
+Steps.UpdateDealerScore = "Update Dealer Score";
 class StringTable {
 }
 // Basic strings
-StringTable.PredealInstructions = "Click on chip to select denomination, click on either betting spot to place wager, click DEAL to begin.";
+StringTable.PredealInstructions = "Click on the chip you want to bet. Place it on the team you think is going to win. Click DEAL to begin.";
 StringTable.Instructions = "Click 'PLAY' to play the hand and make a 1x Play wager; otherwise, click 'FOLD'";
-StringTable.GameOver = "Game over.  Click 'REBET' to make same wagers or 'NEW' to make new wagers.";
+StringTable.GameOver = "The team with the highest overall score wins. Click “Rebet” to make the same wager or “New” to make a new wager.";
 //# sourceMappingURL=index.js.map
