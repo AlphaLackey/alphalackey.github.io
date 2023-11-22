@@ -448,7 +448,6 @@ class GameScene extends Phaser.Scene {
         }
         for (let stage = 0; stage < 2; stage += 1) {
             let newCardNumber = shoeToDrawFrom.drawCard();
-            newCardNumber = 4;
             if (deliverToLeft) {
                 this._leftScore += Blackjack.cardNumberToBlackjackRank(newCardNumber);
                 this._leftScore = this._leftScore % 10;
