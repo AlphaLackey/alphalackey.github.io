@@ -726,7 +726,7 @@ class LoaderScene extends Phaser.Scene {
     preload() {
         //#region Load sounds
         this.load.audio("chipClick", [
-            "./assets/sounds/ChipClick.mp3",
+            "./assets/sounds/beep-22.mp3",
             "./assets/sounds.ChipClick.ogg"
         ]);
         //#endregion
