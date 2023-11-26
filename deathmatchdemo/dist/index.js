@@ -25,9 +25,9 @@ Config.gameOptions = {
     buttonHeight: 35,
     cardWidth: 266,
     cardHeight: 366,
-    chipWidth: 55,
-    chipHeight: 51,
-    chipValues: [5000, 1000, 500, 100, 25, 5, 1, 0.5],
+    chipWidth: 102,
+    chipHeight: 91,
+    chipValues: [100, 25, 5, 1],
     scoreFormat: {
         fontFamily: "Arial",
         fontSize: "36px",
@@ -71,27 +71,26 @@ class GameScene extends Phaser.Scene {
         super("GameScene");
         //#region Constants
         this.TargetFontInstructionSize = 44;
-        this.GameChipScale = 1.8;
         this.ButtonScale = 1.8;
         this.CardScale = 0.8;
         this.HorizButtonGap = 280;
-        this.LeftPayoffOffset = new Point(-34 * this.GameChipScale, -37 * this.GameChipScale);
-        this.RightPayoffOffset = new Point(34 * this.GameChipScale, -37 * this.GameChipScale);
+        this.LeftPayoffOffset = new Point(-34 * 1.8, -37 * 1.8);
+        this.RightPayoffOffset = new Point(34 * 1.8, -37 * 1.8);
         this.CardDelay = 200;
         this.CardSpeed = 500;
-        this.LeftScoreboardAnchor = new Point(150, 455);
-        this.RightScoreboardAnchor = new Point(1640, 425);
-        this.ScoreboardSize = 12;
+        this.LeftScoreboardAnchor = new Point(150, 120);
+        this.RightScoreboardAnchor = new Point(1640, 120);
+        this.ScoreboardSize = 17;
         this.DotImageScale = 80.0 / 1500.0;
         this.DotScoreboardGap = 40;
         this.TotalScoreboardGap = 225;
         this.CardPositions = [
-            new Point(450, 200),
-            new Point(750, 200),
-            new Point(600, 525),
-            new Point(1150, 200),
-            new Point(1450, 200),
-            new Point(1300, 525)
+            new Point(480, 200),
+            new Point(780, 200),
+            new Point(630, 525),
+            new Point(1110, 200),
+            new Point(1410, 200),
+            new Point(1260, 525)
         ];
         //#endregion
         //#region Hand information
@@ -118,10 +117,10 @@ class GameScene extends Phaser.Scene {
     create() {
         // Add the game felt.
         this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
-        let leftScoreboard = this.add.image(0, 0, "scoreboard");
-        leftScoreboard.setOrigin(0, 0);
-        let rightScoreboard = this.add.image(1552, 0, "scoreboard");
-        rightScoreboard.setOrigin(0, 0);
+        this._leftSign = this.add.sprite(0, 0, "sign", 0);
+        this._leftSign.setOrigin(0, 0);
+        this._rightSign = this.add.sprite(1552, 0, "sign", 0);
+        this._rightSign.setOrigin(0, 0);
         this._leftImage = this.add.image(623, 780, "left spot");
         this._leftImage.scale = 0.3;
         this._rightImage = this.add.image(1310, 780, "right spot");
@@ -296,8 +295,8 @@ class GameScene extends Phaser.Scene {
             style: AssetNames.BlueSmall,
             caption: "HOW TO PLAY",
             clickEvent: Emissions.HowToPlay,
-            x: 1790,
-            y: 50,
+            x: 460,
+            y: 915,
             visible: true
         });
         this._howToPlayButton.scale = this.ButtonScale;
@@ -319,7 +318,6 @@ class GameScene extends Phaser.Scene {
             maximumBet: 100,
             payoffOffset: this.LeftPayoffOffset,
         });
-        this._leftSpot.scale = this.GameChipScale;
         this._leftImage.on("clicked", this.addSelectedValue, this);
         this.add.existing(this._leftSpot);
         //#endregion
@@ -337,7 +335,6 @@ class GameScene extends Phaser.Scene {
             maximumBet: 100,
             payoffOffset: this.RightPayoffOffset
         });
-        this._rightSpot.scale = this.GameChipScale;
         this._rightImage.on("clicked", this.addSelectedValue, this);
         this.add.existing(this._rightSpot);
         //#endregion
@@ -520,6 +517,7 @@ class GameScene extends Phaser.Scene {
                 this.clearGameObjectArray(this._leftHand);
                 this.clearGameObjectArray(this._rightHand);
                 this.clearGameObjectArray(this._totalScoreboard);
+                this._rightSign.setFrame(0);
                 this._leftScore = 0;
                 this._rightScore = 0;
                 this.doAnimation();
@@ -654,7 +652,6 @@ class GameScene extends Phaser.Scene {
                     isLocked: true
                 });
                 this._payoutList.push(winningPayoutSpot);
-                winningPayoutSpot.scale = this.GameChipScale;
                 this.add.existing(winningPayoutSpot);
                 if (elevateOldBet)
                     this.children.bringToTop(wager);
@@ -716,11 +713,11 @@ class GameScene extends Phaser.Scene {
     selectCursorValue(value) {
         for (let index = 0; index < this._chipButtons.length; index += 1) {
             if (this._chipButtons[index].Value == value) {
-                this._chipButtons[index].scale = 1.2 * this.GameChipScale;
+                this._chipButtons[index].scale = 1.2;
                 this._cursorValue = value;
             }
             else {
-                this._chipButtons[index].scale = 1.0 * this.GameChipScale;
+                this._chipButtons[index].scale = 1.0;
             }
         }
     }
@@ -795,12 +792,15 @@ class GameScene extends Phaser.Scene {
                 break;
             }
             case GameState.Continue: {
+                this.clearGameObjectArray(this._totalScoreboard);
                 if (this._leftScore == 9) {
                     this.Instructions = "There is a 9-9 tie! A Legendary Conquest has been initiated. Just like a Showdown, but you either get a 2:1 bonus or you push.";
+                    this._rightSign.setFrame(2);
                 }
                 else {
                     let scoreStr = this._leftScore.toString();
                     this.Instructions = "There is a " + scoreStr + "-" + scoreStr + " tie! A Showdown has been activated. Both teams will wipe their slate clean and draw one gladiator. The highest ranking card wins.";
+                    this._rightSign.setFrame(1);
                 }
                 this._continueButton.visible = true;
                 break;
@@ -1013,11 +1013,15 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("scoreboard", "assets/images/Scoreboard.png");
         this.load.image("eeDot", "assets/images/EE Dot.png");
         this.load.image("vvDot", "assets/images/VV Dot.png");
+        this.load.spritesheet("sign", "assets/images/Signage.png", {
+            frameWidth: 336,
+            frameHeight: 1022
+        });
         this.load.spritesheet("card", "assets/images/Monster Cards.jpg", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
         });
-        this.load.spritesheet("chip", "assets/images/TGS Chips.png", {
+        this.load.spritesheet("chip", "assets/images/Chips.png", {
             frameWidth: Config.gameOptions.chipWidth,
             frameHeight: Config.gameOptions.chipHeight
         });
