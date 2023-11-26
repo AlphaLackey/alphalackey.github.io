@@ -111,6 +111,7 @@ class GameScene extends Phaser.Scene {
         this._score = 0;
         this._wager = 0;
         this._currentAward = 0;
+        this._rockImages = new Array(0);
         // #endregion
         //#region Game lists
         this._stepList = new Array(0);
@@ -275,6 +276,19 @@ class GameScene extends Phaser.Scene {
         this.add.existing(this._cashoutButton);
         Config.emitter.on(Emissions.Cashout, this.cashout, this);
         //#endregion
+        //#region Collect button
+        this._collectButton = new Button({
+            scene: this,
+            style: AssetNames.GreenSmall,
+            caption: "COLLECT!",
+            clickEvent: Emissions.Cashout,
+            x: 450,
+            y: 890,
+            visible: false
+        });
+        this._collectButton.scale = 1.5;
+        this.add.existing(this._collectButton);
+        Config.emitter.on(Emissions.Cashout, this.cashout, this);
         this.Score = 100000;
         this.CurrentState = GameState.Predeal;
         //#endregion
@@ -288,6 +302,11 @@ class GameScene extends Phaser.Scene {
     doAnimation() {
         let thisAction = this._stepList.shift();
         switch (thisAction) {
+            case Steps.CollectWinnings: {
+                this.Instructions = "You win!\nPress COLLECT to collect your award.";
+                this._collectButton.visible = true;
+                break;
+            }
             case Steps.PayPlayer: {
                 this.payPlayer();
                 break;
@@ -322,14 +341,21 @@ class GameScene extends Phaser.Scene {
                     curAward = curMult * curAward * this._cursorValue;
                     outcomeText.push(General.amountToDollarString(curAward));
                 }
-                let row = Math.floor(this._selectedCard.CardNumber / 5);
-                let col = this._selectedCard.CardNumber % 5;
-                let commentaryField = this.addCommentaryField(this.GridAnchor.x + (this.GridGap.x * col), this.GridAnchor.y + (this.GridGap.y * row), outcomeText);
-                commentaryField.setOrigin(0.5, 0.5);
+                if (curAward == -1) {
+                    let row = Math.floor(this._selectedCard.CardNumber / 5);
+                    let col = this._selectedCard.CardNumber % 5;
+                    let rockImage = this.add.image(this.GridAnchor.x + (this.GridGap.x * col), this.GridAnchor.y + (this.GridGap.y * row), "rock");
+                    this._rockImages.push(rockImage);
+                }
+                else {
+                    let row = Math.floor(this._selectedCard.CardNumber / 5);
+                    let col = this._selectedCard.CardNumber % 5;
+                    let commentaryField = this.addCommentaryField(this.GridAnchor.x + (this.GridGap.x * col), this.GridAnchor.y + (this.GridGap.y * row), outcomeText);
+                    commentaryField.setOrigin(0.5, 0.5);
+                }
                 if (curAward > 0) {
                     if (this._currentLevel == 4) {
-                        this._stepList.push(Steps.PayPlayer);
-                        this._stepList.push(Steps.ChangeStateGameOver);
+                        this._stepList.push(Steps.CollectWinnings);
                     }
                     else {
                         this._stepList.push(Steps.AdvanceLine);
@@ -546,6 +572,9 @@ class GameScene extends Phaser.Scene {
     cashout() {
         this.playClick();
         this._cashoutButton.visible = false;
+        for (let card of this._gameBoardByRowCol[this._currentLevel]) {
+            card.disableInteractive();
+        }
         this._stepList.push(Steps.ChangeStateGameOver);
         this.payPlayer();
     }
@@ -557,6 +586,7 @@ class GameScene extends Phaser.Scene {
         this.CurrentState = GameState.Predeal;
     }
     payPlayer() {
+        this._collectButton.visible = false;
         let startBankroll = this.Score;
         let fullAward = this.Award;
         this.tweens.addCounter({
@@ -612,6 +642,7 @@ class GameScene extends Phaser.Scene {
     predealInitialization() {
         this.clearGameObjectArray(this._payoutList);
         this.clearGameObjectArray(this._commentaryList);
+        this.clearGameObjectArray(this._rockImages);
         for (let thisRow of this._gameBoardByRowCol) {
             this.clearGameObjectArray(thisRow);
         }
@@ -736,6 +767,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("grayTextSmall", "assets/images/Gray Text 345x50.png");
         this.load.image("grayTextLarge", "assets/images/Gray Text 430x50.png");
         this.load.image("dropPixel", "assets/images/Drop Shape Pixel.jpg");
+        this.load.image("rock", "assets/images/Dwayne.png");
         this.load.spritesheet("card", "assets/images/TGS Cards.png", {
             frameWidth: Config.gameOptions.cardWidth,
             frameHeight: Config.gameOptions.cardHeight
@@ -1363,6 +1395,7 @@ Steps.ChangeStateGameOver = "CHANGE STATE: Game Over";
 // Dealing steps
 Steps.FlipSelectedCard = "Flip Card";
 Steps.GenerateResult = "Generate Result";
+Steps.CollectWinnings = "Collect";
 // Digger steps
 Steps.DeliverGrid = "Deliver Grid";
 Steps.AdvanceLine = "Advance Line";
