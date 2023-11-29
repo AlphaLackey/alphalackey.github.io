@@ -72,17 +72,15 @@ class GameScene extends Phaser.Scene {
         //#region Constants
         this.TargetFontInstructionSize = 44;
         this.ButtonScale = 1.8;
-        this.CardScale = 0.8;
         this.HorizButtonGap = 280;
         this.LeftPayoffOffset = new Point(-34 * 1.8, -37 * 1.8);
         this.RightPayoffOffset = new Point(34 * 1.8, -37 * 1.8);
         this.CardDelay = 200;
         this.CardSpeed = 500;
-        this.LeftScoreboardAnchor = new Point(150, 120);
-        this.RightScoreboardAnchor = new Point(1640, 120);
-        this.ScoreboardSize = 17;
-        this.DotImageScale = 80.0 / 1500.0;
-        this.DotScoreboardGap = 40;
+        this.LeftScoreboardAnchor = new Point(140, 420);
+        this.RightScoreboardAnchor = new Point(1650, 420);
+        this.ScoreboardSize = 9;
+        this.DotScoreboardGap = 53;
         this.TotalScoreboardGap = 225;
         this.CardPositions = [
             new Point(480, 200),
@@ -117,9 +115,9 @@ class GameScene extends Phaser.Scene {
     create() {
         // Add the game felt.
         this.add.image(Config.gameOptions.gameWidth / 2, Config.gameOptions.gameHeight / 2, "gameFelt");
-        this._leftSign = this.add.sprite(0, 0, "sign", 0);
+        this._leftSign = this.add.sprite(20, 0, "sign", 0);
         this._leftSign.setOrigin(0, 0);
-        this._rightSign = this.add.sprite(1552, 0, "sign", 0);
+        this._rightSign = this.add.sprite(1572, 0, "sign", 0);
         this._rightSign.setOrigin(0, 0);
         this._leftImage = this.add.image(623, 780, "left spot");
         this._leftImage.scale = 0.3;
@@ -352,14 +350,14 @@ class GameScene extends Phaser.Scene {
         if (target == CardTarget.Player) {
             this.clearGameObjectArray(this._totalScoreboard);
             let playerScore = (this._playerIsLeft ? this._leftScore : this._rightScore);
-            let rightScoreboardString = "MY\nOVERALL\nPOWER\nRANKING\n" + playerScore.toString();
+            let rightScoreboardString = "MY\nPOWER\nRANKING\n" + playerScore.toString();
             let rightTextField = this.add.text(this.RightScoreboardAnchor.x, this.RightScoreboardAnchor.y, rightScoreboardString, Config.gameOptions.scoreFormat);
             rightTextField.scale = 1.0;
             this._totalScoreboard.push(rightTextField);
         }
         else {
             let dealerScore = (!this._playerIsLeft ? this._leftScore : this._rightScore);
-            let rightScoreboardString = "RIVAL'S\nOVERALL\nPOWER\nRANKING\n" + dealerScore.toString();
+            let rightScoreboardString = "RIVAL'S\nPOWER\nRANKING\n" + dealerScore.toString();
             let rightTextField = this.add.text(this.RightScoreboardAnchor.x, this.RightScoreboardAnchor.y + this.TotalScoreboardGap, rightScoreboardString, Config.gameOptions.scoreFormat);
             rightTextField.scale = 1.0;
             this._totalScoreboard.push(rightTextField);
@@ -763,7 +761,7 @@ class GameScene extends Phaser.Scene {
             case GameState.FirstInput: {
                 for (let thisButton of this._mainPanel)
                     thisButton.visible = true;
-                this.Instructions = "The stars indicate how strong (9) or weak (0) the monster is. The team’s overall score is added together. You can stay or add one more monster.";
+                this.Instructions = "The stars indicate how strong (9) or weak (0) the monster is. The team’s power ranking is added together. You can stay or add one more monster.";
                 break;
             }
             case GameState.GameOver: {
@@ -779,13 +777,11 @@ class GameScene extends Phaser.Scene {
                     if (thisData[0] > thisData[1]) {
                         let thisDot = this.add.image(this.LeftScoreboardAnchor.x, this.LeftScoreboardAnchor.y + (x * this.DotScoreboardGap), "eeDot");
                         thisDot.setOrigin(0.5, 0.5);
-                        thisDot.scale = this.DotImageScale;
                         this._dotScoreboard.push(thisDot);
                     }
                     else {
-                        let thisDot = this.add.image(this.LeftScoreboardAnchor.x + 40, this.LeftScoreboardAnchor.y + (x * this.DotScoreboardGap), "vvDot");
+                        let thisDot = this.add.image(this.LeftScoreboardAnchor.x + 95, this.LeftScoreboardAnchor.y + (x * this.DotScoreboardGap), "vvDot");
                         thisDot.setOrigin(0.5, 0.5);
-                        thisDot.scale = this.DotImageScale;
                         this._dotScoreboard.push(thisDot);
                     }
                 }
@@ -1014,7 +1010,7 @@ class LoaderScene extends Phaser.Scene {
         this.load.image("eeDot", "assets/images/EE Dot.png");
         this.load.image("vvDot", "assets/images/VV Dot.png");
         this.load.spritesheet("sign", "assets/images/Signage.png", {
-            frameWidth: 336,
+            frameWidth: 334,
             frameHeight: 1022
         });
         this.load.spritesheet("card", "assets/images/Monster Cards.jpg", {
@@ -1653,5 +1649,5 @@ class StringTable {
 // Basic strings
 StringTable.PredealInstructions = "Click on the chip you want to bet. Place it on the team you think is going to win. Click DEAL to begin.";
 StringTable.Instructions = "Click 'PLAY' to play the hand and make a 1x Play wager; otherwise, click 'FOLD'";
-StringTable.GameOver = "The team with the highest overall score wins. Click “Rebet” to make the same wager or “New” to make a new wager.";
+StringTable.GameOver = "The team with the highest power ranking wins. Click “Rebet” to make the same wager or “New” to make a new wager.";
 //# sourceMappingURL=index.js.map
