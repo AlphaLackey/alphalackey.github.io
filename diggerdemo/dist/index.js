@@ -398,6 +398,16 @@ class GameScene extends Phaser.Scene {
                     onComplete: this.doAnimation,
                     onCompleteScope: this
                 });
+                for (let neighbor of this._gameBoardByRowCol[this._currentLevel]) {
+                    if (neighbor.CardNumber != this._selectedCard.CardNumber) {
+                        this.add.tween({
+                            targets: neighbor,
+                            duration: 300,
+                            alpha: 0.5,
+                            rotation: 3.1415926 * 2
+                        });
+                    }
+                }
                 break;
             }
             case Steps.DeliverGrid: {
