@@ -1,0 +1,17 @@
+Three Card War
+
+* Play begins with the player making a mandatory Ante wager between $5 and $500.
+* Two rows of three face-down cards will be dealt, and the player will select one of the two rows to wager on; the dealer will be given the other hand.
+* Each card is then revealed.  If the player's three cards all beat the three dealer's cards, the player wins; otherwise, the player loses.
+** Note that the player will win a tie between their card and the dealer's opposing card.
+** Note that aces count as high for the player, and count as low for the dealer.
+
+If the player wins, their ante will be paid according to the following paytable, based on the total margin of victory of all three cards:
+0-18:	4-for-1
+19-26:	5-for-1
+27-30:	10-for-1
+31-34:	25-for-1
+35-36:	50-for-1
+37:		100-for-1
+38:		500-for-1
+39:		1,000-for-1
